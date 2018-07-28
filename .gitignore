@@ -1,0 +1,11 @@
+/.gradle/
+/build/
+.idea
+*.iml
+*.store
+/classes/
+bookmarks
+/logs/
+*.log
+*.zip
+out
