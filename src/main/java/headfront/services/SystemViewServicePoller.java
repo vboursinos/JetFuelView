@@ -62,6 +62,16 @@ public class SystemViewServicePoller extends WebServicePoller {
         return true;
     }
 
+    public String getServerStats(String url) {
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            return restTemplate.getForObject(url, String.class);
+        } catch (Exception e) {
+            LOG.error("Could not process request " + url, e);
+        }
+        return "";
+    }
+
     public void sendRegisteredServer(String replyAddress) {
         activeWebPollingRequests.values().forEach(request -> {
             WebPollingRequest webReq = (WebPollingRequest) request;

@@ -241,7 +241,11 @@
         function getImage(componentName) {
             var imageObject = new Object();
             var componentNameLowerCase = componentName.toLowerCase();
-            if (componentNameLowerCase.indexOf("client") > -1) {
+            if (componentNameLowerCase.indexOf("jetfuel") > -1) {
+                imageObject.imageName = "images/JetFuelMediumNoBg.png";
+                imageObject.imageWidth = 50;
+                imageObject.imageHeight = 40;
+            } else if (componentNameLowerCase.indexOf("fusion") > -1) {
                 imageObject.imageName = "images/client.png";
                 imageObject.imageWidth = 50;
                 imageObject.imageHeight = 40;

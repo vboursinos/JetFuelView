@@ -95,10 +95,10 @@ public class JetFuelView extends Application {
         {
             JSObject window = (JSObject) webEngine.executeScript("window");
             window.setMember("java", new JavaBridge());
-            webEngine.executeScript("console.log = function(message)\n" +
-                    "{\n" +
-                    "    java.log(message);\n" +
-                    "};");
+//            webEngine.executeScript("console.log = function(message)\n" +
+//                    "{\n" +
+//                    "    java.log(message);\n" +
+//                    "};");
         });
         return browser;
     }
