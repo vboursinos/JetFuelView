@@ -46,7 +46,7 @@ public class JetFuelView extends Application {
 
         WebView browser = createWebBrowser(stage, url);
         stage.setScene(new Scene(browser));
-        stage.setTitle("HeadFront JetFuelView - ");
+        stage.setTitle("HeadFront JetFuelView");
         Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
         stage.setX(0);
         stage.setY(0);
