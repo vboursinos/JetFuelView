@@ -9,4 +9,4 @@ sudo npm install tree-kill
 npx electron // not needed but usefull to get the command to run
 node_modules/electron/dist/Electron.app/Contents/MacOS/Electron .
 
-This runs electron version
+This runs electron version.
