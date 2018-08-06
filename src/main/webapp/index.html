@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="css/style.css">
+    <title>JetFuel</title>
+    <script src="js/sockjs-0.3.4.js"></script>
+    <script src="js/stomp.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script type="text/javascript">
+        var stompClient = null;
+
+        function disconnect() {
+            if (stompClient != null) {
+                stompClient.disconnect();
+            }
+            console.log("Disconnected");
+        }
+
+        function connect() {
+            var socket = new SockJS('/jetfuel');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function (frame) {
+                console.log('Connected: ' + frame);
+
+                stompClient.subscribe('/topic/registerServerReply', function (greeting) {
+                    showGreeting(JSON.parse(greeting.body).content);
+                });
+                stompClient.send("/app/systemViewGetCmd", {}, JSON.stringify({'env': 'env'}));
+            });
+        }
+
+        function sendRegisterServer() {
+            var env = document.getElementById('env').value;
+            var conUrl = document.getElementById('conUrl').value;
+            var adminUrl = document.getElementById('adminUrl').value;
+            stompClient.send("/app/registerServerCmd", {}, JSON.stringify({
+                'env': env,
+                'conUrl': conUrl,
+                'adminUrl': adminUrl
+            }));
+        }
+
+        function showGreeting(message) {
+            var response = document.getElementById('subResponse');
+            var p = document.createElement('p');
+            p.appendChild(document.createTextNode(message));
+            response.appendChild(p);
+            recalCanvasOffset();
+        }
+    </script>
+
+</head>
+<body onload="connect()" onbeforeunload="disconnect()">
+<h1> Welcome to JetFuel </h1>
+<div>
+
+    <a href="index.html"> Home</a>
+    <!--<a href="basic.html"> Basic</a>-->
+    <!--<a href="http://www.google.com"> Goolge</a>-->
+    <!--<a href="test.html">First Test</a>-->
+    <a href="webServicePoller.html">WebServicePoller</a>
+    <a href="SystemView.html">SystemView</a>
+</div>
+<BR><BR>
+
+<B>Register server eg Environment = UAT, Connection = tcp://192.168.56.101:8001/amps/json and Admin url=
+    http://192.168.56.101:9085</B><BR>
+<div id="conversationDiv">
+    <label>Environment </label><input type="text"
+                                      value="UAT"
+                                      size="3" id="env"/>
+    <label> Connection Url </label><input type="text"
+                                          value="tcp://192.168.56.101:8001/amps/json"
+                                          size="40" id="conUrl"/>
+    <label> Admin url </label><input type="text"
+                                     value="http://192.168.56.101:9085"
+                                     size="40" id="adminUrl"/>
+
+    <button id="request" onclick="sendRegisterServer();">Register</button>
+</div>
+<div>
+    <p id="subResponse"></p>
+    <p id="response"></p>
+</div>
+
+</body>
+</html>

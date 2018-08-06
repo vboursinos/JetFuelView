@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title> Web Service Poller</title>
+    <script src="js/sockjs-0.3.4.js"></script>
+    <script src="js/stomp.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script type="text/javascript">
+        var stompClient = null;
+
+        function disconnect() {
+            if (stompClient != null) {
+                stompClient.disconnect();
+            }
+            console.log("Disconnected");
+        }
+
+        function connect() {
+            var socket = new SockJS('/jetfuel');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function (frame) {
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/webPollerFeed', function (greeting) {
+                    showGreeting(JSON.parse(greeting.body).content);
+                });
+            });
+        }
+
+        function sendRequest() {
+            var name = document.getElementById('name').value;
+            var url = document.getElementById('url').value;
+            stompClient.send("/app/webPollerCmd", {}, JSON.stringify({'name': name, 'url': url}));
+        }
+
+        function showGreeting(message) {
+            var n = message.indexOf("{");
+            if (n == -1) {
+                document.getElementById('subResponse').innerHTML = message;
+            }
+            else {
+                var res = message.substring(0, n);
+                var myInput = document.getElementById(res);
+                if (myInput != null) {
+                    document.getElementById(res).innerHTML = message;
+                }
+                else {
+                    var response = document.getElementById('response');
+                    var p = document.createElement(res);
+                    p.id = res;
+                    p.style.wordWrap = 'break-word';
+                    var br = document.createElement("br");
+                    response.appendChild(br);
+                    p.appendChild(document.createTextNode(message));
+                    response.appendChild(p);
+                }
+            }
+        }
+    </script>
+</head>
+<body onload="connect()" onbeforeunload="disconnect()">
+<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
+    enabled. Please enable
+    Javascript and reload this page!</h2></noscript>
+<h1> Sow stats </h1>
+
+<div>
+    <a href="index.html"> Home</a>
+    <!--<a href="basic.html"> Basic</a>-->
+    <!--<a href="http://www.google.com"> Goolge</a>-->
+    <!--<a href="test.html">First Test</a>-->
+    <a href="webServicePoller.html">WebServicePoller</a>
+    <a href="SystemView.html">SystemView</a>
+</div>
+<BR><BR>
+<div>
+    Enter a name and url of the stat you want. This will update every 5 seconds.<BR>
+    eg <B>Stat Name</B> = ValidOrders and <B>Stat url </B> =
+    http://192.168.0.6:8085/amps/instance/sow/ORDERS!json/valid_keys<BR>
+    <div id="conversationDiv">
+
+        <label>Stat Name </label><input type="text" value="ValidOrders" id="name"/>
+        <label>Stat url </label><input type="text"
+                                       value="http://192.168.56.101:8085/amps/instance/sow/ORDERS!json/valid_keys"
+                                       size="80" id="url"/>
+        <button id="request" onclick="sendRequest();">Subscribe</button>
+        <p id="subResponse"></p>
+        <p id="response"></p>
+    </div>
+
+</div>
+</body>
+</html>

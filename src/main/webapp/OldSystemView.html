@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="css/style.css">
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <style>
+        canvas {
+            border: 1px solid red;
+        }
+    </style>
+    <title>System View</title>
+    <script src="js/sockjs-0.3.4.js"></script>
+    <script src="js/stomp.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script type="text/javascript">
+        var stompClient = null;
+        var serverWidth = 290;
+        var serverHeight = 50;
+        var canvas;
+        var ctx;
+        var canvasOffset;
+        var offsetX;
+        var offsetY;
+        var rects;
+
+        function forceUpdate() {
+            disconnect();
+            connect();
+        }
+        function disconnect() {
+            if (stompClient != null) {
+                stompClient.disconnect();
+            }
+            console.log("Disconnected");
+        }
+
+        function connect() {
+            var socket = new SockJS('/jetfuel');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function (frame) {
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/systemViewFeed', function (greeting) {
+                    showGreeting(JSON.parse(greeting.body).content);
+                });
+            });
+            init();
+            drawAllServers();
+            drawServerGroup(140, 150, 800, 150, 'London');
+        }
+
+        function sendRequest() {
+            var url = document.getElementById('url').value;
+            stompClient.send("/app/registerServerCmd", {}, JSON.stringify({'url': url}));
+        }
+
+        function showGreeting(message) {
+            var response = document.getElementById('subResponse');
+            var p = document.createElement('p');
+            p.appendChild(document.createTextNode(message));
+            response.appendChild(p);
+            recalCanvasOffset();
+        }
+
+        function init() {
+            canvas = document.getElementById("canvas");
+            ctx = canvas.getContext("2d");
+            recalCanvasOffset();
+            canvas.addEventListener('contextmenu', handleMouseDown, false);
+        }
+
+        function recalCanvasOffset() {
+            canvasOffset = $("#canvas").offset();
+            offsetX = canvasOffset.left;
+            offsetY = canvasOffset.top;
+        }
+
+
+        function drawAllServers() {
+            rects = [];
+            rects.push({
+                x: 200,
+                y: 200,
+                width: serverWidth,
+                height: serverHeight,
+                name: "LDN-UAT-Primary",
+                adminPage: "http://192.168.0.6:8085/amps"
+            });
+            rects.push({
+                x: 600,
+                y: 200,
+                width: serverWidth,
+                height: serverHeight,
+                name: "LDN-UAT-Backup",
+                adminPage: "http://192.168.0.6:9085/amps"
+            });
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (var i = 0; i < rects.length; i++) {
+                var rect = rects[i];
+                drawServer(rect.x, rect.y, rect.name, rect.adminPage);
+            }
+        }
+
+
+        function handleMouseDown(e) {
+
+            // get mouse position relative to the canvas
+            var x = parseInt(e.clientX - offsetX);
+            var y = parseInt(e.clientY - offsetY);
+
+
+            // check each rect for hits
+            for (var i = 0; i < rects.length; i++) {
+                var rect = rects[i];
+                var rectRight = rect.x + rect.width;
+                var rectBottom = rect.y + rect.height;
+
+                // check each rect for hits
+                if (x >= rect.x && x <= rectRight && y >= rect.y && y <= rectBottom) {
+                    var messageToSend = rect.name + "," + rect.adminPage + "," + x + "," + y;
+                    confirm(messageToSend);
+                }
+            }
+
+            // prevents the usual context from popping up
+            e.preventDefault()
+            return (false);
+        }
+
+
+        function drawServer(x, y, servername) {
+            ctx.beginPath();
+            ctx.rect(x, y, serverWidth, serverHeight);
+            ctx.fillStyle = 'blue';
+            ctx.fill();
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = 'black';
+            ctx.stroke();
+            ctx.fillStyle = 'white';
+            ctx.font = 'italic 20pt Calibri';
+            ctx.fillText(servername, x + 25, y + 30);
+        }
+
+        function drawServerGroup(x, y, w, h, groupName) {
+            ctx.beginPath();
+            ctx.rect(x, y, w, h);
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = 'grey';
+            ctx.stroke();
+            ctx.fillStyle = 'black';
+            ctx.font = 'italic 14pt Calibri';
+            ctx.fillText(groupName, x + 25, y + 30);
+        }
+
+
+    </script>
+</head>
+<body onload="connect()" onbeforeunload="disconnect()">
+
+<h1>System View </h1>
+<div>
+    <a href="index.html"> Home</a>
+    <a href="basic.html"> Basic</a>
+    <a href="http://www.google.com"> Goolge</a>
+    <a href="test.html">First Test</a>
+    <a href="webServicePoller.html">WebServicePoller</a>
+    <a href="SystemView.html">SystemView</a>
+</div>
+<BR><BR>
+<B>Enter a admin url eg http://192.168.0.6:9085/amps</B>
+<div id="conversationDiv">
+    <label>Admin url </label><input type="text"
+                                    value="http://192.168.0.6:9085/amps"
+                                    size="80" id="url"/>
+
+    <button id="request" onclick="sendRequest();">Register</button>
+    <button id="forceUpdate" onclick="forceUpdate();">Force Update</button>
+</div>
+<canvas id="canvas" width="1200" height="600"></canvas>
+<div>
+    <p id="subResponse"></p>
+    <p id="response"></p>
+</div>
+
+</body>
+</html>
