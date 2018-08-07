@@ -4,6 +4,7 @@ import headfront.messages.OutputMessage;
 import headfront.utils.MessageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -64,10 +65,14 @@ public class SystemViewServicePoller extends WebServicePoller {
 
     public String getServerStats(String url) {
         try {
-            RestTemplate restTemplate = new RestTemplate();
+            HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+            httpRequestFactory.setConnectionRequestTimeout(1800);
+            httpRequestFactory.setConnectTimeout(1800);
+            httpRequestFactory.setReadTimeout(1800);
+            RestTemplate restTemplate =  new RestTemplate(httpRequestFactory);
             return restTemplate.getForObject(url, String.class);
         } catch (Exception e) {
-            LOG.error("Could not process request " + url, e);
+            //LOG.error("Could not process request " + url, e);
         }
         return "";
     }

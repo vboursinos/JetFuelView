@@ -8,6 +8,7 @@
         canvas {
             border: 1px solid red;
         }
+
     </style>
     <title>System View</title>
     <script src="js/sockjs-0.3.4.js"></script>
@@ -57,34 +58,14 @@
                                         if (part instanceof go.Link) alert(linkInfo(part.data));
                                         else if (part instanceof go.Group) alert(groupInfo(contextmenu));
                                         else alert(nodeInfo(part.data));
-                                    }),
-                            makeButton("Cut",
-                                    function (e, obj) {
-                                        e.diagram.commandHandler.cutSelection();
-                                    },
-                                    function (o) {
-                                        return o.diagram.commandHandler.canCutSelection();
-                                    }),
-                            makeButton("Copy",
-                                    function (e, obj) {
-                                        e.diagram.commandHandler.copySelection();
-                                    },
-                                    function (o) {
-                                        return o.diagram.commandHandler.canCopySelection();
-                                    }),
-                            makeButton("Paste",
-                                    function (e, obj) {
-                                        e.diagram.commandHandler.pasteSelection(e.diagram.lastInput.documentPoint);
-                                    },
-                                    function (o) {
-                                        return o.diagram.commandHandler.canPasteSelection();
-                                    }),
-                            makeButton("Open admin Page",
-                                    function (e, obj) {
-                                        e.diagram.commandHandler.deleteSelection();
-                                    }, function (o) {
-                                        return true;
                                     })
+                                    <!--,-->
+                            <!--makeButton("Open admin Page",-->
+                                    <!--function (e, obj) {-->
+                                        <!--e.diagram.commandHandler.deleteSelection();-->
+                                    <!--}, function (o) {-->
+                                        <!--return true;-->
+                                    <!--})-->
                     );
 
             function nodeInfo(d) {  // Tooltip info for a node data object
@@ -151,12 +132,12 @@
             // The link shape and arrowhead have their stroke brush data bound to the "color" property
             myDiagram.linkTemplate =
                     $(go.Link,
-                            {toShortLength: 3, relinkableFrom: true, relinkableTo: true},  // allow the user to relink existing links
+                            {toShortLength: 13,  curve: go.Link.Bezier, relinkableFrom: true, relinkableTo: true},  // allow the user to relink existing links
                             $(go.Shape,
                                     {strokeWidth: 2},
                                     new go.Binding("stroke", "color")),
                             $(go.Shape,
-                                    {toArrow: "Standard", stroke: null},
+                                    {toArrow: "Standard", stroke: null,scale: 2},
                                     new go.Binding("fill", "color")),
                             { // this tooltip Adornment is shared by all links
                                 toolTip: $(go.Adornment, "Auto",
@@ -324,7 +305,13 @@
             var oldNode = myDiagram.model.findNodeDataForKey(ampsServerName);
             if (oldNode === null) {
                 var imageObject = new Object();
-                imageObject.imageName = "images/ampsServer.png";
+                if (connectedTime.length > 1) {
+                    imageObject.imageName = "images/ampsServer.png";
+                }
+                else{
+                    imageObject.imageName = "images/ampsServerOff2.png";
+                }
+
                 imageObject.imageWidth = 100;
                 imageObject.imageHeight = 40;
                 myDiagram.model.addNodeData({
@@ -392,6 +379,21 @@
                 createAmpsGroup(groupsArray[i])
             }
 
+            for (var i = 0; i < objectData.unknownServers.length; i++) {
+                    var unknownServer = objectData.unknownServers[i];
+                    var imageObject = new Object();
+                    imageObject.imageName = "images/ampsServerOff.png";
+                    imageObject.imageWidth = 100;
+                    imageObject.imageHeight = 40;
+                    myDiagram.model.addNodeData({
+                        key: unknownServer,
+                        text: 'Unreachable ' + unknownServer,
+                        source: imageObject.imageName,
+                        width: imageObject.imageWidth,
+                        height: imageObject.imageHeight
+                    });
+              }
+              updateMessage("Diagram updated from server. ");
         }
 
         function processSystemViewUpdates(message) {
@@ -435,7 +437,9 @@
             stompClient = Stomp.over(socket);
             stompClient.connect({}, function (frame) {
                 console.log('Connected: ' + frame);
+                 updateMessage("Connected");
                 loadSavedView();
+                 updateMessage("Loaded saved config. ");
                 subscribeToSytemViewUpdates();
             });
         }
@@ -455,6 +459,10 @@
             <!--response.appendChild(p);-->
         }
 
+        function updateMessage(message) {
+            document.getElementById("statusPanel").innerHTML = message + new Date();
+        }
+
         function save() {
             var jsonToSave = myDiagram.model.toJson();
             <!--document.getElementById("mySavedModel").value = jsonToSave;-->
@@ -462,7 +470,7 @@
                 showGreeting(JSON.parse(greeting.body).content);
             });
             stompClient.send("/app/systemViewModelSaveCmd", {}, jsonToSave);
-            window.alert("Diagram Saved.");
+            updateMessage("Diagram Saved. ");
         }
 
         function add() {
@@ -487,22 +495,6 @@
             });
         }
 
-        function addnoLink() {
-            var imageObject = new Object();
-            imageObject.imageName = "images/ampsServer.png";
-            imageObject.imageWidth = 100;
-            imageObject.imageHeight = 40;
-            myDiagram.model.addNodeData({
-                key: 'Deepsk21',
-                text: 'Deepsk21',
-                group: 'Dee',
-                source: imageObject.imageName,
-                width: imageObject.imageWidth,
-                height: imageObject.imageHeight
-            });
-
-        }
-
         function update() {
             var oldDate = myDiagram.model.findNodeDataForKey('LDN_PRIMARY');
             myDiagram.model.setKeyForNodeData(oldDate, 'Newwwwwwwww');
@@ -525,14 +517,14 @@
                     <!--document.getElementById("mySavedModel").value = message;-->
                     myDiagram.model = go.Model.fromJson(message);
                 } else {
-                    getCurrentSytemView();
+                    getCurrentSystemView();
                 }
                 stompClient.unsubscribe('/topic/systemViewModelGetReply');
             });
             stompClient.send("/app/systemViewModelGetCmd", {}, JSON.stringify({'env': 'env'}));
         }
 
-        function getCurrentSytemView() {
+        function getCurrentSystemView() {
             //unsubscribe to udpates
             stompClient.unsubscribe('/topic/systemDiagramViewUpdateFeed');
             //get systemview
@@ -551,14 +543,17 @@
     </script>
 </head>
 <body onload="startView()" onbeforeunload="disconnect()">
-<h1>System View </h1>
-<button id="SaveButton" onclick="save()">Save</button>
-<button onclick="add()">add</button>
-<button onclick="addnoLink()">addnolink</button>
-<button onclick="removeNode()">remove</button>
-<button id="updateView" onclick="getCurrentSytemView()">Update View from Server</button>
-<BR><BR>
-<div id="myDiagramDiv" style="border: solid 1px black; width:1200px; height:600px"></div>
+<center><h1>JetFuelView - Showing all Amps servers only</h1>
+    <button id="SaveButton" onclick="save()">Save</button>
+    <!--<button onclick="add()">add</button>-->
+    <!--<button onclick="addnoLink()">addnolink</button>-->
+    <!--<button onclick="removeNode()">remove</button>-->
+    <button id="updateView" onclick="getCurrentSystemView()">Force Update View from Server</button>
+    <div>
+        <p id="statusPanel"></p>
+    </div>
+</center>
+<div id="myDiagramDiv" style="border: solid 1px black; width:1300px; height:720px"></div>
 
 
 </body>

@@ -16,7 +16,6 @@ import org.springframework.stereotype.Controller;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -33,6 +32,8 @@ public class SystemViewContoller {
     private SimpMessagingTemplate template;
     private Random random = new Random();
 
+    private static final String SEPARATOR = "=";
+
     @Autowired
     public SystemViewContoller(SimpMessagingTemplate template) {
         this.template = template;
@@ -47,6 +48,8 @@ public class SystemViewContoller {
     private String[] servers = null;
 
     private Map<String, Map<String, Object>> allDataFromServer = new HashMap<>();
+    private Set<String> unknownServers = new HashSet<>();
+    private Map<String, String> mappedServers = new HashMap<>();
 
     @PostConstruct
     public void init() {
@@ -54,30 +57,6 @@ public class SystemViewContoller {
         try {
             properties.load(this.getClass().getClassLoader().getResourceAsStream("JetFuelView.properties"));
             servers = properties.getProperty("servers").split(",");
-            final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-            ScheduledFuture<?> webServicePoller = scheduler.scheduleAtFixedRate(() -> {
-                try {
-                    for (String server : servers) {
-                        final String serverStats = systemViewServicePoller.getServerStats(server);
-                        if (serverStats.trim().length() > 1) {
-                            updateState(serverStats);
-                        }
-                    }
-                    Thread.sleep(100);
-                } catch (Exception e) {
-                    LOG.error("Exception thrown during processing request", e);
-                }
-            }, 0, 10, TimeUnit.SECONDS);
-
-            // This to get the exception from the ScheduledExectureService
-            Executors.newSingleThreadExecutor().submit(() -> {
-                try {
-                    webServicePoller.get();
-                } catch (Exception e) {
-                    LOG.error("Exception thrown during processing webPollingRequests", e);
-                }
-            });
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -123,14 +102,27 @@ public class SystemViewContoller {
     @SendTo("/topic/systemDiagramViewGetFeed")
     public OutputMessage getSystemDiagramView(String message) throws Exception {
         LOG.info("Got getSystemDiagramView Message " + message);
-        List<Map<String, Object>> allServers = new ArrayList<>();
-//        allServers.add(createServer("LDN_PRIMARY", "LONDON", new String[]{"LDN_BACKUP", "FFT_PRIMARY", "FFT_BACKUP"}, new String[]{"PriceFeedPublisher", "JamesTraderClient", "KateSalesClient"}));
-//        allServers.add(createServer("LDN_BACKUP", "LONDON", new String[]{"LDN_PRIMARY"}, new String[]{"RFQFeedPublisher", "BBGTradeFeedPublisher"}));
-//        allServers.add(createServer("FFT_PRIMARY", "FRANKFURT", new String[]{"FFT_BACKUP"}, new String[]{"BBGQuoteGateway", "DeepakTraderClient"}));
-//        allServers.add(createServer("FFT_BACKUP", "FRANKFURT", new String[]{"FFT_PRIMARY"}, new String[]{"HitRatioReportSubscriber"}));
-        allDataFromServer.values().forEach(allServers::add);
+        for (String server : servers) {
+            final String serverStats = systemViewServicePoller.getServerStats(server);
+            if (serverStats.trim().length() > 1) {
+                updateState(serverStats, server);
+            } else {
+                String s = server.replaceAll("http://", "");
+                s = s.replace("/amps.json", "");
+                final String registeredServer = mappedServers.get(server);
+                if (registeredServer != null){
+                    final String[] split = registeredServer.split(SEPARATOR);
+                    allDataFromServer.put(registeredServer, createServer(split[1], split[0], "",
+                            null, null));
+                }else{
+                    unknownServers.add(s);
+                }
+            }
+        }
+
         Map<String, Object> all = new HashMap<>();
-        all.put("servers", allServers);
+        all.put("servers", allDataFromServer.values());
+        all.put("unknownServers", unknownServers);
         return new OutputMessage(jsonConvertor.convertToString(all));
     }
 
@@ -149,17 +141,17 @@ public class SystemViewContoller {
         server.put("connectedTime", date);
         server.put("messagesIn", random.nextInt(1500000));
         server.put("messagesOut", random.nextInt(100000));
+        List<Map<String, Object>> createdRep = new ArrayList<>();
         if (reps != null) {
-            List<Map<String, Object>> createdRep = new ArrayList<>();
             List<Map<String, Object>> repList = (List) reps;
             for (Map aRep : repList) {
                 createdRep.add(createRep(aRep));
             }
-            server.put("replication", createdRep);
         }
+        server.put("replication", createdRep);
 
+        List<Map<String, Object>> createdClients = new ArrayList<>();
         if (clients != null) {
-            List<Map<String, Object>> createdClients = new ArrayList<>();
             List<Map<String, Object>> clientList = (List) clients;
             for (Map aClient : clientList) {
                 final String client_name = aClient.get("client_name").toString();
@@ -167,8 +159,8 @@ public class SystemViewContoller {
                     createdClients.add(createClient(aClient, name));
                 }
             }
-            server.put("clients", createdClients);
         }
+        server.put("clients", createdClients);
 
         return server;
 
@@ -197,13 +189,23 @@ public class SystemViewContoller {
     }
 
     private Map<String, Object> createRep(Map rep) {
-            Map<String, Object> replication = new HashMap();
-            replication.put("name", rep.get("destination_name"));
-            replication.put("type", rep.get("replication_type"));
-            replication.put("secondsBehind", rep.get("seconds_behind"));
-            return replication;
+        Map<String, Object> replication = new HashMap();
+        final Object name = rep.get("name");
+        final Object group = rep.get("destination_group_name");
+        replication.put("name", name);
+        replication.put("type", rep.get("replication_type"));
+        replication.put("secondsBehind", rep.get("seconds_behind"));
+        final String fullServerName = getFullServerName("" + group, "" + name);
+        if (!allDataFromServer.containsKey(fullServerName)) {
+            allDataFromServer.put(fullServerName, createServer(name.toString(), group.toString(), "",
+                    null, null));
         }
+        return replication;
+    }
 
+    private String getFullServerName(String group, String name) {
+        return group + SEPARATOR + name;
+    }
 
     private void sendClientStream(final String replyAddress) {
         new Thread(() -> {
@@ -240,7 +242,7 @@ public class SystemViewContoller {
         return prefix + "_" + ran;
     }
 
-    private void updateState(String allJson) {
+    private void updateState(String allJson, String url) {
         final Map<String, Object> mapData = jsonConvertor.convertToMap(allJson);
         final Map amps = (Map) mapData.get("amps");
         final Map instance = (Map) amps.get("instance");
@@ -249,7 +251,9 @@ public class SystemViewContoller {
         final Object timestamp = MessageUtil.getLeafNode(instance, "timestamp");
         final Object clients = MessageUtil.getLeafNode(instance, "clients");
         final Object replication = MessageUtil.getLeafNode(instance, "replication");
-        allDataFromServer.put(group + ":" + name, createServer(name.toString(), group.toString(), timestamp.toString(),
-                replication, clients));
+        final String fullServerName = getFullServerName("" + group, "" + name);
+        allDataFromServer.put(fullServerName, createServer(name.toString(), group.toString(), timestamp.toString(),
+                replication, null));
+        mappedServers.put(url, fullServerName);
     }
 }

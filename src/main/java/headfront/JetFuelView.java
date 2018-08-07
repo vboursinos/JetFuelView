@@ -107,9 +107,9 @@ public class JetFuelView extends Application {
     public void stop() {
         try {
             super.stop();
-            ProcessService processService = (ProcessService) applicationContext.getBean("processService");
-            SpringApplication.exit(applicationContext);
-            processService.shutdownAllProcess();
+//            ProcessService processService = (ProcessService) applicationContext.getBean("processService");
+//            SpringApplication.exit(applicationContext);
+//            processService.shutdownAllProcess();
             Platform.exit();
             Thread.sleep(1000);
             System.exit(0);
