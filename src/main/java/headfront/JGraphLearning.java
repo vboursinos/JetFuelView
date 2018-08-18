@@ -1,11 +1,8 @@
 package headfront;
 
-import com.mxgraph.model.mxCell;
-import com.mxgraph.model.mxGeometry;
 import com.mxgraph.swing.handler.mxGraphHandler;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
-import com.mxgraph.util.mxRectangle;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxStylesheet;
@@ -44,17 +41,17 @@ public class JGraphLearning extends JFrame {
         Object user = graph.insertVertex(defaultParent, null, "ProcessFFT", 20, 20, 50, 50, "user");
         Object jetFuel = graph.insertVertex(defaultParent, null, "DeepakJetFuel", 150, 20, 50, 50, "jetFuel");
         Object group = graph.insertVertex(defaultParent, null, "Main", 240, 150,
-                 (width + yPadding)*2,
-                (((allAmpsServer.length + 1)/2) * (height + xPadding)) + (starty), "group");
+                (width + yPadding) * 2,
+                (((allAmpsServer.length + 1) / 2) * (height + xPadding)) + (starty), "group");
         int count = 0;
-        for (int i = 0; i < allAmpsServer.length; i ++) {
+        for (int i = 0; i < allAmpsServer.length; i++) {
             final Object ampsSever = graph.insertVertex(group, allAmpsServer[i], allAmpsServer[i], startx, starty, width, height, "ampsSever");
             count++;
-            if (count == 2){
+            if (count == 2) {
                 count = 0;
                 startx = 20;
                 starty = starty + height + yPadding;
-            }else {
+            } else {
                 startx = startx + width + xPadding;
             }
             createdServers.put(allAmpsServer[i], ampsSever);
@@ -65,7 +62,7 @@ public class JGraphLearning extends JFrame {
         graph.insertEdge(defaultParent, "3", "", jetFuel, user, "link");
         graph.insertEdge(group, "4", "", createdServers.get(allAmpsServer[0]), createdServers.get(allAmpsServer[1]), "link");
         graph.insertEdge(group, "5", "", createdServers.get(allAmpsServer[1]), createdServers.get(allAmpsServer[0]), "link");
-        
+
         graph.getModel().endUpdate();
         mxGraphComponent graphComponent = new mxGraphComponent(graph) {
             private static final long serialVersionUID = 1821677322838455152L;
@@ -164,8 +161,8 @@ public class JGraphLearning extends JFrame {
         style.put(mxConstants.STYLE_STROKEWIDTH, 2);
         style.put(mxConstants.STYLE_STROKECOLOR, mxUtils.getHexColorString(new Color(0, 0, 170)));
         style.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_RECTANGLE);
-        style.put(mxConstants.STYLE_AUTOSIZE,1);
-        style.put(mxConstants.STYLE_RESIZABLE,1);
+        style.put(mxConstants.STYLE_AUTOSIZE, 1);
+        style.put(mxConstants.STYLE_RESIZABLE, 1);
         // label position
         style.put(mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_TOP);
         style.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_BOTTOM);
