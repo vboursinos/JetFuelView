@@ -1,4 +1,4 @@
-package headfront;
+package headfront.graph;
 
 import com.mxgraph.io.mxCodec;
 import com.mxgraph.swing.mxGraphComponent;

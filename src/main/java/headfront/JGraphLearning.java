@@ -1,15 +1,18 @@
 package headfront;
 
+import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.handler.mxGraphHandler;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxStylesheet;
+import headfront.graph.FileUtil;
 import headfront.graph.JetFuelGraph;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -28,7 +31,7 @@ public class JGraphLearning extends JFrame {
         stylesheet.putCellStyle("group", createGroupStyle());
         stylesheet.putCellStyle("link", createAgentLinkStyle());
         stylesheet.putCellStyle("jetFuel", createJetfuelStyle());
-        stylesheet.putCellStyle("ampsSever", createAmpServerStyle());
+        stylesheet.putCellStyle("ampsServer", createAmpServerStyle());
         graph.getModel().beginUpdate();
         Map<String, Object> createdServers = new HashMap<>();
         int startx = 20;
@@ -45,7 +48,7 @@ public class JGraphLearning extends JFrame {
                 (((allAmpsServer.length + 1) / 2) * (height + xPadding)) + (starty), "group");
         int count = 0;
         for (int i = 0; i < allAmpsServer.length; i++) {
-            final Object ampsSever = graph.insertVertex(group, allAmpsServer[i], allAmpsServer[i], startx, starty, width, height, "ampsSever");
+            final Object ampsSever = graph.insertVertex(group, allAmpsServer[i], allAmpsServer[i], startx, starty, width, height, "ampsServer");
             count++;
             if (count == 2) {
                 count = 0;
@@ -77,7 +80,7 @@ public class JGraphLearning extends JFrame {
                 };
             }
         };
-        configureGraphComponent(graphComponent);
+        configureGraphComponent(graphComponent, graph);
 
         JPanel canvasPanel = new JPanel(new BorderLayout());
         canvasPanel.add(graphComponent, BorderLayout.CENTER);
@@ -107,12 +110,42 @@ public class JGraphLearning extends JFrame {
      *
      * @param graphComponent
      */
-    private void configureGraphComponent(mxGraphComponent graphComponent) {
+    private void configureGraphComponent(mxGraphComponent graphComponent, mxGraph model) {
         graphComponent.getViewport().setOpaque(true);
         graphComponent.getViewport().setBackground(Color.WHITE);
         graphComponent.setConnectable(false);
         graphComponent.setToolTips(true);
         ToolTipManager.sharedInstance().registerComponent(graphComponent);
+        graphComponent.getGraphControl().addMouseListener(new MouseAdapter() {
+
+            public void mouseReleased(MouseEvent e) {
+                mxCell cell = (mxCell) graphComponent.getCellAt(e.getX(), e.getY());
+
+                if (cell != null) {
+                    if (e.isPopupTrigger()||SwingUtilities.isRightMouseButton(e)) {
+                        JPopupMenu menu = new JPopupMenu();
+                        if (cell.getStyle().equals("ampsServer")) {
+//                            System.out.println("cell=" + model.getLabel(cell));
+                            JMenuItem startJetFuelExplorer = new JMenuItem("Start JetFuel Explorer");
+                            startJetFuelExplorer.addActionListener(et -> System.out.println("Start JetFuel Explorer"));
+                            menu.add(startJetFuelExplorer);
+                        }
+                        JMenuItem properties = new JMenuItem("Properties");
+                        properties.addActionListener(et -> System.out.println("Properties"));
+                        menu.add(properties);
+                        menu.show(graphComponent, e.getX(), e.getY());
+                    }
+                }
+            }
+        });
+//        graphComponent.getGraphControl().addMouseListener(new MouseAdapter() {
+//            public void mouseReleased(MouseEvent e) {
+////                if (e.isPopupTrigger()) {
+//
+//
+////                }
+//            }
+//        });
     }
 
     /**
