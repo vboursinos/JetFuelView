@@ -23,6 +23,7 @@ public class JGraphLearning extends JFrame {
     public JGraphLearning() {
         super("JGraphXLearning2");
         mxGraph graph = new mxGraph();
+
         configureGraph(graph);
         Object defaultParent = graph.getDefaultParent();
         mxStylesheet stylesheet = graph.getStylesheet();
@@ -54,14 +55,13 @@ public class JGraphLearning extends JFrame {
                     protected boolean shouldRemoveCellFromParent(Object parent, Object[] cells, MouseEvent e) {
                         return false;
                     }
-
                 };
             }
         };
         configureGraphComponent(graphComponent);
 
-        JPanel canvasPanel = new JPanel();
-        canvasPanel.add(graphComponent);
+        JPanel canvasPanel = new JPanel(new BorderLayout());
+        canvasPanel.add(graphComponent, BorderLayout.CENTER);
 
         JButton save = new JButton("Save");
         save.addActionListener(l -> {
@@ -77,10 +77,9 @@ public class JGraphLearning extends JFrame {
         JPanel buttonPanel = new JPanel(buttonLayout);
         buttonPanel.add(save);
         buttonPanel.add(load);
-        JPanel mainPanel= new JPanel(new BorderLayout());
-        mainPanel.add(canvasPanel, "Center");
-        mainPanel.add(buttonPanel, "South");
-//        layout.addLayoutComponent(, "");
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.add(canvasPanel, BorderLayout.CENTER);
+        mainPanel.add(buttonPanel, BorderLayout.PAGE_END);
         setContentPane(mainPanel);
     }
 
@@ -116,6 +115,8 @@ public class JGraphLearning extends JFrame {
         graphComponent.getViewport().setOpaque(true);
         graphComponent.getViewport().setBackground(Color.WHITE);
         graphComponent.setConnectable(false);
+        graphComponent.setToolTips(true);
+        ToolTipManager.sharedInstance().registerComponent(graphComponent);
     }
 
     /**
