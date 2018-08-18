@@ -1,30 +1,30 @@
 package headfront;
 
+import com.mxgraph.model.mxCell;
+import com.mxgraph.model.mxGeometry;
 import com.mxgraph.swing.handler.mxGraphHandler;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
+import com.mxgraph.util.mxRectangle;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxStylesheet;
+import headfront.graph.JetFuelGraph;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 
 public class JGraphLearning extends JFrame {
-    /**
-     * Create all required styles.
-     * Create a three node graph with an inner node.
-     * Extend the {@link mxGraphComponent} so that inner vertex cannot be dragged
-     * outside their parent.
-     */
+
     public JGraphLearning() {
         super("JGraphXLearning2");
-        mxGraph graph = new mxGraph();
+        mxGraph graph = new JetFuelGraph();
 
-        configureGraph(graph);
         Object defaultParent = graph.getDefaultParent();
         mxStylesheet stylesheet = graph.getStylesheet();
         stylesheet.putCellStyle("user", createUserStyle());
@@ -33,17 +33,39 @@ public class JGraphLearning extends JFrame {
         stylesheet.putCellStyle("jetFuel", createJetfuelStyle());
         stylesheet.putCellStyle("ampsSever", createAmpServerStyle());
         graph.getModel().beginUpdate();
+        Map<String, Object> createdServers = new HashMap<>();
+        int startx = 20;
+        int starty = 35;
+        int width = 200;
+        int height = 40;
+        int xPadding = 50;
+        int yPadding = 50;
+        String[] allAmpsServer = {"PRIMARYLDN", "BACKUPLDN", "PRIMARYFFT", "BACKUPFFT"};
         Object user = graph.insertVertex(defaultParent, null, "ProcessFFT", 20, 20, 50, 50, "user");
         Object jetFuel = graph.insertVertex(defaultParent, null, "DeepakJetFuel", 150, 20, 50, 50, "jetFuel");
-        Object group = graph.insertVertex(defaultParent, null, "Main", 240, 150, 10, 10, "group");
-        Object ampsServer = graph.insertVertex(group, null, "PRIMARYLDN", 10, 35, 100, 20, "ampsSever");
-        Object ampsServer2 = graph.insertVertex(group, null, "BACKUPLDN", 250, 35, 100, 20, "ampsSever");
-//        graph.insertEdge(defaultParent, null, "", user, group, "agent");
-        graph.insertEdge(defaultParent, "1", "", user, ampsServer, "link");
+        Object group = graph.insertVertex(defaultParent, null, "Main", 240, 150,
+                 (width + yPadding)*2,
+                (((allAmpsServer.length + 1)/2) * (height + xPadding)) + (starty), "group");
+        int count = 0;
+        for (int i = 0; i < allAmpsServer.length; i ++) {
+            final Object ampsSever = graph.insertVertex(group, allAmpsServer[i], allAmpsServer[i], startx, starty, width, height, "ampsSever");
+            count++;
+            if (count == 2){
+                count = 0;
+                startx = 20;
+                starty = starty + height + yPadding;
+            }else {
+                startx = startx + width + xPadding;
+            }
+            createdServers.put(allAmpsServer[i], ampsSever);
+        }
+
+        graph.insertEdge(defaultParent, "1", "", user, createdServers.get(allAmpsServer[0]), "link");
         graph.insertEdge(defaultParent, "2", "", user, jetFuel, "link");
         graph.insertEdge(defaultParent, "3", "", jetFuel, user, "link");
-        graph.insertEdge(group, "4", "", ampsServer, ampsServer2, "link");
-        graph.insertEdge(group, "5", "", ampsServer2, ampsServer, "link");
+        graph.insertEdge(group, "4", "", createdServers.get(allAmpsServer[0]), createdServers.get(allAmpsServer[1]), "link");
+        graph.insertEdge(group, "5", "", createdServers.get(allAmpsServer[1]), createdServers.get(allAmpsServer[0]), "link");
+        
         graph.getModel().endUpdate();
         mxGraphComponent graphComponent = new mxGraphComponent(graph) {
             private static final long serialVersionUID = 1821677322838455152L;
@@ -84,30 +106,7 @@ public class JGraphLearning extends JFrame {
     }
 
     /**
-     * General graph settings.
-     *
-     * @param graph the graph to configure.
-     */
-    private void configureGraph(mxGraph graph) {
-        graph.setResetEdgesOnMove(true);
-        graph.setCellsResizable(false);
-        graph.setAutoSizeCells(true);
-        graph.setCellsEditable(false);
-        graph.setEdgeLabelsMovable(false);
-        graph.setDisconnectOnMove(false);
-        graph.setKeepEdgesInForeground(true);
-        graph.getSelectionModel().setSingleSelection(false);
-        graph.setAllowDanglingEdges(false);
-
-        graph.setEnabled(false);
-        graph.setConstrainChildren(true);
-        graph.setExtendParents(true);
-        graph.setExtendParentsOnAdd(true);
-        graph.setDefaultOverlap(0);
-    }
-
-    /**
-     * General graph component settings.
+     * General JetFuelGraph component settings.
      *
      * @param graphComponent
      */
@@ -165,6 +164,8 @@ public class JGraphLearning extends JFrame {
         style.put(mxConstants.STYLE_STROKEWIDTH, 2);
         style.put(mxConstants.STYLE_STROKECOLOR, mxUtils.getHexColorString(new Color(0, 0, 170)));
         style.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_RECTANGLE);
+        style.put(mxConstants.STYLE_AUTOSIZE,1);
+        style.put(mxConstants.STYLE_RESIZABLE,1);
         // label position
         style.put(mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_TOP);
         style.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_BOTTOM);
