@@ -1,4 +1,4 @@
-package headfront.graph;
+package headfront.jetfuelview.graph;
 
 import com.mxgraph.view.mxGraph;
 
@@ -26,8 +26,6 @@ public class JetFuelGraph extends mxGraph {
 
     @Override
     public String getToolTipForCell(Object cell) {
-//        return super.getToolTipForCell(cell);
-//if (cell instanceof)
-        return "Deepak";
+        return super.getToolTipForCell(cell);
     }
 }

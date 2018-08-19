@@ -1,4 +1,4 @@
-package headfront.graph;
+package headfront.jetfuelview.graph;
 
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxUtils;
@@ -21,6 +21,8 @@ public class Styles {
     public static final String AMPS_SERVER_GOOD = "AMPS_SERVER_GOOD";
     public static final String AMPS_SERVER_BAD = "AMPS_SERVER_BAD";
     public static final String AMPS_GROUP = "AMPS_GROUP";
+    public static final String AMPS_COMPONENT_GOOD = "AMPS_COMPONENT_GOOD";
+    public static final String AMPS_COMPONENT_BAD = "AMPS_COMPONENT_BAD";
 
 
     public static void registerStyles(mxStylesheet stylesheet) {
@@ -29,6 +31,7 @@ public class Styles {
         stylesheet.putCellStyle(AMPS_LINK_GOOD, createAmpsGoodLinktyle());
         stylesheet.putCellStyle(JETFUEL_CONNECTED, createConnectedJetfuelStyle());
         stylesheet.putCellStyle(AMPS_SERVER_GOOD, createAmpsGoodServerStyle());
+        stylesheet.putCellStyle(AMPS_COMPONENT_GOOD, createComponentGoodStyle());
     }
 
     private static Hashtable<String, Object> createConnectedUserStyle() {
@@ -47,6 +50,25 @@ public class Styles {
         style.put(mxConstants.SHAPE_IMAGE, "/images/client.png");
         return style;
     }
+
+    private static Hashtable<String, Object> createComponentGoodStyle() {
+        Hashtable<String, Object> style = new Hashtable<>();
+        style.put(mxConstants.STYLE_FILLCOLOR, mxUtils.getHexColorString(Color.WHITE));
+        style.put(mxConstants.STYLE_STROKEWIDTH, 2);
+        style.put(mxConstants.STYLE_STROKECOLOR, mxUtils.getHexColorString(new Color(0, 0, 170)));
+        style.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_IMAGE);
+        // label position
+        style.put(mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_BOTTOM);
+        style.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_TOP);
+        // font
+        style.put(mxConstants.STYLE_FONTSIZE, 14);
+        style.put(mxConstants.STYLE_FONTSTYLE, mxConstants.FONT_BOLD);
+        //image
+        style.put(mxConstants.SHAPE_IMAGE, "/images/component.png");
+        return style;
+    }
+
+
 
     private static Hashtable<String, Object> createConnectedJetfuelStyle() {
         Hashtable<String, Object> style = new Hashtable<>();

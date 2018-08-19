@@ -1,4 +1,4 @@
-package headfront.graph;
+package headfront.jetfuelview.graph;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.handler.mxGraphHandler;
@@ -10,7 +10,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import static headfront.graph.Styles.AMPS_SERVER_GOOD;
+import static headfront.jetfuelview.graph.Styles.AMPS_SERVER_GOOD;
 
 /**
  * Created by Deepak on 19/08/2018.

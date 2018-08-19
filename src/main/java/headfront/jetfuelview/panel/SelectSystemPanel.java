@@ -1,7 +1,6 @@
 package headfront.jetfuelview.panel;
 
 import headfront.guiwidgets.PopUpDialog;
-import headfront.jetfuelview.JetFuelView;
 import headfront.jetfuelview.util.TextUtils;
 import headfront.utils.FileUtils;
 import headfront.utils.StringUtils;
@@ -12,12 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.effect.Blend;
-import javafx.scene.effect.BlendMode;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.InnerShadow;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import org.controlsfx.control.MaskerPane;
 import org.slf4j.Logger;

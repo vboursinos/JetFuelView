@@ -108,7 +108,7 @@ public class JetFuelView extends Application {
     }
 
     private void createMainStage() {
-        SystemViewPanel systemViewPanel = new SystemViewPanel(environment);
+        SystemViewPanel systemViewPanel = new SystemViewPanel(environment, propertiesFile, username, credential);
         Scene mainScene = new Scene(systemViewPanel.getMainPane());
         mainScene.getStylesheets().add("fx.css");
         ServiceLoader<FXConfiguraion> configurationServiceLoader = ServiceLoader.load(FXConfiguraion.class);
@@ -123,7 +123,7 @@ public class JetFuelView extends Application {
 
         String title = "JetFuelView - " + version  + " [Environment - " + environment + "]";
         mainStage.setTitle(title);
-        mainStage.setWidth(1000);
+        mainStage.setWidth(1200);
         mainStage.setHeight(900);
         mainStage.getIcons().add(jetfuelTitlebarImage);
         mainStage.show();

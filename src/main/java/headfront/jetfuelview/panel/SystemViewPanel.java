@@ -1,7 +1,7 @@
 package headfront.jetfuelview.panel;
 
 import com.mxgraph.swing.mxGraphComponent;
-import headfront.graph.*;
+import headfront.jetfuelview.graph.*;
 import headfront.jetfuelview.util.TextUtils;
 import javafx.embed.swing.SwingNode;
 import javafx.geometry.Insets;
@@ -27,16 +27,23 @@ public class SystemViewPanel {
     private static final Logger LOG = LoggerFactory.getLogger(SystemViewPanel.class);
     private BorderPane mainPane = new BorderPane();
     private String environment;
+    private String propertiesFile;
+    private final String username;
+    private final String credentials;
     private static final String FILE_SUFFIX = "-JetFuelView.xml";
+    private  JetFuelGraphModel jetFuelGraphModel = null;
 
-    public SystemViewPanel(String env) {
-        this.environment = env;
+    public SystemViewPanel(String environment, String propertiesFile, String username, String credentials) {
+        this.environment = environment;
+        this.propertiesFile = propertiesFile;
+        this.username = username;
+        this.credentials = credentials;
         JetFuelGraph graph = new JetFuelGraph();
         Styles.registerStyles(graph.getStylesheet());
         mxGraphComponent graphComponent = new JetFuelGraphComponent(graph);
         createMainPanel(graphComponent);
-        JetFuelGraphRenderer render = new JetFuelGraphRenderer(graph);
-        render.draw();
+        jetFuelGraphModel = new JetFuelGraphModel(graph, propertiesFile, username, credentials);
+        FileUtil.loadGraph(graphComponent, environment + FILE_SUFFIX);
     }
 
     private void createMainPanel(mxGraphComponent graphComponent) {
@@ -52,16 +59,22 @@ public class SystemViewPanel {
                 FileUtil.saveGraph(graphComponent, environment + FILE_SUFFIX);
             });
         });
-        Button load = new Button("Load");
+        Button load = new Button("Load from Disk ");
         load.setOnAction(l -> {
             SwingUtilities.invokeLater(() -> {
                 FileUtil.loadGraph(graphComponent, environment + FILE_SUFFIX);
             });
         });
+        Button loadFromSever = new Button("Load from Server ");
+        loadFromSever.setOnAction(l -> {
+            SwingUtilities.invokeLater(() -> {
+                jetFuelGraphModel.updateFromServer();
+            });
+        });
 
         HBox buttonBox = new HBox();
         buttonBox.setPadding(new Insets(5, 5, 5, 5));
-        buttonBox.getChildren().addAll(save, load);
+        buttonBox.getChildren().addAll(save, load, loadFromSever);
         buttonBox.setAlignment(Pos.BOTTOM_CENTER);
         buttonBox.spacingProperty().setValue(10);
         final Text text = TextUtils.createText("JetFuelView showing system view", "fancytextLarge");
