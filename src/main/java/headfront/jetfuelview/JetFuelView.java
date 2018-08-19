@@ -2,7 +2,8 @@ package headfront.jetfuelview;
 
 import headfront.dataexplorer.FXConfiguraion;
 import headfront.dataexplorer.JetFuelDataExplorerProperties;
-import headfront.jetfuelview.util.SelectSystem;
+import headfront.jetfuelview.panel.SelectSystemPanel;
+import headfront.jetfuelview.panel.SystemViewPanel;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -77,7 +78,7 @@ public class JetFuelView extends Application {
 
     private Parent createLogonPanel() {
         BorderPane borderPane = new BorderPane();
-        borderPane.setCenter(new SelectSystem(this::shutDownDataExplorer, this::loggedOn).getMainPane());
+        borderPane.setCenter(new SelectSystemPanel(this::shutDownDataExplorer, this::loggedOn).getMainPane());
         return borderPane;
     }
 
@@ -100,7 +101,8 @@ public class JetFuelView extends Application {
     }
 
     private void createMainStage() {
-        Scene mainScene = new Scene(createMainPanel());
+        SystemViewPanel systemViewPanel = new SystemViewPanel();
+        Scene mainScene = new Scene(systemViewPanel.getMainPane());
         mainScene.getStylesheets().add("fx.css");
         ServiceLoader<FXConfiguraion> configurationServiceLoader = ServiceLoader.load(FXConfiguraion.class);
         for (FXConfiguraion fxsamplerConfiguration : configurationServiceLoader) {
@@ -111,7 +113,8 @@ public class JetFuelView extends Application {
         }
         mainStage = new Stage();
         mainStage.setScene(mainScene);
-        String title = "JetFuelView - " + version  + " Environment - " + logonDetails.get(0);
+        String env = logonDetails.get(0).replace(".properties","");
+        String title = "JetFuelView - " + version  + " [Environment - " + env + "]";
         mainStage.setTitle(title);
         mainStage.setWidth(1000);
         mainStage.setHeight(900);

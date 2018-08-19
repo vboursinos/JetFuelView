@@ -8,7 +8,7 @@ import com.mxgraph.view.mxGraph;
 public class JetFuelGraph extends mxGraph {
     public JetFuelGraph() {
         setResetEdgesOnMove(true);
-        setCellsResizable(true);
+        setCellsResizable(false);
         setAutoSizeCells(true);
         setCellsEditable(false);
         setEdgeLabelsMovable(false);

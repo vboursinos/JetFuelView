@@ -1,4 +1,4 @@
-package headfront.jetfuelview.util;
+package headfront.jetfuelview.panel;
 
 import headfront.guiwidgets.PopUpDialog;
 import headfront.jetfuelview.JetFuelView;
@@ -36,9 +36,9 @@ import java.util.stream.Collectors;
 /**
  * Created by Deepak on 19/08/2018.
  */
-public class SelectSystem {
+public class SelectSystemPanel {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JetFuelView.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SelectSystemPanel.class);
     private final ComboBox<String> comboBox = new ComboBox<>();
     private final TextField usernameTextField = new TextField();
     private final PasswordField passwordTextField = new PasswordField();
@@ -47,7 +47,7 @@ public class SelectSystem {
     private final BorderPane mainPane = new BorderPane();
     private Consumer<List<String>> validLogon;
 
-    public SelectSystem(Runnable shutdownProcess, Consumer<List<String>> validLogon) {
+    public SelectSystemPanel(Runnable shutdownProcess, Consumer<List<String>> validLogon) {
         this.validLogon = validLogon;
         final List<Path> files = FileUtils.getFiles("config", "properties");
         if (files.size() == 0) {
