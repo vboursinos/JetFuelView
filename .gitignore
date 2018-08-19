@@ -9,3 +9,5 @@ bookmarks
 *.log
 *.zip
 out
+PROD-JetFuelView.xml
+UAT-JetFuelView.xml

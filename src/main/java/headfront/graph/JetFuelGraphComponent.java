@@ -10,6 +10,8 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import static headfront.graph.Styles.AMPS_SERVER_GOOD;
+
 /**
  * Created by Deepak on 19/08/2018.
  */
@@ -46,7 +48,7 @@ public class JetFuelGraphComponent extends mxGraphComponent {
                 if (cell != null) {
                     if (e.isPopupTrigger() || SwingUtilities.isRightMouseButton(e)) {
                         JPopupMenu menu = new JPopupMenu();
-                        if (cell.getStyle().equals("ampsServer")) {
+                        if (cell.getStyle().equals(AMPS_SERVER_GOOD)) {
                             System.out.println("cell=" + model.getLabel(cell));
                             JMenuItem startJetFuelExplorer = new JMenuItem("Start JetFuel Explorer");
                             startJetFuelExplorer.addActionListener(et -> System.out.println("Start JetFuel Explorer"));

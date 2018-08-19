@@ -34,6 +34,10 @@ public class JetFuelView extends Application {
     private Stage mainStage= null;
     private Object version = 0;
     private List<String> logonDetails;
+    private String environment = "";
+    private String username = "";
+    private String credential = "";
+    private String propertiesFile = "";
 
     public static void main(String[] args) {
         launch(args);
@@ -94,14 +98,17 @@ public class JetFuelView extends Application {
         System.exit(0);
     }
     private void loggedOn(List<String> logonDetails) {
-        this.logonDetails = logonDetails;
+        environment = logonDetails.get(0).replace(".properties","");
+        propertiesFile = logonDetails.get(0);
+        username = logonDetails.get(1);
+        credential = logonDetails.get(2);
         LOG.info("Starting JetFuelView");
         createMainStage();
         logonStage.close();
     }
 
     private void createMainStage() {
-        SystemViewPanel systemViewPanel = new SystemViewPanel();
+        SystemViewPanel systemViewPanel = new SystemViewPanel(environment);
         Scene mainScene = new Scene(systemViewPanel.getMainPane());
         mainScene.getStylesheets().add("fx.css");
         ServiceLoader<FXConfiguraion> configurationServiceLoader = ServiceLoader.load(FXConfiguraion.class);
@@ -113,8 +120,8 @@ public class JetFuelView extends Application {
         }
         mainStage = new Stage();
         mainStage.setScene(mainScene);
-        String env = logonDetails.get(0).replace(".properties","");
-        String title = "JetFuelView - " + version  + " [Environment - " + env + "]";
+
+        String title = "JetFuelView - " + version  + " [Environment - " + environment + "]";
         mainStage.setTitle(title);
         mainStage.setWidth(1000);
         mainStage.setHeight(900);
