@@ -8,6 +8,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -28,6 +29,10 @@ public class JetFuelView extends Application {
 
     private static final Logger LOG = LoggerFactory.getLogger(JetFuelView.class);
     public final static Image jetfuelTitlebarImage = new Image("images/icons/JetFuelMediumNoBg2.png");
+    private Stage logonStage= null;
+    private Stage mainStage= null;
+    private Object version = 0;
+    private List<String> logonDetails;
 
     public static void main(String[] args) {
         launch(args);
@@ -35,7 +40,7 @@ public class JetFuelView extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Object version = JetFuelDataExplorerProperties.getInstance().getProperty("version");
+        version = JetFuelDataExplorerProperties.getInstance().getProperty("version");
         LOG.info("Starting Data Explorer version " + version);
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
             LOG.error("Caught Exception on Thread " + t, e);
@@ -43,7 +48,7 @@ public class JetFuelView extends Application {
 
         try {
             showSplash(stage);
-            Scene scene = new Scene(createMainPanel());
+            Scene scene = new Scene(createLogonPanel());
             scene.getStylesheets().add("fx.css");
             ServiceLoader<FXConfiguraion> configurationServiceLoader = ServiceLoader.load(FXConfiguraion.class);
             for (FXConfiguraion fxsamplerConfiguration : configurationServiceLoader) {
@@ -59,6 +64,7 @@ public class JetFuelView extends Application {
             stage.setHeight(200);
             stage.setResizable(false);
             stage.getIcons().add(jetfuelTitlebarImage);
+            logonStage = stage;
 
             stage.setOnCloseRequest(e -> {
                 shutDownDataExplorer();
@@ -69,9 +75,15 @@ public class JetFuelView extends Application {
         }
     }
 
+    private Parent createLogonPanel() {
+        BorderPane borderPane = new BorderPane();
+        borderPane.setCenter(new SelectSystem(this::shutDownDataExplorer, this::loggedOn).getMainPane());
+        return borderPane;
+    }
+
     private Parent createMainPanel() {
         BorderPane borderPane = new BorderPane();
-        borderPane.setCenter(new SelectSystem().getMainPane());
+        borderPane.setCenter(new Button("YESSSSS"));
         return borderPane;
     }
 
@@ -79,6 +91,34 @@ public class JetFuelView extends Application {
         LOG.error("Shuting down JetFuelView");
         Platform.exit();
         System.exit(0);
+    }
+    private void loggedOn(List<String> logonDetails) {
+        this.logonDetails = logonDetails;
+        LOG.info("Starting JetFuelView");
+        createMainStage();
+        logonStage.close();
+    }
+
+    private void createMainStage() {
+        Scene mainScene = new Scene(createMainPanel());
+        mainScene.getStylesheets().add("fx.css");
+        ServiceLoader<FXConfiguraion> configurationServiceLoader = ServiceLoader.load(FXConfiguraion.class);
+        for (FXConfiguraion fxsamplerConfiguration : configurationServiceLoader) {
+            String stylesheet = fxsamplerConfiguration.getSceneStylesheet();
+            if (stylesheet != null) {
+                mainScene.getStylesheets().add(stylesheet);
+            }
+        }
+        mainStage = new Stage();
+        mainStage.setScene(mainScene);
+        String title = "JetFuelView - " + version  + " Environment - " + logonDetails.get(0);
+        mainStage.setTitle(title);
+        mainStage.setWidth(1000);
+        mainStage.setHeight(900);
+        mainStage.getIcons().add(jetfuelTitlebarImage);
+        mainStage.show();
+        mainStage.toFront();
+
     }
 
     private void showSplash(Stage primaryStage) {
