@@ -3,6 +3,7 @@ package headfront.jetfuelview.graph;
 import headfront.convertor.JacksonJsonConvertor;
 import headfront.utils.MessageUtil;
 import headfront.utils.StringUtils;
+import headfront.utils.WebServiceRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -25,7 +26,7 @@ public class JetFuelGraphModel {
 
     private static final Logger LOG = LoggerFactory.getLogger(JetFuelGraphModel.class);
 
-    private static final int TIMEOUT_INTERVAL = 1800;
+
     private Map<String, Map<String, Object>> allDataFromServer = new ConcurrentHashMap<>();
     private Set<String> unknownServers = new HashSet<>();
     private Map<String, String> mappedServers = new ConcurrentHashMap<>();
@@ -64,7 +65,7 @@ public class JetFuelGraphModel {
                     String adminPortToLoad = allAdminPorts[i];
                     String metaDatUrl = StringUtils.getAdminUrl(serverToLoad, adminPortToLoad) + ".json";
                     final String serverStats = getServerConfig(metaDatUrl);
-                    if (serverStats.trim().length() > 1) {
+                    if (serverStats != null && serverStats.trim().length() > 1) {
                         updateState(serverStats, serverToLoad);
                     } else {
                         String s = serverToLoad.replaceAll("http://", "");
@@ -181,12 +182,7 @@ public class JetFuelGraphModel {
 
     public String getServerConfig(String url) {
         try {
-            HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-            httpRequestFactory.setConnectionRequestTimeout(TIMEOUT_INTERVAL);
-            httpRequestFactory.setConnectTimeout(TIMEOUT_INTERVAL);
-            httpRequestFactory.setReadTimeout(TIMEOUT_INTERVAL);
-            RestTemplate restTemplate = new RestTemplate(httpRequestFactory);
-            return restTemplate.getForObject(url, String.class);
+            return  WebServiceRequest.doWebRequests(url);
         } catch (Exception e) {
             //LOG.error("Could not process request " + url, e);
         }
