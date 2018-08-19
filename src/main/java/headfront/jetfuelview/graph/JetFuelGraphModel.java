@@ -209,9 +209,9 @@ public class JetFuelGraphModel {
             int ampsGroupX = 100;
             int ampsGroupY = 150;
             Object defaultParent = graph.getDefaultParent();
-        Object user = graph.insertVertex(defaultParent, null, "TraderMark", 20, 20, 50, 50, USER_CONNECTED);
-        Object server = graph.insertVertex(defaultParent, null, "pricePublisher", 130, 20, 50, 50, AMPS_COMPONENT_GOOD);
-        Object jetFuel = graph.insertVertex(defaultParent, null, "DeepakJetFuel", 240, 20, 50, 50, JETFUEL_CONNECTED);
+            Object user = graph.insertVertex(defaultParent, null, "TraderMark", 20, 20, 50, 50, USER_CONNECTED);
+            Object server = graph.insertVertex(defaultParent, null, "pricePublisher", 130, 20, 50, 50, AMPS_COMPONENT_GOOD);
+            Object jetFuel = graph.insertVertex(defaultParent, null, "DeepakJetFuel", 240, 20, 50, 50, JETFUEL_CONNECTED);
             final Collection<Map<String, Object>> values = allDataFromServer.values();
             List<String> ampsGroups = new ArrayList<>();
             Map<String, List<String>> replications = new HashMap<>();
@@ -243,6 +243,14 @@ public class JetFuelGraphModel {
                     ampsGroupX = ampsGroupX + groupWith + 50;
                 }
                 createdGroups.put(groupName, group);
+            }
+            int badAmpsServerX = 500;
+            for (String unknowsAmpsServer : unknownServers) {
+                unknowsAmpsServer = unknowsAmpsServer.replaceAll("tcp://", "");
+                unknowsAmpsServer = unknowsAmpsServer.replaceAll("/amps/json", "");
+                unknowsAmpsServer = "Unreachable " + unknowsAmpsServer;
+                graph.insertVertex(defaultParent, null, unknowsAmpsServer, badAmpsServerX, 20, ampsServerWidth, ampsServerHeight, AMPS_SERVER_BAD);
+                badAmpsServerX = badAmpsServerX + ampsServerWidth + ampsServerPaddingX;
             }
 
             Map<String, Object> createdServers = new HashMap<>();

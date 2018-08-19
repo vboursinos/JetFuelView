@@ -31,6 +31,7 @@ public class Styles {
         stylesheet.putCellStyle(AMPS_LINK_GOOD, createAmpsGoodLinktyle());
         stylesheet.putCellStyle(JETFUEL_CONNECTED, createConnectedJetfuelStyle());
         stylesheet.putCellStyle(AMPS_SERVER_GOOD, createAmpsGoodServerStyle());
+        stylesheet.putCellStyle(AMPS_SERVER_BAD, createAmpsBadServerStyle());
         stylesheet.putCellStyle(AMPS_COMPONENT_GOOD, createComponentGoodStyle());
     }
 
@@ -130,6 +131,26 @@ public class Styles {
         style.put(mxConstants.STYLE_FONTSTYLE, mxConstants.FONT_BOLD);
         //image
         style.put(mxConstants.SHAPE_IMAGE, "/images/ampsServer.png");
+
+        return style;
+    }
+
+    private static Hashtable<String, Object> createAmpsBadServerStyle() {
+        Hashtable<String, Object> style = new Hashtable<>();
+
+        style.put(mxConstants.STYLE_FILLCOLOR, mxUtils.getHexColorString(Color.WHITE));
+        style.put(mxConstants.STYLE_STROKEWIDTH, 2);
+        style.put(mxConstants.STYLE_STROKECOLOR, mxUtils.getHexColorString(new Color(0, 0, 170)));
+        style.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_IMAGE);
+        style.put(mxConstants.STYLE_PERIMETER, mxConstants.PERIMETER_RECTANGLE);
+        // label position
+        style.put(mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_BOTTOM);
+        style.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_TOP);
+        // font
+        style.put(mxConstants.STYLE_FONTSIZE, 14);
+        style.put(mxConstants.STYLE_FONTSTYLE, mxConstants.FONT_BOLD);
+        //image
+        style.put(mxConstants.SHAPE_IMAGE, "/images/ampsServerOff2.png");
 
         return style;
     }
