@@ -4,11 +4,14 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.handler.mxGraphHandler;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
+import headfront.jetfuelview.JetFuelView;
+import headfront.jetfuelview.util.ProcessLauncher;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 import static headfront.jetfuelview.graph.Styles.AMPS_SERVER_GOOD;
 
@@ -51,7 +54,15 @@ public class JetFuelGraphComponent extends mxGraphComponent {
                         if (cell.getStyle().equals(AMPS_SERVER_GOOD)) {
                             System.out.println("cell=" + model.getLabel(cell));
                             JMenuItem startJetFuelExplorer = new JMenuItem("Start JetFuel Explorer");
-                            startJetFuelExplorer.addActionListener(et -> System.out.println("Start JetFuel Explorer"));
+                            startJetFuelExplorer.addActionListener(et -> {
+                                try {
+                                    System.out.println("Start JetFuel Explorer");
+                                    final int exec = ProcessLauncher.exec(JetFuelView.class);
+                                    System.out.println("Started process "  + exec);
+                                } catch (Exception e1) {
+                                    e1.printStackTrace();
+                                }
+                            });
                             menu.add(startJetFuelExplorer);
                         }
                         JMenuItem properties = new JMenuItem("Properties");
