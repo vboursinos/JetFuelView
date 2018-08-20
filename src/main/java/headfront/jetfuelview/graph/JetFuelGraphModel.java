@@ -68,13 +68,12 @@ public class JetFuelGraphModel {
                     if (serverStats != null && serverStats.trim().length() > 1) {
                         updateState(serverStats, serverToLoad);
                     } else {
-                        String s = serverToLoad.replaceAll("http://", "");
-                        s = s.replace("/amps.json", "");
+                        String s = StringUtils.getServerAndPortFromUrl(serverToLoad);
                         final String registeredServer = mappedServers.get(serverToLoad);
                         if (registeredServer != null) {
                             final String[] split = registeredServer.split(SEPARATOR);
                             allDataFromServer.put(registeredServer, createServer(split[1], split[0], "",
-                                    null, null));
+                                    null, null, null));
                         } else {
                             unknownServers.add(s);
                         }
@@ -87,13 +86,14 @@ public class JetFuelGraphModel {
         }).start();
     }
 
-    private Map<String, Object> createServer(String name, String group, String date, Object reps, Object clients) {
+    private Map<String, Object> createServer(String name, String group, String date, Object reps, Object clients, String serverHost) {
         Map<String, Object> server = new HashMap<>();
         server.put("name", name);
         server.put("group", group);
         server.put("connectedTime", date);
         server.put("messagesIn", random.nextInt(1500000));
         server.put("messagesOut", random.nextInt(100000));
+        server.put("serverHost", serverHost);
         List<Map<String, Object>> createdRep = new ArrayList<>();
         if (reps != null) {
             List<Map<String, Object>> repList = (List) reps;
@@ -151,7 +151,7 @@ public class JetFuelGraphModel {
         final String fullServerName = getFullServerName("" + group, "" + name);
         if (!allDataFromServer.containsKey(fullServerName)) {
             allDataFromServer.put(fullServerName, createServer(name.toString(), group.toString(), "",
-                    null, null));
+                    null, null, null));
         }
         return replication;
     }
@@ -175,14 +175,15 @@ public class JetFuelGraphModel {
         final Object clients = MessageUtil.getLeafNode(instance, "clients");
         final Object replication = MessageUtil.getLeafNode(instance, "replication");
         final String fullServerName = getFullServerName("" + group, "" + name);
+        final String serverHost = StringUtils.getServerFromUrl(url);
         allDataFromServer.put(fullServerName, createServer(name.toString(), group.toString(), timestamp.toString(),
-                replication, null));
+                replication, null, serverHost));
         mappedServers.put(url, fullServerName);
     }
 
     public String getServerConfig(String url) {
         try {
-            return  WebServiceRequest.doWebRequests(url);
+            return WebServiceRequest.doWebRequests(url);
         } catch (Exception e) {
             //LOG.error("Could not process request " + url, e);
         }
@@ -209,23 +210,25 @@ public class JetFuelGraphModel {
             Object server = graph.insertVertex(defaultParent, null, "pricePublisher", 130, 20, 50, 50, AMPS_COMPONENT_GOOD);
             Object jetFuel = graph.insertVertex(defaultParent, null, "DeepakJetFuel", 240, 20, 50, 50, JETFUEL_CONNECTED);
             final Collection<Map<String, Object>> values = allDataFromServer.values();
-            List<String> ampsGroups = new ArrayList<>();
             Map<String, List<String>> replications = new HashMap<>();
-            Map<String, String> ampsServerToGroups = new HashMap<>();
+            Map<String, List<String>> groupToAmpsServers = new TreeMap<>();
             values.forEach(map -> {
                 final String newGroup = map.get("group").toString();
-                if (!ampsGroups.contains(newGroup)) {
-                    ampsGroups.add(newGroup);
+                final String newamps = map.get("name").toString();
+                List<String> servers = groupToAmpsServers.get(newGroup);
+                if (servers == null) {
+                    servers = new ArrayList<>();
+                    groupToAmpsServers.putIfAbsent(newGroup, servers);
                 }
-                ampsServerToGroups.put(map.get("name").toString(), newGroup);
+                servers.add(newamps);
+
                 List<Map<String, Object>> reps = (List<Map<String, Object>>) map.get("replication");
                 final List<String> repNames = reps.stream().map(m -> m.get("name").toString()).collect(Collectors.toList());
                 replications.put(map.get("name").toString(), repNames);
             });
             int groupCount = 0;
             Map<String, Object> createdGroups = new HashMap<>();
-            for (int i = 0; i < ampsGroups.size(); i++) {
-                final String groupName = ampsGroups.get(i);
+            for (String groupName : groupToAmpsServers.keySet()) {
                 final int groupWith = (ampsServerWidth + ampsServerPaddingY) * 2;
                 final int groupHeight = ((roughNoOfServersPerGroup / 2) * (ampsServerHeight + ampsServerPaddingX)) + (ampsServerY);
                 Object group = graph.insertVertex(defaultParent, null, groupName, ampsGroupX, ampsGroupY,
@@ -250,20 +253,40 @@ public class JetFuelGraphModel {
             }
 
             Map<String, Object> createdServers = new HashMap<>();
-            int ampsCount = 0;
-            for (String anAmpsSever : ampsServerToGroups.keySet()) {
-                String groupNameForServer = ampsServerToGroups.get(anAmpsSever);
-                final Object ampsSever = graph.insertVertex(createdGroups.get(groupNameForServer),
-                        null, anAmpsSever, ampsServerX, ampsServerY, ampsServerWidth, ampsServerHeight, AMPS_SERVER_GOOD);
-                ampsCount++;
-                if (ampsCount == 2) {
-                    ampsCount = 0;
-                    ampsServerX = 20;
-                    ampsServerY = ampsServerY + ampsServerHeight + ampsServerPaddingY;
-                } else {
-                    ampsServerX = ampsServerX + ampsServerWidth + ampsServerPaddingX;
+            for (Map.Entry<String, List<String>> entry : groupToAmpsServers.entrySet()) {
+                int ampsCount = 0;
+                ampsServerX = 20;
+                ampsServerY = 35;
+                String groupKey = entry.getKey();
+                Object ampsGroupObj = createdGroups.get(groupKey);
+                List<String> allServers = entry.getValue();
+                for (String ampServer : allServers) {
+                    String fullServerName = getFullServerName(groupKey, ampServer);
+                    Map<String, Object> fullServerDetails = allDataFromServer.get(fullServerName);
+                    if (fullServerDetails != null) {
+                        String connectedTime = (String) fullServerDetails.get("connectedTime");
+                        String style = AMPS_SERVER_GOOD;
+                        if (connectedTime != null && connectedTime.length() == 0) {
+                            style = AMPS_SERVER_BAD;
+                        }
+                        String ampsNameToUse = ampServer;
+                        final Object serverHost = fullServerDetails.get("serverHost");
+                        if (serverHost != null){
+                            ampsNameToUse = ampsNameToUse  + "\n(" + serverHost + ")";
+                        }
+                        final Object ampsSever = graph.insertVertex(ampsGroupObj,
+                                null, ampsNameToUse, ampsServerX, ampsServerY, ampsServerWidth, ampsServerHeight, style);
+                        ampsCount++;
+                        if (ampsCount == 2) {
+                            ampsCount = 0;
+                            ampsServerX = 20;
+                            ampsServerY = ampsServerY + ampsServerHeight + ampsServerPaddingY;
+                        } else {
+                            ampsServerX = ampsServerX + ampsServerWidth + ampsServerPaddingX;
+                        }
+                        createdServers.put(ampServer, ampsSever);
+                    }
                 }
-                createdServers.put(anAmpsSever, ampsSever);
             }
 
 //        graph.insertEdge(defaultParent, "1", "", user, createdServers.get(allAmpsServer[0]), AMPS_LINK_GOOD);
