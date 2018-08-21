@@ -57,8 +57,8 @@ public class JetFuelGraphComponent extends mxGraphComponent {
                             startJetFuelExplorer.addActionListener(et -> {
                                 try {
                                     System.out.println("Start JetFuel Explorer");
-                                    final int exec = ProcessLauncher.exec(JetFuelView.class);
-                                    System.out.println("Started process "  + exec);
+                                    ProcessLauncher.exec(JetFuelView.class);
+                                    System.out.println("Started process " );
                                 } catch (Exception e1) {
                                     e1.printStackTrace();
                                 }

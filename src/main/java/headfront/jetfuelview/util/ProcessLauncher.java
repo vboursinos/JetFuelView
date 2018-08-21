@@ -1,13 +1,11 @@
 package headfront.jetfuelview.util;
 
-import headfront.dataexplorer.DataExplorer;
-import javafx.application.Platform;
-
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -15,23 +13,14 @@ import java.util.stream.Collectors;
  */
 public class ProcessLauncher {
 
-    public static int exec(Class klass) throws IOException,
-            InterruptedException {
-//        String javaHome = System.getProperty("java.home");
-//        String javaBin = javaHome +
-//                File.separator + "bin" +
-//                File.separator + "java";
-//        String classpath = System.getProperty("java.class.path");
-//        String className = klass.getCanonicalName();
-//
-//        ProcessBuilder builder = new ProcessBuilder(
-//                javaBin, "-cp", classpath, className);
-//
-//        Process process = builder.start();
-//        process.waitFor();
-//        return process.exitValue
-// ();
+    private static List<Process> activeProcess = new ArrayList();
 
+    public static void killAllChildrenProcess(){
+        activeProcess.forEach(process -> process.destroy());
+        activeProcess.forEach(process -> process.destroyForcibly());
+    }
+
+    public static void exec(Class klass){
         new Thread(() -> {
             try {
                 String classpath = Arrays.stream(((URLClassLoader) Thread.currentThread().getContextClassLoader()).getURLs())
@@ -54,12 +43,12 @@ public class ProcessLauncher {
                         .inheritIO()
                         .start();
                 int exitCode = process.waitFor();
+                activeProcess.add(process);
                 System.out.println("process stopped with exitCode " + exitCode);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }).start();
 
-        return 1;
     }
 }

@@ -23,6 +23,8 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.ServiceLoader;
 
+import static headfront.jetfuelview.util.ProcessLauncher.killAllChildrenProcess;
+
 /**
  * Created by Deepak on 19/08/2018.
  */
@@ -72,6 +74,7 @@ public class JetFuelView extends Application {
             logonStage = stage;
 
             stage.setOnCloseRequest(e -> {
+                killAllChildrenProcess();
                 shutDownDataExplorer();
             });
         } catch (Exception e) {
