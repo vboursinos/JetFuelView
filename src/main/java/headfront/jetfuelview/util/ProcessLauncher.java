@@ -32,19 +32,24 @@ public class ProcessLauncher {
 //        return process.exitValue
 // ();
 
-        Platform.runLater(() -> {
+        new Thread(() -> {
             try {
                 String classpath = Arrays.stream(((URLClassLoader) Thread.currentThread().getContextClassLoader()).getURLs())
                         .map(URL::getFile)
                         .collect(Collectors.joining(File.pathSeparator));
-                
+
                 Process process = new ProcessBuilder(
                         System.getProperty("java.home") + "/bin/java",
-                        "-Dlog4j.configurationFile=log4j2-JetFuel.xml -XX:MaxGCPauseMillis=10 -XX:SurvivorRatio=4 -XX:+UseConcMarkSweepGC",
+                        "-Dlog4j.configurationFile=log4j2-JetFuel.xml",
+                        "-XX:MaxGCPauseMillis=10",
+                        "-XX:SurvivorRatio=4",
+                        "-XX:+UseConcMarkSweepGC",
                         "-classpath",
                         classpath,
                         "headfront.dataexplorer.DataExplorer",
-                        "tcp://192.168.56.101:8001/amps/json 8199 UAT"
+                        "tcp://192.168.56.101:8001/amps/json",
+                        "8199",
+                        "UAT"
                 )
                         .inheritIO()
                         .start();
@@ -53,7 +58,7 @@ public class ProcessLauncher {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        });
+        }).start();
 
         return 1;
     }
