@@ -51,7 +51,7 @@ public class LogonPanel {
         if (files.size() == 0) {
             PopUpDialog.showWarningPopup("No properties found", "No properties founds in folder config", 999999999);
         } else {
-            final Text text = TextUtils.createText("Select Amps system", "fancytextSmaller");
+            final Text text = TextUtils.createText("Select Amps System", "fancytextSmaller");
             BorderPane labelPane = new BorderPane();
             labelPane.setPadding(new Insets(5, 5, 0, 5));
             labelPane.setLeft(jetfuelImage);

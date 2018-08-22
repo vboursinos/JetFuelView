@@ -33,14 +33,15 @@ public class JetFuelView extends Application {
 
     private static final Logger LOG = LoggerFactory.getLogger(JetFuelView.class);
     public final static Image jetfuelTitlebarImage = new Image("images/icons/JetFuelMediumNoBg2.png");
-    private Stage logonStage= null;
-    private Stage mainStage= null;
+    private Stage logonStage = null;
+    private Stage mainStage = null;
     private Object version = 0;
     private List<String> logonDetails;
     private String environment = "";
     private String username = "";
     private String credential = "";
     private String propertiesFile = "";
+    private JetFuelViewActions jetFuelViewActions;
 
     public static void main(String[] args) {
         launch(args);
@@ -66,7 +67,7 @@ public class JetFuelView extends Application {
                 }
             }
             stage.setScene(scene);
-            String title = "JetFuelView - " + version ;
+            String title = "JetFuelView - " + version;
             stage.setTitle(title);
             stage.setWidth(350);
             stage.setHeight(230);
@@ -91,20 +92,23 @@ public class JetFuelView extends Application {
         Platform.exit();
         System.exit(0);
     }
+
     private void loggedOn(List<String> logonDetails) {
-        environment = logonDetails.get(0).replace(".properties","");
+        environment = logonDetails.get(0).replace(".properties", "");
         propertiesFile = logonDetails.get(0);
         username = logonDetails.get(1);
         credential = logonDetails.get(2);
         LOG.info("Starting JetFuelView");
+        jetFuelViewActions = new JetFuelViewActions(environment, this::shutDownJetFuelView);
+        jetFuelViewActions.setHostServices(getHostServices());
         createMainStage();
         logonStage.close();
     }
 
     private void createMainStage() {
         SystemViewPanel systemViewPanel = new SystemViewPanel(environment, propertiesFile, username, credential);
-        JetFuelViewActions jetFuelViewActions = new JetFuelViewActions(GuiUtil.isProd(environment), this::shutDownJetFuelView);
-        jetFuelViewActions.setHostServices(getHostServices());
+        jetFuelViewActions.setGraphComponent(systemViewPanel.getGraphComponent());
+        jetFuelViewActions.setGraphModel(systemViewPanel.getJetFuelGraphModel());
         BorderPane topPanels = new BorderPane();
         topPanels.setTop(jetFuelViewActions.getMenuBar());
         topPanels.setCenter(jetFuelViewActions.getToolBar(GuiUtil.getEnvColour(environment)));
@@ -124,7 +128,7 @@ public class JetFuelView extends Application {
         mainStage = new Stage();
         mainStage.setScene(mainScene);
 
-        String title = "JetFuelView - " + version  + " [Environment - " + environment + "]";
+        String title = "JetFuelView - " + version + " [Environment - " + environment + "]";
         mainStage.setTitle(title);
         mainStage.setWidth(1200);
         mainStage.setHeight(900);

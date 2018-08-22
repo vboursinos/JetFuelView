@@ -1,6 +1,7 @@
 package headfront.jetfuelview.graph;
 
 import headfront.convertor.JacksonJsonConvertor;
+import headfront.jetfuelview.panel.JetFuelViewStatusBar;
 import headfront.utils.MessageUtil;
 import headfront.utils.StringUtils;
 import headfront.utils.WebServiceRequest;
@@ -38,12 +39,15 @@ public class JetFuelGraphModel {
     private String propertiesFile;
     private String username;
     private String credentials;
+    private JetFuelViewStatusBar jetFuelViewStatusBar;
 
-    public JetFuelGraphModel(JetFuelGraph graph, String propertiesFile, String username, String credentials) {
+    public JetFuelGraphModel(JetFuelGraph graph, String propertiesFile, String username, String credentials,
+                             JetFuelViewStatusBar jetFuelViewStatusBar) {
         this.graph = graph;
         this.propertiesFile = propertiesFile;
         this.username = username;
         this.credentials = credentials;
+        this.jetFuelViewStatusBar = jetFuelViewStatusBar;
     }
 
     public void updateFromServer() {
@@ -61,6 +65,7 @@ public class JetFuelGraphModel {
                 allDataFromServer.clear();
                 unknownServers.clear();
                 mappedServers.clear();
+                jetFuelViewStatusBar.clearCount();
                 for (int i = 0; i < allServers.length; i++) {
                     String serverToLoad = allServers[i];
                     String adminPortToLoad = allAdminPorts[i];
@@ -254,6 +259,7 @@ public class JetFuelGraphModel {
                 unknowsAmpsServer = "Unreachable " + StringUtils.getServerAndPortFromUrl(unknowsAmpsServer);
                 graph.insertVertex(defaultParent, null, unknowsAmpsServer, badAmpsServerX, 20, ampsServerWidth, ampsServerHeight, AMPS_SERVER_BAD);
                 badAmpsServerX = badAmpsServerX + ampsServerWidth + ampsServerPaddingX;
+                jetFuelViewStatusBar.incrementInactiveRowCount();
             }
 
             Map<String, Object> createdServers = new HashMap<>();
@@ -289,6 +295,7 @@ public class JetFuelGraphModel {
                             ampsServerX = ampsServerX + ampsServerWidth + ampsServerPaddingX;
                         }
                         createdServers.put(ampServer, ampsSever);
+                        jetFuelViewStatusBar.incrementActiveRowCount();
                     }
                 }
             }

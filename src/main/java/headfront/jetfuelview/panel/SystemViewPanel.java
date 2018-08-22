@@ -12,6 +12,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import org.controlsfx.control.NotificationPane;
 import org.controlsfx.tools.Borders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,19 +31,24 @@ public class SystemViewPanel {
     private String propertiesFile;
     private final String username;
     private final String credentials;
-    private static final String FILE_SUFFIX = "-JetFuelView.xml";
-    private  JetFuelGraphModel jetFuelGraphModel = null;
+    public static final String FILE_SUFFIX = "-JetFuelView.xml";
+    private JetFuelGraphModel jetFuelGraphModel = null;
+    private mxGraphComponent graphComponent;
+    private JetFuelGraph graph;
+    private JetFuelViewStatusBar jetFuelViewStatusBar;
 
     public SystemViewPanel(String environment, String propertiesFile, String username, String credentials) {
         this.environment = environment;
         this.propertiesFile = propertiesFile;
         this.username = username;
         this.credentials = credentials;
-        JetFuelGraph graph = new JetFuelGraph();
+        graph = new JetFuelGraph();
         Styles.registerStyles(graph.getStylesheet());
-        mxGraphComponent graphComponent = new JetFuelGraphComponent(graph);
+        graphComponent = new JetFuelGraphComponent(graph);
+        jetFuelViewStatusBar = new JetFuelViewStatusBar(new NotificationPane());
+        jetFuelViewStatusBar.showWelcomeMessage();
+        jetFuelGraphModel = new JetFuelGraphModel(graph, propertiesFile, username, credentials, jetFuelViewStatusBar);
         createMainPanel(graphComponent);
-        jetFuelGraphModel = new JetFuelGraphModel(graph, propertiesFile, username, credentials);
         FileUtil.loadGraph(graphComponent, environment + FILE_SUFFIX);
     }
 
@@ -52,51 +58,34 @@ public class SystemViewPanel {
             swingNode.setContent(graphComponent);
 
         });
-
-        Button save = new Button("Save");
-        save.setOnAction(l -> {
-            SwingUtilities.invokeLater(() -> {
-                FileUtil.saveGraph(graphComponent, environment + FILE_SUFFIX);
-            });
-        });
-        Button load = new Button("Load from Disk ");
-        load.setOnAction(l -> {
-            SwingUtilities.invokeLater(() -> {
-                FileUtil.loadGraph(graphComponent, environment + FILE_SUFFIX);
-            });
-        });
-        Button loadFromSever = new Button("Load from Server ");
-        loadFromSever.setOnAction(l -> {
-            SwingUtilities.invokeLater(() -> {
-                jetFuelGraphModel.updateFromServer();
-            });
-        });
-
-        HBox buttonBox = new HBox();
-        buttonBox.setPadding(new Insets(5, 5, 5, 5));
-        buttonBox.getChildren().addAll(save, load, loadFromSever);
-        buttonBox.setAlignment(Pos.BOTTOM_CENTER);
-        buttonBox.spacingProperty().setValue(10);
-        final Text text = TextUtils.createText("JetFuelView - System View", "fancytextLarge");
+        final Text text = TextUtils.createText("JetFuelView - System View", "fancytextSmall");
         BorderPane labelPane = new BorderPane();
-        labelPane.setPadding(new Insets(5, 5, 10, 5));
+        labelPane.setPadding(new Insets(5, 5, 5, 5));
         labelPane.setCenter(text);
         mainPane.setTop(labelPane);
         final Node BorderedPane = Borders.wrap(swingNode)
                 .lineBorder()
                 .innerPadding(0).outerPadding(0)
-                .color(Color.BLUE)
-                .thickness(3)
+                .color(Color.PURPLE)
+                .thickness(2)
                 .radius(5, 5, 5, 5)
                 .build().build();
         BorderPane swingNodePane = new BorderPane();
-        swingNodePane.setPadding(new Insets(5, 5, 10, 5));
+        swingNodePane.setPadding(new Insets(1, 1, 1, 1));
         swingNodePane.setCenter(BorderedPane);
         mainPane.setCenter(swingNodePane);
-        mainPane.setBottom(buttonBox);
+        mainPane.setBottom(jetFuelViewStatusBar);
     }
 
     public BorderPane getMainPane() {
         return mainPane;
+    }
+
+    public mxGraphComponent getGraphComponent() {
+        return graphComponent;
+    }
+
+    public JetFuelGraphModel getJetFuelGraphModel() {
+        return jetFuelGraphModel;
     }
 }
