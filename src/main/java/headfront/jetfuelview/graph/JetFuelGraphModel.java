@@ -6,9 +6,7 @@ import headfront.utils.StringUtils;
 import headfront.utils.WebServiceRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.web.client.RestTemplate;
 
 import javax.swing.*;
 import java.io.FileReader;
@@ -201,7 +199,7 @@ public class JetFuelGraphModel {
             int ampsServerHeight = 40;
             int ampsServerPaddingX = 50;
             int ampsServerPaddingY = 50;
-            int roughNoOfServersPerGroup = 4;
+            int noOfServersPerGroup = 4;
             int initialAmpsGroupX = 100;
             int ampsGroupX = 100;
             int ampsGroupY = 150;
@@ -230,7 +228,9 @@ public class JetFuelGraphModel {
             Map<String, Object> createdGroups = new HashMap<>();
             for (String groupName : groupToAmpsServers.keySet()) {
                 final int groupWith = (ampsServerWidth + ampsServerPaddingY) * 2;
-                final int groupHeight = ((roughNoOfServersPerGroup / 2) * (ampsServerHeight + ampsServerPaddingX)) + (ampsServerY);
+                final List<String> strings = groupToAmpsServers.get(groupName);
+                noOfServersPerGroup = strings.size();
+                final int groupHeight = ((noOfServersPerGroup / 2) * (ampsServerHeight + ampsServerPaddingX)) + (ampsServerY);
                 Object group = graph.insertVertex(defaultParent, null, groupName, ampsGroupX, ampsGroupY,
                         groupWith, groupHeight, AMPS_GROUP);
                 groupCount++;
