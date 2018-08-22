@@ -77,7 +77,7 @@ public class SystemViewPanel {
         buttonBox.getChildren().addAll(save, load, loadFromSever);
         buttonBox.setAlignment(Pos.BOTTOM_CENTER);
         buttonBox.spacingProperty().setValue(10);
-        final Text text = TextUtils.createText("JetFuelView showing system view", "fancytextLarge");
+        final Text text = TextUtils.createText("JetFuelView - System View", "fancytextLarge");
         BorderPane labelPane = new BorderPane();
         labelPane.setPadding(new Insets(5, 5, 10, 5));
         labelPane.setCenter(text);

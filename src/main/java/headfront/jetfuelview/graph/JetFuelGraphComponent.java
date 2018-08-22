@@ -6,12 +6,16 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
 import headfront.jetfuelview.JetFuelView;
 import headfront.jetfuelview.util.ProcessLauncher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static headfront.jetfuelview.graph.Styles.AMPS_SERVER_GOOD;
 
@@ -21,6 +25,8 @@ import static headfront.jetfuelview.graph.Styles.AMPS_SERVER_GOOD;
 public class JetFuelGraphComponent extends mxGraphComponent {
 
     private static final long serialVersionUID = 1821677322838455152L;
+
+    private static final Logger LOG = LoggerFactory.getLogger(ProcessLauncher.class);
 
     public JetFuelGraphComponent(mxGraph model) {
         super(model);
@@ -53,14 +59,14 @@ public class JetFuelGraphComponent extends mxGraphComponent {
                         JPopupMenu menu = new JPopupMenu();
                         if (cell.getStyle().equals(AMPS_SERVER_GOOD)) {
                             System.out.println("cell=" + model.getLabel(cell));
-                            JMenuItem startJetFuelExplorer = new JMenuItem("Start JetFuel Explorer");
+                            Map<String, Object> server = new HashMap<>();
+                            server.put("name", "Sarah");
+                             JMenuItem startJetFuelExplorer = new JMenuItem("Start JetFuel Explorer");
                             startJetFuelExplorer.addActionListener(et -> {
                                 try {
-                                    System.out.println("Start JetFuel Explorer");
-                                    ProcessLauncher.exec(JetFuelView.class);
-                                    System.out.println("Started process " );
+                                    ProcessLauncher.exec(server);
                                 } catch (Exception e1) {
-                                    e1.printStackTrace();
+                                    LOG.error("Unable to launch JetFuelExplorer for " + model.getLabel(cell));
                                 }
                             });
                             menu.add(startJetFuelExplorer);

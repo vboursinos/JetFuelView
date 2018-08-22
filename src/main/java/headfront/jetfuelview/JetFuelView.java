@@ -2,14 +2,15 @@ package headfront.jetfuelview;
 
 import headfront.dataexplorer.FXConfiguraion;
 import headfront.dataexplorer.JetFuelDataExplorerProperties;
-import headfront.jetfuelview.panel.SelectSystemPanel;
+import headfront.jetfuelview.panel.LogonPanel;
 import headfront.jetfuelview.panel.SystemViewPanel;
+import headfront.jetfuelview.util.JetFuelViewActions;
+import headfront.utils.GuiUtil;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -67,16 +68,11 @@ public class JetFuelView extends Application {
             stage.setScene(scene);
             String title = "JetFuelView - " + version ;
             stage.setTitle(title);
-            stage.setWidth(370);
-            stage.setHeight(200);
-            stage.setResizable(false);
+            stage.setWidth(350);
+            stage.setHeight(230);
+            stage.setResizable(true);
             stage.getIcons().add(jetfuelTitlebarImage);
             logonStage = stage;
-
-            stage.setOnCloseRequest(e -> {
-                killAllChildrenProcess();
-                shutDownDataExplorer();
-            });
         } catch (Exception e) {
             LOG.error("Unable to start DataExplorer", e);
             throw e;
@@ -85,18 +81,13 @@ public class JetFuelView extends Application {
 
     private Parent createLogonPanel() {
         BorderPane borderPane = new BorderPane();
-        borderPane.setCenter(new SelectSystemPanel(this::shutDownDataExplorer, this::loggedOn).getMainPane());
+        borderPane.setCenter(new LogonPanel(this::shutDownJetFuelView, this::loggedOn).getMainPane());
         return borderPane;
     }
 
-    private Parent createMainPanel() {
-        BorderPane borderPane = new BorderPane();
-        borderPane.setCenter(new Button("YESSSSS"));
-        return borderPane;
-    }
-
-    private void shutDownDataExplorer() {
-        LOG.error("Shuting down JetFuelView");
+    private void shutDownJetFuelView() {
+        LOG.error("Shutting down JetFuelView");
+        killAllChildrenProcess();
         Platform.exit();
         System.exit(0);
     }
@@ -112,7 +103,16 @@ public class JetFuelView extends Application {
 
     private void createMainStage() {
         SystemViewPanel systemViewPanel = new SystemViewPanel(environment, propertiesFile, username, credential);
-        Scene mainScene = new Scene(systemViewPanel.getMainPane());
+        JetFuelViewActions jetFuelViewActions = new JetFuelViewActions(GuiUtil.isProd(environment), this::shutDownJetFuelView);
+        jetFuelViewActions.setHostServices(getHostServices());
+        BorderPane topPanels = new BorderPane();
+        topPanels.setTop(jetFuelViewActions.getMenuBar());
+        topPanels.setCenter(jetFuelViewActions.getToolBar(GuiUtil.getEnvColour(environment)));
+
+        BorderPane mainPanel = new BorderPane();
+        mainPanel.setTop(topPanels);
+        mainPanel.setCenter(systemViewPanel.getMainPane());
+        Scene mainScene = new Scene(mainPanel);
         mainScene.getStylesheets().add("fx.css");
         ServiceLoader<FXConfiguraion> configurationServiceLoader = ServiceLoader.load(FXConfiguraion.class);
         for (FXConfiguraion fxsamplerConfiguration : configurationServiceLoader) {
@@ -129,6 +129,9 @@ public class JetFuelView extends Application {
         mainStage.setWidth(1200);
         mainStage.setHeight(900);
         mainStage.getIcons().add(jetfuelTitlebarImage);
+        mainStage.setOnCloseRequest(e -> {
+            shutDownJetFuelView();
+        });
         mainStage.show();
         mainStage.toFront();
 

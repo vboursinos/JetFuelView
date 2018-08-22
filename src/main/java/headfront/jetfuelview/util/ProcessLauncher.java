@@ -1,11 +1,14 @@
 package headfront.jetfuelview.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -13,20 +16,23 @@ import java.util.stream.Collectors;
  */
 public class ProcessLauncher {
 
-    private static List<Process> activeProcess = new ArrayList();
+    private static Map<String, Process> activeProcess = new ConcurrentHashMap<>();
+    private static final Logger LOG = LoggerFactory.getLogger(ProcessLauncher.class);
 
-    public static void killAllChildrenProcess(){
-        activeProcess.forEach(process -> process.destroy());
-        activeProcess.forEach(process -> process.destroyForcibly());
+    public static void killAllChildrenProcess() {
+        LOG.info("Going to kill " + activeProcess.size() + " processes");
+        activeProcess.values().forEach(Process::destroy);
+        activeProcess.values().forEach(Process::destroyForcibly);
+        LOG.info("Killed all processes");
     }
 
-    public static void exec(Class klass){
+    public static void exec(Map<String, Object> server) {
         new Thread(() -> {
+            final String name = (String) server.get("name");
             try {
                 String classpath = Arrays.stream(((URLClassLoader) Thread.currentThread().getContextClassLoader()).getURLs())
                         .map(URL::getFile)
                         .collect(Collectors.joining(File.pathSeparator));
-
                 Process process = new ProcessBuilder(
                         System.getProperty("java.home") + "/bin/java",
                         "-Dlog4j.configurationFile=log4j2-JetFuel.xml",
@@ -42,13 +48,11 @@ public class ProcessLauncher {
                 )
                         .inheritIO()
                         .start();
-                int exitCode = process.waitFor();
-                activeProcess.add(process);
-                System.out.println("process stopped with exitCode " + exitCode);
+                activeProcess.put(name, process);
+                LOG.info("JetFuelExplorer for " + name + " ended.");
             } catch (Exception e) {
-                e.printStackTrace();
+                LOG.info("Unable to start JetFuelExplorer for " + name, e);
             }
         }).start();
-
     }
 }

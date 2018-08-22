@@ -58,6 +58,9 @@ public class JetFuelGraphModel {
                 final String environment = properties.getProperty("environment");
                 final String[] allServers = servers.split(",");
                 final String[] allAdminPorts = adminPorts.split(",");
+                allDataFromServer.clear();
+                unknownServers.clear();
+                mappedServers.clear();
                 for (int i = 0; i < allServers.length; i++) {
                     String serverToLoad = allServers[i];
                     String adminPortToLoad = allAdminPorts[i];
@@ -194,7 +197,7 @@ public class JetFuelGraphModel {
             graph.removeCells(graph.getChildVertices(graph.getDefaultParent()));
 
             int ampsServerX = 20;
-            int ampsServerY = 35;
+            int ampsServerY = 30;
             int ampsServerWidth = 200;
             int ampsServerHeight = 40;
             int ampsServerPaddingX = 50;
@@ -230,6 +233,9 @@ public class JetFuelGraphModel {
                 final int groupWith = (ampsServerWidth + ampsServerPaddingY) * 2;
                 final List<String> strings = groupToAmpsServers.get(groupName);
                 noOfServersPerGroup = strings.size();
+                if (noOfServersPerGroup % 2 != 0) {
+                    noOfServersPerGroup++;
+                }
                 final int groupHeight = ((noOfServersPerGroup / 2) * (ampsServerHeight + ampsServerPaddingX)) + (ampsServerY);
                 Object group = graph.insertVertex(defaultParent, null, groupName, ampsGroupX, ampsGroupY,
                         groupWith, groupHeight, AMPS_GROUP);
@@ -245,9 +251,7 @@ public class JetFuelGraphModel {
             }
             int badAmpsServerX = 500;
             for (String unknowsAmpsServer : unknownServers) {
-                unknowsAmpsServer = unknowsAmpsServer.replaceAll("tcp://", "");
-                unknowsAmpsServer = unknowsAmpsServer.replaceAll("/amps/json", "");
-                unknowsAmpsServer = "Unreachable " + unknowsAmpsServer;
+                unknowsAmpsServer = "Unreachable " + StringUtils.getServerAndPortFromUrl(unknowsAmpsServer);
                 graph.insertVertex(defaultParent, null, unknowsAmpsServer, badAmpsServerX, 20, ampsServerWidth, ampsServerHeight, AMPS_SERVER_BAD);
                 badAmpsServerX = badAmpsServerX + ampsServerWidth + ampsServerPaddingX;
             }
@@ -271,8 +275,8 @@ public class JetFuelGraphModel {
                         }
                         String ampsNameToUse = ampServer;
                         final Object serverHost = fullServerDetails.get("serverHost");
-                        if (serverHost != null){
-                            ampsNameToUse = ampsNameToUse  + "\n(" + serverHost + ")";
+                        if (serverHost != null) {
+                            ampsNameToUse = ampsNameToUse + "\n(" + serverHost + ")";
                         }
                         final Object ampsSever = graph.insertVertex(ampsGroupObj,
                                 null, ampsNameToUse, ampsServerX, ampsServerY, ampsServerWidth, ampsServerHeight, style);
