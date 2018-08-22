@@ -39,14 +39,16 @@ public class JetFuelGraphModel {
     private String propertiesFile;
     private String username;
     private String credentials;
+    private String environment;
     private JetFuelViewStatusBar jetFuelViewStatusBar;
 
-    public JetFuelGraphModel(JetFuelGraph graph, String propertiesFile, String username, String credentials,
+    public JetFuelGraphModel(JetFuelGraph graph, String propertiesFile, String username, String credentials,String environment,
                              JetFuelViewStatusBar jetFuelViewStatusBar) {
         this.graph = graph;
         this.propertiesFile = propertiesFile;
         this.username = username;
         this.credentials = credentials;
+        this.environment = environment;
         this.jetFuelViewStatusBar = jetFuelViewStatusBar;
     }
 
@@ -100,6 +102,7 @@ public class JetFuelGraphModel {
         server.put("messagesIn", random.nextInt(1500000));
         server.put("messagesOut", random.nextInt(100000));
         server.put("serverHost", serverHost);
+        server.put("environment", environment);
         List<Map<String, Object>> createdRep = new ArrayList<>();
         if (reps != null) {
             List<Map<String, Object>> repList = (List) reps;
@@ -164,6 +167,10 @@ public class JetFuelGraphModel {
 
     private String getFullServerName(String group, String name) {
         return group + SEPARATOR + name;
+    }
+
+    public Map<String, Object> getAmpsServer(String id){
+       return allDataFromServer.get(id);
     }
 
     private String getRandomClientName(String prefix) {

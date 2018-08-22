@@ -4,6 +4,7 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.handler.mxGraphHandler;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
+import headfront.guiwidgets.PopUpDialog;
 import headfront.jetfuelview.JetFuelView;
 import headfront.jetfuelview.util.ProcessLauncher;
 import org.slf4j.Logger;
@@ -27,11 +28,17 @@ public class JetFuelGraphComponent extends mxGraphComponent {
     private static final long serialVersionUID = 1821677322838455152L;
 
     private static final Logger LOG = LoggerFactory.getLogger(ProcessLauncher.class);
+    private JetFuelGraphModel graphModel;
 
     public JetFuelGraphComponent(mxGraph model) {
         super(model);
         configureGraphComponent(model);
     }
+
+    public void setJetFuelGraphModel(JetFuelGraphModel graphModel) {
+        this.graphModel = graphModel;
+    }
+
 
     @Override
     public mxGraphHandler createGraphHandler() {
@@ -53,18 +60,22 @@ public class JetFuelGraphComponent extends mxGraphComponent {
 
             public void mouseReleased(MouseEvent e) {
                 mxCell cell = (mxCell) getCellAt(e.getX(), e.getY());
-
                 if (cell != null) {
                     if (e.isPopupTrigger() || SwingUtilities.isRightMouseButton(e)) {
                         JPopupMenu menu = new JPopupMenu();
                         if (cell.getStyle().equals(AMPS_SERVER_GOOD)) {
-                            System.out.println("cell=" + model.getLabel(cell));
-                            Map<String, Object> server = new HashMap<>();
-                            server.put("name", "Sarah");
-                             JMenuItem startJetFuelExplorer = new JMenuItem("Start JetFuel Explorer");
+                            JMenuItem startJetFuelExplorer = new JMenuItem("Start JetFuel Explorer");
                             startJetFuelExplorer.addActionListener(et -> {
                                 try {
-                                    ProcessLauncher.exec(server);
+                                    System.out.println(cell.getId());
+                                    System.out.println(cell.getValue());
+                                    final String id = cell.getId().split("=")[1];
+                                    final Map<String, Object> ampsServer = graphModel.getAmpsServer(id);
+                                    if (ampsServer != null) {
+                                        ProcessLauncher.exec(cell.getId(), ampsServer);
+                                    } else {
+                                        PopUpDialog.showWarningPopup("Amps Sever not found", "Amps server with name " + id + " not found");
+                                    }
                                 } catch (Exception e1) {
                                     LOG.error("Unable to launch JetFuelExplorer for " + model.getLabel(cell));
                                 }

@@ -33,7 +33,7 @@ public class SystemViewPanel {
     private final String credentials;
     public static final String FILE_SUFFIX = "-JetFuelView.xml";
     private JetFuelGraphModel jetFuelGraphModel = null;
-    private mxGraphComponent graphComponent;
+    private JetFuelGraphComponent graphComponent;
     private JetFuelGraph graph;
     private JetFuelViewStatusBar jetFuelViewStatusBar;
 
@@ -47,7 +47,8 @@ public class SystemViewPanel {
         graphComponent = new JetFuelGraphComponent(graph);
         jetFuelViewStatusBar = new JetFuelViewStatusBar(new NotificationPane());
         jetFuelViewStatusBar.showWelcomeMessage();
-        jetFuelGraphModel = new JetFuelGraphModel(graph, propertiesFile, username, credentials, jetFuelViewStatusBar);
+        jetFuelGraphModel = new JetFuelGraphModel(graph, propertiesFile, username, credentials, environment, jetFuelViewStatusBar);
+        graphComponent.setJetFuelGraphModel(jetFuelGraphModel);
         createMainPanel(graphComponent);
         FileUtil.loadGraph(graphComponent, environment + FILE_SUFFIX);
     }
@@ -58,7 +59,7 @@ public class SystemViewPanel {
             swingNode.setContent(graphComponent);
 
         });
-        final Text text = TextUtils.createText("JetFuelView - System View", "fancytextSmall");
+        final Text text = TextUtils.createText("JetFuelView - System View", "fancytextSmaller");
         BorderPane labelPane = new BorderPane();
         labelPane.setPadding(new Insets(5, 5, 5, 5));
         labelPane.setCenter(text);
@@ -67,7 +68,7 @@ public class SystemViewPanel {
                 .lineBorder()
                 .innerPadding(0).outerPadding(0)
                 .color(Color.PURPLE)
-                .thickness(2)
+                .thickness(1)
                 .radius(5, 5, 5, 5)
                 .build().build();
         BorderPane swingNodePane = new BorderPane();
