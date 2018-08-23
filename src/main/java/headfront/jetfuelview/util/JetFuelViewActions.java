@@ -1,12 +1,13 @@
 package headfront.jetfuelview.util;
 
+import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import headfront.dataexplorer.controlfx.ActionUtils;
 import headfront.guiwidgets.AboutPopup;
 import headfront.guiwidgets.PopUpDialog;
 import headfront.jetfuelview.graph.FileUtil;
 import headfront.jetfuelview.graph.JetFuelGraphModel;
-import headfront.utils.FileUtils;
+import headfront.jetfuelview.panel.JetFuelViewStatusBar;
 import javafx.application.HostServices;
 import javafx.geometry.Insets;
 import javafx.scene.control.MenuBar;
@@ -25,6 +26,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+import static headfront.jetfuelview.graph.Styles.AMPS_GROUP;
+import static headfront.jetfuelview.graph.Styles.AMPS_SERVER_BAD;
+import static headfront.jetfuelview.graph.Styles.AMPS_SERVER_GOOD;
 import static headfront.jetfuelview.panel.SystemViewPanel.FILE_SUFFIX;
 import static org.controlsfx.control.action.ActionMap.action;
 import static org.controlsfx.control.action.ActionMap.actions;
@@ -49,6 +53,7 @@ public class JetFuelViewActions {
     private Runnable shutdownHandler;
     private mxGraphComponent graphComponent;
     private JetFuelGraphModel graphModel;
+    private JetFuelViewStatusBar jetFuelStatusBar;
 
     public JetFuelViewActions(String environment, Runnable shutdownHandler) {
         this.environment = environment;
@@ -72,20 +77,46 @@ public class JetFuelViewActions {
     private void save() {
         SwingUtilities.invokeLater(() -> {
             FileUtil.saveGraph(graphComponent, environment + FILE_SUFFIX);
+            jetFuelStatusBar.updateMessage("Saved SystemView");
         });
     }
 
     @ActionProxy(text = "Load From Disk", graphic = update1Image)
-    private void loadFromDisk() {
+    public void loadFromDisk() {
         SwingUtilities.invokeLater(() -> {
             FileUtil.loadGraph(graphComponent, environment + FILE_SUFFIX);
+            mxCell aCell = (mxCell) graphComponent.getGraph().getDefaultParent();
+            int parentChildCount = aCell.getChildCount();
+            for (int i = parentChildCount - 1; i >= 0; i--) {
+                mxCell aChild = (mxCell) graphComponent.getGraph().getModel().getChildAt(aCell, i);
+                String style = aChild.getStyle();
+                processAmpsServer(style);
+                if (style.equals(AMPS_GROUP)) {
+                    int childCount = aChild.getChildCount();
+                    for (int j = childCount - 1; j >= 0; j--) {
+                        mxCell childCell = (mxCell) graphComponent.getGraph().getModel().getChildAt(aChild, j);
+                        String childStyle = childCell.getStyle();
+                        processAmpsServer(childStyle);
+                    }
+                }
+            }
+            jetFuelStatusBar.updateMessage("Loaded SystemView from disk");
         });
+    }
+
+    private void processAmpsServer(String style) {
+        if (style.equals(AMPS_SERVER_GOOD)) {
+            jetFuelStatusBar.incrementActiveCount();
+        } else if (style.equals(AMPS_SERVER_BAD)) {
+            jetFuelStatusBar.incrementInactiveCount();
+        }
     }
 
     @ActionProxy(text = "Load From Server", graphic = update2Image)
     private void loadFromServer() {
         SwingUtilities.invokeLater(() -> {
             graphModel.updateFromServer(true);
+            jetFuelStatusBar.updateMessage("Loaded SystemView from Amps");
         });
     }
 
@@ -131,5 +162,9 @@ public class JetFuelViewActions {
 
     public void setGraphModel(JetFuelGraphModel graphModel) {
         this.graphModel = graphModel;
+    }
+
+    public void setJetFuelStatusBar(JetFuelViewStatusBar jetFuelStatusBar) {
+        this.jetFuelStatusBar = jetFuelStatusBar;
     }
 }

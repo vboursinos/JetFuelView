@@ -106,7 +106,7 @@ public class JetFuelView extends Application {
     }
 
     private void createMainStage() {
-        SystemViewPanel systemViewPanel = new SystemViewPanel(environment, propertiesFile, username, credential);
+        SystemViewPanel systemViewPanel = new SystemViewPanel(environment, propertiesFile, username, credential, jetFuelViewActions);
         jetFuelViewActions.setGraphComponent(systemViewPanel.getGraphComponent());
         jetFuelViewActions.setGraphModel(systemViewPanel.getJetFuelGraphModel());
         BorderPane topPanels = new BorderPane();

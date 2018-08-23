@@ -268,7 +268,7 @@ public class JetFuelGraphModel {
                 unknowsAmpsServer = "Unreachable " + StringUtils.getServerAndPortFromUrl(unknowsAmpsServer);
                 graph.insertVertex(defaultParent, null, unknowsAmpsServer, badAmpsServerX, 20, ampsServerWidth, ampsServerHeight, AMPS_SERVER_BAD);
                 badAmpsServerX = badAmpsServerX + ampsServerWidth + ampsServerPaddingX;
-                jetFuelViewStatusBar.incrementInactiveRowCount();
+                jetFuelViewStatusBar.incrementInactiveCount();
             }
 
             Map<String, Object> createdServers = new HashMap<>();
@@ -304,7 +304,7 @@ public class JetFuelGraphModel {
                             ampsServerX = ampsServerX + ampsServerWidth + ampsServerPaddingX;
                         }
                         createdServers.put(ampServer, ampsSever);
-                        jetFuelViewStatusBar.incrementActiveRowCount();
+                        jetFuelViewStatusBar.incrementActiveCount();
                     }
                 }
             }

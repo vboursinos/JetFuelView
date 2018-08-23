@@ -2,6 +2,7 @@ package headfront.jetfuelview.panel;
 
 import com.mxgraph.swing.mxGraphComponent;
 import headfront.jetfuelview.graph.*;
+import headfront.jetfuelview.util.JetFuelViewActions;
 import headfront.jetfuelview.util.TextUtils;
 import javafx.embed.swing.SwingNode;
 import javafx.geometry.Insets;
@@ -37,7 +38,8 @@ public class SystemViewPanel {
     private JetFuelGraph graph;
     private JetFuelViewStatusBar jetFuelViewStatusBar;
 
-    public SystemViewPanel(String environment, String propertiesFile, String username, String credentials) {
+    public SystemViewPanel(String environment, String propertiesFile, String username, String credentials,
+                           JetFuelViewActions jetFuelViewActions) {
         this.environment = environment;
         this.propertiesFile = propertiesFile;
         this.username = username;
@@ -46,12 +48,14 @@ public class SystemViewPanel {
         Styles.registerStyles(graph.getStylesheet());
         graphComponent = new JetFuelGraphComponent(graph);
         jetFuelViewStatusBar = new JetFuelViewStatusBar(new NotificationPane());
-        jetFuelViewStatusBar.showWelcomeMessage();
         jetFuelGraphModel = new JetFuelGraphModel(graph, propertiesFile, username, credentials, environment, jetFuelViewStatusBar);
+        jetFuelViewActions.setJetFuelStatusBar(jetFuelViewStatusBar);
         graphComponent.setJetFuelGraphModel(jetFuelGraphModel);
         createMainPanel(graphComponent);
+        jetFuelViewActions.loadFromDisk();
         FileUtil.loadGraph(graphComponent, environment + FILE_SUFFIX);
         jetFuelGraphModel.updateFromServer(false);
+        jetFuelViewStatusBar.updateMessage("SystemView read from saved config");
     }
 
     private void createMainPanel(mxGraphComponent graphComponent) {

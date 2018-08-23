@@ -13,6 +13,13 @@ import javafx.scene.paint.Color;
 import org.controlsfx.control.NotificationPane;
 import org.controlsfx.control.StatusBar;
 
+import javax.swing.text.DateFormatter;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+
 /**
  * Created by Deepak on 07/07/2016.
  */
@@ -42,34 +49,35 @@ public class JetFuelViewStatusBar extends StatusBar {
 
         HBox recordCountBox = new HBox();
         recordCountBox.setAlignment(Pos.CENTER);
-        recordCountBox.getChildren().addAll(inactiveCountButton,activeCountButton);
+        recordCountBox.getChildren().addAll(inactiveCountButton, activeCountButton);
         HBox.setHgrow(activeCountButton, Priority.ALWAYS);
         getRightItems().add(recordCountBox);
+        showWelcomeMessage();
     }
 
 
-    public void incrementActiveRowCount() {
+    public void incrementActiveCount() {
         Platform.runLater(() -> {
             activeCount++;
             activeCountButton.setText("" + activeCount);
         });
     }
 
-    public void decrementActiveRowCount() {
+    public void decrementActiveCount() {
         Platform.runLater(() -> {
             activeCount--;
             activeCountButton.setText("" + activeCount);
         });
     }
 
-    public void incrementInactiveRowCount() {
+    public void incrementInactiveCount() {
         Platform.runLater(() -> {
             inActiveCount++;
             inactiveCountButton.setText("" + inActiveCount);
         });
     }
 
-    public void decrementInactiveRowCount() {
+    public void decrementInactiveCount() {
         Platform.runLater(() -> {
             inActiveCount--;
             inactiveCountButton.setText("" + inActiveCount);
@@ -87,6 +95,12 @@ public class JetFuelViewStatusBar extends StatusBar {
     public void clearCount() {
         inActiveCount = 0;
         activeCount = 0;
-        showWelcomeMessage();
+    }
+
+    public void updateMessage(String message) {
+        Platform.runLater(() -> {
+            setText(message + " - [" + DateTimeFormatter.ofPattern("dd MMM yyyy - HH:mm:ss")
+                    .format(LocalDateTime.now()) + "]");
+        });
     }
 }

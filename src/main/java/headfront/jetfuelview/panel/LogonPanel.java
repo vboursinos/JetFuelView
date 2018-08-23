@@ -37,7 +37,7 @@ public class LogonPanel {
 
     public final static ImageView jetfuelImage = new ImageView(new Image("images/icons/JetFuelMediumNoBg1.png"));
     private static final Logger LOG = LoggerFactory.getLogger(LogonPanel.class);
-    private final ComboBox<String> comboBox = new ComboBox<>();
+    private final ComboBox<String> systemsComboBox = new ComboBox<>();
     private final TextField usernameTextField = new TextField();
     private final PasswordField passwordTextField = new PasswordField();
     private final StackPane mainPanelWithMasker = new StackPane();
@@ -47,6 +47,9 @@ public class LogonPanel {
 
     public LogonPanel(Runnable shutdownProcess, Consumer<List<String>> validLogon) {
         this.validLogon = validLogon;
+        usernameTextField.setText("JetFuel");
+        passwordTextField.setText("JetFuel");
+        systemsComboBox.getSelectionModel().select(1);
         final List<Path> files = FileUtils.getFiles("config", "properties");
         if (files.size() == 0) {
             PopUpDialog.showWarningPopup("No properties found", "No properties founds in folder config", 999999999);
@@ -69,13 +72,13 @@ public class LogonPanel {
             selectionPane.setPadding(new Insets(5, 5, 0, 5));
             selectionPane.setMaxWidth(Double.MAX_VALUE);
             selectionPane.setAlignment(Pos.CENTER_LEFT);
-            comboBox.getItems().addAll(listToUse);
-            comboBox.setMaxWidth(Double.MAX_VALUE);
-            GridPane.setHgrow(comboBox, Priority.ALWAYS);
-            GridPane.setFillWidth(comboBox, true);
+            systemsComboBox.getItems().addAll(listToUse);
+            systemsComboBox.setMaxWidth(Double.MAX_VALUE);
+            GridPane.setHgrow(systemsComboBox, Priority.ALWAYS);
+            GridPane.setFillWidth(systemsComboBox, true);
 
             selectionPane.add(new Label("Environment"), 0, 0);
-            selectionPane.add(comboBox, 1, 0);
+            selectionPane.add(systemsComboBox, 1, 0);
             selectionPane.add(new Label("Username"), 0, 1);
             selectionPane.add(usernameTextField, 1, 1);
             selectionPane.add(new Label("Password"), 0, 2);
@@ -88,7 +91,7 @@ public class LogonPanel {
 
             Button loginButton = new Button("Login");
             loginButton.setOnAction(e -> {
-                final String selectedItem = comboBox.getSelectionModel().getSelectedItem();
+                final String selectedItem = systemsComboBox.getSelectionModel().getSelectedItem();
                 if (selectedItem == null) {
                     PopUpDialog.showWarningPopup("Select Environment", "Please select an environment");
                     return;
@@ -114,7 +117,7 @@ public class LogonPanel {
             selectionPane.add(buttonBox, 1, 3);
             mainPane.setCenter(selectionPane);
             mainPanelWithMasker.getChildren().addAll(mainPane, maskerPane);
-            Platform.runLater(() -> comboBox.requestFocus());
+            Platform.runLater(() -> systemsComboBox.requestFocus());
         }
     }
 
