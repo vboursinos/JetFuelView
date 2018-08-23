@@ -51,6 +51,7 @@ public class SystemViewPanel {
         graphComponent.setJetFuelGraphModel(jetFuelGraphModel);
         createMainPanel(graphComponent);
         FileUtil.loadGraph(graphComponent, environment + FILE_SUFFIX);
+        jetFuelGraphModel.updateFromServer(false);
     }
 
     private void createMainPanel(mxGraphComponent graphComponent) {

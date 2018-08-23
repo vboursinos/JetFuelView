@@ -42,7 +42,7 @@ public class JetFuelGraphModel {
     private String environment;
     private JetFuelViewStatusBar jetFuelViewStatusBar;
 
-    public JetFuelGraphModel(JetFuelGraph graph, String propertiesFile, String username, String credentials,String environment,
+    public JetFuelGraphModel(JetFuelGraph graph, String propertiesFile, String username, String credentials, String environment,
                              JetFuelViewStatusBar jetFuelViewStatusBar) {
         this.graph = graph;
         this.propertiesFile = propertiesFile;
@@ -52,7 +52,7 @@ public class JetFuelGraphModel {
         this.jetFuelViewStatusBar = jetFuelViewStatusBar;
     }
 
-    public void updateFromServer() {
+    public void updateFromServer(boolean redraw) {
         new Thread(() -> {
             try {
                 String fileToLoad = "config/" + propertiesFile;
@@ -76,7 +76,7 @@ public class JetFuelGraphModel {
                     if (serverStats != null && serverStats.trim().length() > 1) {
                         updateState(serverStats, serverToLoad);
                     } else {
-                        String s = StringUtils.getServerAndPortFromUrl(serverToLoad);
+                        String s = StringUtils.getShortServerAndPortFromUrl(serverToLoad);
                         final String registeredServer = mappedServers.get(serverToLoad);
                         if (registeredServer != null) {
                             final String[] split = registeredServer.split(SEPARATOR);
@@ -87,7 +87,9 @@ public class JetFuelGraphModel {
                         }
                     }
                 }
-                draw();
+                if (redraw) {
+                    draw();
+                }
             } catch (Exception e) {
                 LOG.error("Unable to load graph model", e);
             }
@@ -169,8 +171,8 @@ public class JetFuelGraphModel {
         return group + SEPARATOR + name;
     }
 
-    public Map<String, Object> getAmpsServer(String id){
-       return allDataFromServer.get(id);
+    public Map<String, Object> getAmpsServer(String id) {
+        return allDataFromServer.get(id);
     }
 
     private String getRandomClientName(String prefix) {
@@ -188,7 +190,7 @@ public class JetFuelGraphModel {
         final Object clients = MessageUtil.getLeafNode(instance, "clients");
         final Object replication = MessageUtil.getLeafNode(instance, "replication");
         final String fullServerName = getFullServerName("" + group, "" + name);
-        final String serverHost = StringUtils.getServerFromUrl(url);
+        final String serverHost = StringUtils.getShortServerAndPortFromUrl(url);
         allDataFromServer.put(fullServerName, createServer(name.toString(), group.toString(), timestamp.toString(),
                 replication, null, serverHost));
         mappedServers.put(url, fullServerName);
@@ -289,10 +291,10 @@ public class JetFuelGraphModel {
                         String ampsNameToUse = ampServer;
                         final Object serverHost = fullServerDetails.get("serverHost");
                         if (serverHost != null) {
-                            ampsNameToUse = ampsNameToUse + "\n(" + serverHost + ")";
+                            ampsNameToUse = ampsNameToUse + "\n[" + serverHost + "]";
                         }
                         final Object ampsSever = graph.insertVertex(ampsGroupObj,
-                                null, ampsNameToUse, ampsServerX, ampsServerY, ampsServerWidth, ampsServerHeight, style);
+                                fullServerName, ampsNameToUse, ampsServerX, ampsServerY, ampsServerWidth, ampsServerHeight, style);
                         ampsCount++;
                         if (ampsCount == 2) {
                             ampsCount = 0;

@@ -67,9 +67,7 @@ public class JetFuelGraphComponent extends mxGraphComponent {
                             JMenuItem startJetFuelExplorer = new JMenuItem("Start JetFuel Explorer");
                             startJetFuelExplorer.addActionListener(et -> {
                                 try {
-                                    System.out.println(cell.getId());
-                                    System.out.println(cell.getValue());
-                                    final String id = cell.getId().split("=")[1];
+                                    final String id = cell.getId();
                                     final Map<String, Object> ampsServer = graphModel.getAmpsServer(id);
                                     if (ampsServer != null) {
                                         ProcessLauncher.exec(cell.getId(), ampsServer);

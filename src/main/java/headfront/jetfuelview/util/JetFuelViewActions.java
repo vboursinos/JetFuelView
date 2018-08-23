@@ -85,7 +85,7 @@ public class JetFuelViewActions {
     @ActionProxy(text = "Load From Server", graphic = update2Image)
     private void loadFromServer() {
         SwingUtilities.invokeLater(() -> {
-            graphModel.updateFromServer();
+            graphModel.updateFromServer(true);
         });
     }
 

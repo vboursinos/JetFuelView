@@ -70,7 +70,7 @@ public class JetFuelView extends Application {
             String title = "JetFuelView - " + version;
             stage.setTitle(title);
             stage.setWidth(350);
-            stage.setHeight(230);
+            stage.setHeight(240);
             stage.setResizable(true);
             stage.getIcons().add(jetfuelTitlebarImage);
             logonStage = stage;
@@ -87,7 +87,7 @@ public class JetFuelView extends Application {
     }
 
     private void shutDownJetFuelView() {
-        LOG.error("Shutting down JetFuelView");
+        LOG.info("Shutting down JetFuelView");
         killAllChildrenProcess();
         Platform.exit();
         System.exit(0);

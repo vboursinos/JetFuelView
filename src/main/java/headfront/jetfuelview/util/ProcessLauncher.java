@@ -52,6 +52,7 @@ public class ProcessLauncher {
                     )
                             .inheritIO()
                             .start();
+                    LOG.info("Launched JetFuelView for " + id);
                     activeProcess.put(id, process);
                     process.waitFor();
                     activeProcess.remove(id);
