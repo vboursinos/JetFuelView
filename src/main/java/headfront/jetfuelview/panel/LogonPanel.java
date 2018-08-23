@@ -141,7 +141,7 @@ public class LogonPanel {
                 final String[] allServers = servers.split(",");
                 final String[] allAdminPorts = adminPorts.split(",");
                 if (allServers.length != allAdminPorts.length) {
-                    PopUpDialog.showWarningPopup("Invalid config", "Length of servers and adminports should be same in the config");
+                    PopUpDialog.showWarningPopup("Invalid config", "Number of servers and adminports should be same in the config");
                 }
                 final String adminUrl = StringUtils.getAdminUrl(allServers[0], allAdminPorts[0]);
                 WebServiceRequest request = new WebServiceRequest();

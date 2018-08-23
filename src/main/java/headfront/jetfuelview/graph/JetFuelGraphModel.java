@@ -80,14 +80,14 @@ public class JetFuelGraphModel {
                     String metaDatUrl = StringUtils.getAdminUrl(serverToLoad, adminPortToLoad) + ".json";
                     final String serverStats = getServerConfig(metaDatUrl);
                     if (serverStats != null && serverStats.trim().length() > 1) {
-                        updateState(serverStats, serverToLoad);
+                        updateState(serverStats, serverToLoad, adminPortToLoad);
                     } else {
                         String s = StringUtils.getShortServerAndPortFromUrl(serverToLoad);
                         final String registeredServer = mappedServers.get(serverToLoad);
                         if (registeredServer != null) {
                             final String[] split = registeredServer.split(SEPARATOR);
                             allDataFromServer.put(registeredServer, createServer(split[1], split[0], "",
-                                    null, null, null));
+                                    null, null, null, null, null));
                         } else {
                             unknownServers.add(s);
                         }
@@ -103,7 +103,8 @@ public class JetFuelGraphModel {
         }).start();
     }
 
-    private Map<String, Object> createServer(String name, String group, String date, Object reps, Object clients, String serverHost) {
+    private Map<String, Object> createServer(String name, String group, String date, Object reps, Object clients,
+                                             String serverHost, String url, String adminPort) {
         Map<String, Object> server = new HashMap<>();
         server.put("name", name);
         server.put("group", group);
@@ -112,6 +113,10 @@ public class JetFuelGraphModel {
         server.put("messagesOut", random.nextInt(100000));
         server.put("serverHost", serverHost);
         server.put("environment", environment);
+        server.put("url", url);
+        server.put("username", username);
+        server.put("credentials", credentials);
+        server.put("adminPort", adminPort);
         List<Map<String, Object>> createdRep = new ArrayList<>();
         if (reps != null) {
             List<Map<String, Object>> repList = (List) reps;
@@ -169,7 +174,7 @@ public class JetFuelGraphModel {
         final String fullServerName = getFullServerName("" + group, "" + name);
         if (!allDataFromServer.containsKey(fullServerName)) {
             allDataFromServer.put(fullServerName, createServer(name.toString(), group.toString(), "",
-                    null, null, null));
+                    null, null, null, null, null));
         }
         return replication;
     }
@@ -187,7 +192,7 @@ public class JetFuelGraphModel {
         return prefix + "_" + ran;
     }
 
-    private void updateState(String allJson, String url) {
+    private void updateState(String allJson, String url, String adminPortToLoad) {
         final Map<String, Object> mapData = jsonConvertor.convertToMap(allJson);
         final Map amps = (Map) mapData.get("amps");
         final Map instance = (Map) amps.get("instance");
@@ -199,7 +204,7 @@ public class JetFuelGraphModel {
         final String fullServerName = getFullServerName("" + group, "" + name);
         final String serverHost = StringUtils.getShortServerAndPortFromUrl(url);
         allDataFromServer.put(fullServerName, createServer(name.toString(), group.toString(), timestamp.toString(),
-                replication, null, serverHost));
+                replication, null, serverHost, url, adminPortToLoad));
         mappedServers.put(url, fullServerName);
     }
 
@@ -219,8 +224,8 @@ public class JetFuelGraphModel {
 
             int ampsServerX = 20;
             int ampsServerY = 30;
-            int ampsServerWidth = 200;
-            int ampsServerHeight = 40;
+            int ampsServerWidth = 150;
+            int ampsServerHeight = 30;
             int ampsServerPaddingX = 50;
             int ampsServerPaddingY = 50;
             int noOfServersPerGroup = 4;
@@ -228,9 +233,9 @@ public class JetFuelGraphModel {
             int ampsGroupX = 100;
             int ampsGroupY = 150;
             Object defaultParent = graph.getDefaultParent();
-            Object user = graph.insertVertex(defaultParent, null, "TraderMark", 20, 20, 50, 50, USER_CONNECTED);
-            Object server = graph.insertVertex(defaultParent, null, "pricePublisher", 130, 20, 50, 50, AMPS_COMPONENT_GOOD);
-            Object jetFuel = graph.insertVertex(defaultParent, null, "DeepakJetFuel", 240, 20, 50, 50, JETFUEL_CONNECTED);
+            Object user = graph.insertVertex(defaultParent, null, "TraderMark", 35, 20, 30, 30, USER_CONNECTED);
+            Object server = graph.insertVertex(defaultParent, null, "pricePublisher", 145, 20, 30, 30, AMPS_COMPONENT_GOOD);
+            Object jetFuel = graph.insertVertex(defaultParent, null, "DeepakJetFuel", 265, 20, 30, 30, JETFUEL_CONNECTED);
             final Collection<Map<String, Object>> values = allDataFromServer.values();
             Map<String, List<String>> replications = new HashMap<>();
             Map<String, List<String>> groupToAmpsServers = new TreeMap<>();

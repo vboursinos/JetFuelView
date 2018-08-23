@@ -1,6 +1,7 @@
 package headfront.jetfuelview.util;
 
 import headfront.guiwidgets.PopUpDialog;
+import headfront.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,10 +34,12 @@ public class ProcessLauncher {
         } else {
             new Thread(() -> {
                 try {
-                    final Object o = server.get("");
                     String classpath = Arrays.stream(((URLClassLoader) Thread.currentThread().getContextClassLoader()).getURLs())
                             .map(URL::getFile)
                             .collect(Collectors.joining(File.pathSeparator));
+                    final String ampsJsonUrlWithCredential = StringUtils.getAmpsJsonConnectionStringWithCredentials(server.get("url").toString(),
+                            server.get("username").toString(),
+                            server.get("credentials").toString());
                     Process process = new ProcessBuilder(
                             System.getProperty("java.home") + "/bin/java",
                             "-Dlog4j.configurationFile=log4j2-JetFuel.xml",
@@ -46,8 +49,8 @@ public class ProcessLauncher {
                             "-classpath",
                             classpath,
                             "headfront.dataexplorer.DataExplorer",
-                            "tcp://192.168.56.101:8001/amps/json",
-                            "8199",
+                            ampsJsonUrlWithCredential,
+                            server.get("adminPort").toString(),
                             server.get("environment").toString()
                     )
                             .inheritIO()
