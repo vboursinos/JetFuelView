@@ -11,8 +11,11 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import org.controlsfx.control.MaskerPane;
 import org.controlsfx.control.NotificationPane;
 import org.controlsfx.tools.Borders;
 import org.slf4j.Logger;
@@ -27,7 +30,6 @@ import javax.swing.*;
 public class SystemViewPanel {
 
     private static final Logger LOG = LoggerFactory.getLogger(SystemViewPanel.class);
-    private BorderPane mainPane = new BorderPane();
     private String environment;
     private String propertiesFile;
     private final String username;
@@ -37,6 +39,8 @@ public class SystemViewPanel {
     private JetFuelGraphComponent graphComponent;
     private JetFuelGraph graph;
     private JetFuelViewStatusBar jetFuelViewStatusBar;
+    private final StackPane mainPanelWithMasker = new StackPane();
+    private final MaskerPane maskerPane = new MaskerPane();
 
     public SystemViewPanel(String environment, String propertiesFile, String username, String credentials,
                            JetFuelViewActions jetFuelViewActions) {
@@ -48,8 +52,10 @@ public class SystemViewPanel {
         Styles.registerStyles(graph.getStylesheet());
         graphComponent = new JetFuelGraphComponent(graph);
         jetFuelViewStatusBar = new JetFuelViewStatusBar(new NotificationPane());
-        jetFuelGraphModel = new JetFuelGraphModel(graph, propertiesFile, username, credentials, environment, jetFuelViewStatusBar);
+        jetFuelGraphModel = new JetFuelGraphModel(graph, propertiesFile, username, credentials, environment,
+                jetFuelViewStatusBar, maskerPane);
         jetFuelViewActions.setJetFuelStatusBar(jetFuelViewStatusBar);
+        jetFuelViewActions.setMaskerPane(maskerPane);
         graphComponent.setJetFuelGraphModel(jetFuelGraphModel);
         createMainPanel(graphComponent);
         jetFuelViewActions.loadFromDisk();
@@ -68,6 +74,7 @@ public class SystemViewPanel {
         BorderPane labelPane = new BorderPane();
         labelPane.setPadding(new Insets(5, 5, 5, 5));
         labelPane.setCenter(text);
+        BorderPane mainPane = new BorderPane();
         mainPane.setTop(labelPane);
         final Node BorderedPane = Borders.wrap(swingNode)
                 .lineBorder()
@@ -81,10 +88,13 @@ public class SystemViewPanel {
         swingNodePane.setCenter(BorderedPane);
         mainPane.setCenter(swingNodePane);
         mainPane.setBottom(jetFuelViewStatusBar);
+        maskerPane.setText("Updating SystemView ...");
+        maskerPane.setVisible(false);
+        mainPanelWithMasker.getChildren().addAll(mainPane, maskerPane);
     }
 
-    public BorderPane getMainPane() {
-        return mainPane;
+    public Pane getMainPane() {
+        return mainPanelWithMasker;
     }
 
     public mxGraphComponent getGraphComponent() {

@@ -16,6 +16,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
+import org.controlsfx.control.MaskerPane;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.control.action.ActionGroup;
 import org.controlsfx.control.action.ActionMap;
@@ -54,6 +55,7 @@ public class JetFuelViewActions {
     private mxGraphComponent graphComponent;
     private JetFuelGraphModel graphModel;
     private JetFuelViewStatusBar jetFuelStatusBar;
+    private MaskerPane maskerPane;
 
     public JetFuelViewActions(String environment, Runnable shutdownHandler) {
         this.environment = environment;
@@ -84,6 +86,8 @@ public class JetFuelViewActions {
     @ActionProxy(text = "Load From Disk", graphic = update1Image)
     public void loadFromDisk() {
         SwingUtilities.invokeLater(() -> {
+            maskerPane.setVisible(true);
+            jetFuelStatusBar.clearCount();
             FileUtil.loadGraph(graphComponent, environment + FILE_SUFFIX);
             mxCell aCell = (mxCell) graphComponent.getGraph().getDefaultParent();
             int parentChildCount = aCell.getChildCount();
@@ -101,6 +105,7 @@ public class JetFuelViewActions {
                 }
             }
             jetFuelStatusBar.updateMessage("Loaded SystemView from disk");
+            maskerPane.setVisible(false);
         });
     }
 
@@ -166,5 +171,9 @@ public class JetFuelViewActions {
 
     public void setJetFuelStatusBar(JetFuelViewStatusBar jetFuelStatusBar) {
         this.jetFuelStatusBar = jetFuelStatusBar;
+    }
+
+    public void setMaskerPane(MaskerPane maskerPane) {
+        this.maskerPane = maskerPane;
     }
 }

@@ -5,6 +5,7 @@ import headfront.jetfuelview.panel.JetFuelViewStatusBar;
 import headfront.utils.MessageUtil;
 import headfront.utils.StringUtils;
 import headfront.utils.WebServiceRequest;
+import org.controlsfx.control.MaskerPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -41,20 +42,25 @@ public class JetFuelGraphModel {
     private String credentials;
     private String environment;
     private JetFuelViewStatusBar jetFuelViewStatusBar;
+    private MaskerPane maskerPane;
 
     public JetFuelGraphModel(JetFuelGraph graph, String propertiesFile, String username, String credentials, String environment,
-                             JetFuelViewStatusBar jetFuelViewStatusBar) {
+                             JetFuelViewStatusBar jetFuelViewStatusBar, MaskerPane maskerPane) {
         this.graph = graph;
         this.propertiesFile = propertiesFile;
         this.username = username;
         this.credentials = credentials;
         this.environment = environment;
         this.jetFuelViewStatusBar = jetFuelViewStatusBar;
+        this.maskerPane = maskerPane;
     }
 
     public void updateFromServer(boolean redraw) {
         new Thread(() -> {
             try {
+                if (redraw) {
+                    maskerPane.setVisible(true);
+                }
                 String fileToLoad = "config/" + propertiesFile;
                 LOG.info("Loading " + fileToLoad);
                 Properties properties = new Properties();
@@ -89,6 +95,7 @@ public class JetFuelGraphModel {
                 }
                 if (redraw) {
                     draw();
+                    maskerPane.setVisible(false);
                 }
             } catch (Exception e) {
                 LOG.error("Unable to load graph model", e);
