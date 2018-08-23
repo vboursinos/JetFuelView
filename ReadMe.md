@@ -2,3 +2,4 @@ This Project has lots of code from samples I worked on. Some code could be much 
 
 Todo
 When reploading try to keep existing positions
+ShowData formating is lost
