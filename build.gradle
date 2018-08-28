@@ -63,7 +63,7 @@ distributions {
 github {
     owner = 'deepakcdo'
     repo = 'JetFuelView'
-    token = '5xxxxxxxxxxxxxxxxxxxxxxxxxxx'
+    token = JetFuelViewGitHubToken
     tagName = nameToUse
     targetCommitish = 'master'
     body = "Latest Stable release"
