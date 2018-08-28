@@ -1,5 +1,6 @@
-This Project has lots of code from samples I worked on. Some code could be much better.
+# JetFuelView
+An Amps admin client that helps you to look at how Amps servers are connected. It can also launch JetFuelExplorer to each instance.
 
-Todo
-When reploading try to keep existing positions
-ShowData formating is lost
+This was a proof of concept so some code could be better. Refactoring is happening but is slow.
+
+However this is working and live project with many several happy users.
