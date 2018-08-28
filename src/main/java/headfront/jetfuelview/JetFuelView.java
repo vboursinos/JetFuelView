@@ -50,7 +50,7 @@ public class JetFuelView extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         version = JetFuelDataExplorerProperties.getInstance().getProperty("version");
-        LOG.info("Starting Data Explorer version " + version);
+        LOG.info("Starting JetFuelView version " + version);
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
             LOG.error("Caught Exception on Thread " + t, e);
         });
@@ -107,7 +107,6 @@ public class JetFuelView extends Application {
 
     private void createMainStage() {
         SystemViewPanel systemViewPanel = new SystemViewPanel(environment, propertiesFile, username, credential, jetFuelViewActions);
-        jetFuelViewActions.setGraphComponent(systemViewPanel.getGraphComponent());
         jetFuelViewActions.setGraphModel(systemViewPanel.getJetFuelGraphModel());
         BorderPane topPanels = new BorderPane();
         topPanels.setTop(jetFuelViewActions.getMenuBar());

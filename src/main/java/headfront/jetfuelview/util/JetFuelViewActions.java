@@ -85,28 +85,26 @@ public class JetFuelViewActions {
 
     @ActionProxy(text = "Load From Disk", graphic = update1Image)
     public void loadFromDisk() {
-        SwingUtilities.invokeLater(() -> {
-            maskerPane.setVisible(true);
-            jetFuelStatusBar.clearCount();
-            FileUtil.loadGraph(graphComponent, environment + FILE_SUFFIX);
-            mxCell aCell = (mxCell) graphComponent.getGraph().getDefaultParent();
-            int parentChildCount = aCell.getChildCount();
-            for (int i = parentChildCount - 1; i >= 0; i--) {
-                mxCell aChild = (mxCell) graphComponent.getGraph().getModel().getChildAt(aCell, i);
-                String style = aChild.getStyle();
-                processAmpsServer(style);
-                if (style.equals(AMPS_GROUP)) {
-                    int childCount = aChild.getChildCount();
-                    for (int j = childCount - 1; j >= 0; j--) {
-                        mxCell childCell = (mxCell) graphComponent.getGraph().getModel().getChildAt(aChild, j);
-                        String childStyle = childCell.getStyle();
-                        processAmpsServer(childStyle);
-                    }
+        maskerPane.setVisible(true);
+        jetFuelStatusBar.clearCount();
+        FileUtil.loadGraph(graphComponent, environment + FILE_SUFFIX);
+        mxCell aCell = (mxCell) graphComponent.getGraph().getDefaultParent();
+        int parentChildCount = aCell.getChildCount();
+        for (int i = parentChildCount - 1; i >= 0; i--) {
+            mxCell aChild = (mxCell) graphComponent.getGraph().getModel().getChildAt(aCell, i);
+            String style = aChild.getStyle();
+            processAmpsServer(style);
+            if (style.equals(AMPS_GROUP)) {
+                int childCount = aChild.getChildCount();
+                for (int j = childCount - 1; j >= 0; j--) {
+                    mxCell childCell = (mxCell) graphComponent.getGraph().getModel().getChildAt(aChild, j);
+                    String childStyle = childCell.getStyle();
+                    processAmpsServer(childStyle);
                 }
             }
-            jetFuelStatusBar.updateMessage("Loaded SystemView from disk");
-            maskerPane.setVisible(false);
-        });
+        }
+        jetFuelStatusBar.updateMessage("Loaded SystemView from disk");
+        maskerPane.setVisible(false);
     }
 
     private void processAmpsServer(String style) {
@@ -121,7 +119,6 @@ public class JetFuelViewActions {
     private void loadFromServer() {
         SwingUtilities.invokeLater(() -> {
             graphModel.updateFromServer(true);
-            jetFuelStatusBar.updateMessage("Loaded SystemView from Amps");
         });
     }
 

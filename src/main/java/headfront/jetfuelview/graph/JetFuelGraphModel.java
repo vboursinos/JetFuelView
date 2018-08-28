@@ -30,7 +30,7 @@ public class JetFuelGraphModel {
     private Map<String, Map<String, Object>> allDataFromServer = new ConcurrentHashMap<>();
     private Set<String> unknownServers = new HashSet<>();
     private Map<String, String> mappedServers = new ConcurrentHashMap<>();
-    private static final String SEPARATOR = "=";
+    private static final String SEPARATOR = ".";
     private JacksonJsonConvertor jsonConvertor = new JacksonJsonConvertor();
 
     private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm:ss");
@@ -96,6 +96,7 @@ public class JetFuelGraphModel {
                 if (redraw) {
                     draw();
                     maskerPane.setVisible(false);
+                    jetFuelViewStatusBar.updateMessage("Loaded SystemView from Amps");
                 }
             } catch (Exception e) {
                 LOG.error("Unable to load graph model", e);
@@ -222,11 +223,11 @@ public class JetFuelGraphModel {
             graph.getModel().beginUpdate();
             graph.removeCells(graph.getChildVertices(graph.getDefaultParent()));
 
-            int ampsServerX = 20;
+            int ampsServerX = 45;
             int ampsServerY = 30;
             int ampsServerWidth = 150;
             int ampsServerHeight = 30;
-            int ampsServerPaddingX = 50;
+            int ampsServerPaddingX = 100;
             int ampsServerPaddingY = 50;
             int noOfServersPerGroup = 4;
             int initialAmpsGroupX = 100;
@@ -256,13 +257,13 @@ public class JetFuelGraphModel {
             int groupCount = 0;
             Map<String, Object> createdGroups = new HashMap<>();
             for (String groupName : groupToAmpsServers.keySet()) {
-                final int groupWith = (ampsServerWidth + ampsServerPaddingY) * 2;
+                final int groupWith = (ampsServerWidth + ampsServerPaddingX) * 2;
                 final List<String> strings = groupToAmpsServers.get(groupName);
                 noOfServersPerGroup = strings.size();
                 if (noOfServersPerGroup % 2 != 0) {
                     noOfServersPerGroup++;
                 }
-                final int groupHeight = ((noOfServersPerGroup / 2) * (ampsServerHeight + ampsServerPaddingX)) + (ampsServerY);
+                final int groupHeight = ((noOfServersPerGroup / 2) * (ampsServerHeight + ampsServerPaddingY)) + (ampsServerY * 2);
                 Object group = graph.insertVertex(defaultParent, null, groupName, ampsGroupX, ampsGroupY,
                         groupWith, groupHeight, AMPS_GROUP);
                 groupCount++;
@@ -286,7 +287,7 @@ public class JetFuelGraphModel {
             Map<String, Object> createdServers = new HashMap<>();
             for (Map.Entry<String, List<String>> entry : groupToAmpsServers.entrySet()) {
                 int ampsCount = 0;
-                ampsServerX = 20;
+                ampsServerX = 45;
                 ampsServerY = 35;
                 String groupKey = entry.getKey();
                 Object ampsGroupObj = createdGroups.get(groupKey);
@@ -310,7 +311,7 @@ public class JetFuelGraphModel {
                         ampsCount++;
                         if (ampsCount == 2) {
                             ampsCount = 0;
-                            ampsServerX = 20;
+                            ampsServerX = 45;
                             ampsServerY = ampsServerY + ampsServerHeight + ampsServerPaddingY;
                         } else {
                             ampsServerX = ampsServerX + ampsServerWidth + ampsServerPaddingX;

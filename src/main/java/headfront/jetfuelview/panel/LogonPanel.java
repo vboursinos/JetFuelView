@@ -56,7 +56,7 @@ public class LogonPanel {
         } else {
             final Text text = TextUtils.createText("Select Amps System", "fancytextSmaller");
             BorderPane labelPane = new BorderPane();
-            labelPane.setPadding(new Insets(5, 5, 0, 5));
+            labelPane.setPadding(new Insets(10, 10, 0, 10));
             labelPane.setLeft(jetfuelImage);
             labelPane.setCenter(text);
             maskerPane.setText("Validating with AMPS ...");
@@ -142,6 +142,8 @@ public class LogonPanel {
                 final String[] allAdminPorts = adminPorts.split(",");
                 if (allServers.length != allAdminPorts.length) {
                     PopUpDialog.showWarningPopup("Invalid config", "Number of servers and adminports should be same in the config");
+                    maskerPane.setVisible(false);
+                    return;
                 }
                 final String adminUrl = StringUtils.getAdminUrl(allServers[0], allAdminPorts[0]);
                 WebServiceRequest request = new WebServiceRequest();

@@ -1,5 +1,6 @@
 package headfront.jetfuelview.panel;
 
+import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import headfront.jetfuelview.graph.*;
 import headfront.jetfuelview.util.JetFuelViewActions;
@@ -58,9 +59,15 @@ public class SystemViewPanel {
         jetFuelViewActions.setMaskerPane(maskerPane);
         graphComponent.setJetFuelGraphModel(jetFuelGraphModel);
         createMainPanel(graphComponent);
+        jetFuelViewActions.setGraphComponent(graphComponent);
         jetFuelViewActions.loadFromDisk();
-        FileUtil.loadGraph(graphComponent, environment + FILE_SUFFIX);
-        jetFuelGraphModel.updateFromServer(false);
+        mxCell parent = (mxCell) graphComponent.getGraph().getDefaultParent();
+        final int children = parent.getChildCount();
+        if (children == 0) {
+            jetFuelGraphModel.updateFromServer(true);
+        } else {
+            jetFuelGraphModel.updateFromServer(false);
+        }
         jetFuelViewStatusBar.updateMessage("SystemView read from saved config");
     }
 
