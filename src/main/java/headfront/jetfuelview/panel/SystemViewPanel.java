@@ -2,16 +2,16 @@ package headfront.jetfuelview.panel;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
-import headfront.jetfuelview.graph.*;
+import headfront.jetfuelview.graph.JetFuelGraph;
+import headfront.jetfuelview.graph.JetFuelGraphComponent;
+import headfront.jetfuelview.graph.JetFuelGraphModel;
+import headfront.jetfuelview.graph.Styles;
 import headfront.jetfuelview.util.JetFuelViewActions;
 import headfront.jetfuelview.util.TextUtils;
 import javafx.embed.swing.SwingNode;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -35,7 +35,6 @@ public class SystemViewPanel {
     private String propertiesFile;
     private final String username;
     private final String credentials;
-    public static final String FILE_SUFFIX = "-JetFuelView.xml";
     private JetFuelGraphModel jetFuelGraphModel = null;
     private JetFuelGraphComponent graphComponent;
     private JetFuelGraph graph;

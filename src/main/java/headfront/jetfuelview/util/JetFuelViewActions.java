@@ -30,7 +30,6 @@ import java.util.Collection;
 import static headfront.jetfuelview.graph.Styles.AMPS_GROUP;
 import static headfront.jetfuelview.graph.Styles.AMPS_SERVER_BAD;
 import static headfront.jetfuelview.graph.Styles.AMPS_SERVER_GOOD;
-import static headfront.jetfuelview.panel.SystemViewPanel.FILE_SUFFIX;
 import static org.controlsfx.control.action.ActionMap.action;
 import static org.controlsfx.control.action.ActionMap.actions;
 
@@ -78,7 +77,7 @@ public class JetFuelViewActions {
     @ActionProxy(text = "Save", graphic = savePathImage, accelerator = "ctrl+S")
     private void save() {
         SwingUtilities.invokeLater(() -> {
-            FileUtil.saveGraph(graphComponent, environment + FILE_SUFFIX);
+            FileUtil.saveGraph(graphComponent, getConfigFileName());
             jetFuelStatusBar.updateMessage("Saved SystemView");
         });
     }
@@ -87,7 +86,7 @@ public class JetFuelViewActions {
     public void loadFromDisk() {
         maskerPane.setVisible(true);
         jetFuelStatusBar.clearCount();
-        FileUtil.loadGraph(graphComponent, environment + FILE_SUFFIX);
+        FileUtil.loadGraph(graphComponent, getConfigFileName());
         mxCell aCell = (mxCell) graphComponent.getGraph().getDefaultParent();
         int parentChildCount = aCell.getChildCount();
         for (int i = parentChildCount - 1; i >= 0; i--) {
@@ -172,5 +171,9 @@ public class JetFuelViewActions {
 
     public void setMaskerPane(MaskerPane maskerPane) {
         this.maskerPane = maskerPane;
+    }
+
+    private String getConfigFileName(){
+        return "JetFuelView-" + environment + ".xml";
     }
 }
