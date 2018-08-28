@@ -27,9 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static headfront.jetfuelview.graph.Styles.AMPS_GROUP;
-import static headfront.jetfuelview.graph.Styles.AMPS_SERVER_BAD;
-import static headfront.jetfuelview.graph.Styles.AMPS_SERVER_GOOD;
+import static headfront.jetfuelview.graph.Styles.*;
 import static org.controlsfx.control.action.ActionMap.action;
 import static org.controlsfx.control.action.ActionMap.actions;
 
@@ -173,7 +171,7 @@ public class JetFuelViewActions {
         this.maskerPane = maskerPane;
     }
 
-    private String getConfigFileName(){
+    private String getConfigFileName() {
         return "JetFuelView-" + environment + ".xml";
     }
 }

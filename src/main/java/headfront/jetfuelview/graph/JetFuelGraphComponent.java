@@ -5,7 +5,6 @@ import com.mxgraph.swing.handler.mxGraphHandler;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
 import headfront.guiwidgets.PopUpDialog;
-import headfront.jetfuelview.JetFuelView;
 import headfront.jetfuelview.util.ProcessLauncher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +13,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import static headfront.jetfuelview.graph.Styles.AMPS_SERVER_GOOD;

@@ -1,3 +1,7 @@
+plugins {
+    id "co.riiid.gradle" version "0.4.2"
+}
+
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'distribution'
@@ -27,14 +31,15 @@ dependencies {
     compile("org.apache.logging.log4j:log4j-1.2-api:2.1") { exclude group: '*' }
     compile("org.slf4j:slf4j-api:1.7.25") { exclude group: '*' }
 }
+FileTree tree = fileTree(dir: 'libs', include: 'headfront-jetfuel-*.jar')
+def nameToUse = ""
+tree.visit { element ->
+    def (company, project, version) = element.name.split("-");
+    nameToUse = "JetFuelView-" + version.replaceAll('.jar', '')
+}
 
 distributions {
-    FileTree tree = fileTree(dir: 'libs', include: 'headfront-jetfuel-*.jar')
-    def nameToUse = ""
-    tree.visit { element ->
-        def (company, project, version) = element.name.split("-");
-        nameToUse = "JetFuelView-" + version.replaceAll('.jar', '')
-    }
+
     main {
         contents {
             baseName = nameToUse
@@ -55,8 +60,21 @@ distributions {
     }
 }
 
+github {
+    owner = 'deepakcdo'
+    repo = 'JetFuelView'
+    token = '5b54ede27e45afeff164a32d7b21a5b6880b18ef'
+    tagName = nameToUse
+    targetCommitish = 'master'
+    body = "Latest Stable release"
+    assets = [
+            'build/distributions/JetFuelView-1.38.zip'
+    ]
+}
+
 task runJetFuelView(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'headfront.jetfuelview.JetFuelView'
     jvmArgs '-Dlog4j.configurationFile=log4j2-JetFuelView.xml', '-XX:MaxGCPauseMillis=10', '-XX:SurvivorRatio=4', '-XX:+UseConcMarkSweepGC'
 }
+

@@ -70,7 +70,6 @@ public class Styles {
     }
 
 
-
     private static Hashtable<String, Object> createConnectedJetfuelStyle() {
         Hashtable<String, Object> style = new Hashtable<>();
         style.put(mxConstants.STYLE_FILLCOLOR, mxUtils.getHexColorString(Color.WHITE));
