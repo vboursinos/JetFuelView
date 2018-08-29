@@ -1,4 +1,4 @@
-set title "JetFuelView Launcher"
+title JetFuelView Launcher
 
 set CLASSPATH=./config/*;./libs/*;
 
