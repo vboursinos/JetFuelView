@@ -39,6 +39,7 @@ public class JetFuelViewActions {
 
     private static final String update1Image = "images/icons/update1.png";
     private static final String update2Image = "images/icons/update2.png";
+    private static final String findImage = "images/icons/find.png";
     private static final String savePathImage = "images/icons/Save.png";
     private static final String helpPathImage = "images/icons/doc.png";
     private static final String preferencesPathImage = "images/icons/preferences.png";
@@ -70,6 +71,7 @@ public class JetFuelViewActions {
         toolBarActions.add(action("save"));
         toolBarActions.add(action("loadFromDisk"));
         toolBarActions.add(action("loadFromServer"));
+        toolBarActions.add(action("find"));
     }
 
     @ActionProxy(text = "Save", graphic = savePathImage, accelerator = "ctrl+S")
@@ -122,6 +124,11 @@ public class JetFuelViewActions {
     @ActionProxy(text = "Preference", graphic = preferencesPathImage)
     private void preference() {
         PopUpDialog.showWarningPopup("Preference not available", "Preference not implemented in this version");
+    }
+
+    @ActionProxy(text = "Find", graphic = findImage)
+    private void find() {
+        PopUpDialog.showWarningPopup("Find not available", "Find not implemented in this version");
     }
 
     @ActionProxy(text = "Exit")
