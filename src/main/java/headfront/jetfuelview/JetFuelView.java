@@ -2,7 +2,9 @@ package headfront.jetfuelview;
 
 import headfront.dataexplorer.FXConfiguraion;
 import headfront.dataexplorer.JetFuelDataExplorerProperties;
-import headfront.jetfuelview.panel.LogonPanel;
+import headfront.jetfuelview.panel.AbstractLogonPanel;
+import headfront.jetfuelview.panel.JetFuelExplorerLogonPanel;
+import headfront.jetfuelview.panel.JetFuelViewLogonPanel;
 import headfront.jetfuelview.panel.SystemViewPanel;
 import headfront.jetfuelview.util.JetFuelViewActions;
 import headfront.utils.GuiUtil;
@@ -42,6 +44,10 @@ public class JetFuelView extends Application {
     private String credential = "";
     private String propertiesFile = "";
     private JetFuelViewActions jetFuelViewActions;
+    private String APP_TYPE_JETFUEL_VIEW = "JetFuelView";
+    private String APP_TYPE_JETFUEL_EXPLORER = "JetFuelExplorer";
+    private String appType = APP_TYPE_JETFUEL_EXPLORER;
+    private boolean isAppJetFuelView = false;
 
     public static void main(String[] args) {
         launch(args);
@@ -49,8 +55,24 @@ public class JetFuelView extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        final Parameters params = getParameters();
+        final List<String> parameters = params.getRaw();
+        if (parameters.size() != 1) {
+            throw new IllegalArgumentException("Expected one parameter of value " +
+                    APP_TYPE_JETFUEL_VIEW + " or " + APP_TYPE_JETFUEL_EXPLORER + " we found none.");
+        }
+        appType = parameters.get(0);
+        if (appType.equalsIgnoreCase(APP_TYPE_JETFUEL_VIEW)) {
+            isAppJetFuelView = true;
+        } else if (appType.equalsIgnoreCase(APP_TYPE_JETFUEL_EXPLORER)) {
+            isAppJetFuelView = false;
+        } else {
+            throw new IllegalArgumentException("Expected one parameter of value " + APP_TYPE_JETFUEL_VIEW + " or " + APP_TYPE_JETFUEL_EXPLORER +
+                    " we found " + appType);
+        }
+
         version = JetFuelDataExplorerProperties.getInstance().getProperty("version");
-        LOG.info("Starting JetFuelView version " + version);
+        LOG.info("Starting JetFuel version " + version + " appType " + appType);
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
             LOG.error("Caught Exception on Thread " + t, e);
         });
@@ -67,10 +89,14 @@ public class JetFuelView extends Application {
                 }
             }
             stage.setScene(scene);
-            String title = "JetFuelView - " + version;
+            String title = appType + " - " + version;
             stage.setTitle(title);
             stage.setWidth(350);
-            stage.setHeight(240);
+            if (isAppJetFuelView) {
+                stage.setHeight(240);
+            } else {
+                stage.setHeight(270);
+            }
             stage.setResizable(true);
             stage.getIcons().add(jetfuelTitlebarImage);
             logonStage = stage;
@@ -82,30 +108,36 @@ public class JetFuelView extends Application {
 
     private Parent createLogonPanel() {
         BorderPane borderPane = new BorderPane();
-        borderPane.setCenter(new LogonPanel(this::shutDownJetFuelView, this::loggedOn).getMainPane());
+        AbstractLogonPanel logonPanel;
+        if (isAppJetFuelView) {
+            logonPanel = new JetFuelViewLogonPanel(this::shutDownJetFuelView, this::loggedOnJetFuelView);
+        } else {
+            logonPanel = new JetFuelExplorerLogonPanel(this::shutDownJetFuelView, this::loggedOnJetFuelView);
+        }
+        borderPane.setCenter(logonPanel.getMainPane());
         return borderPane;
     }
 
     private void shutDownJetFuelView() {
-        LOG.info("Shutting down JetFuelView");
+        LOG.info("Shutting down " + appType);
         killAllChildrenProcess();
         Platform.exit();
         System.exit(0);
     }
 
-    private void loggedOn(List<String> logonDetails) {
+    private void loggedOnJetFuelView(List<String> logonDetails) {
         environment = logonDetails.get(0).replace(".properties", "");
         propertiesFile = logonDetails.get(0);
         username = logonDetails.get(1);
         credential = logonDetails.get(2);
-        LOG.info("Starting JetFuelView");
+        LOG.info("Starting " + appType);
         jetFuelViewActions = new JetFuelViewActions(environment, this::shutDownJetFuelView);
         jetFuelViewActions.setHostServices(getHostServices());
-        createMainStage();
+        createMainStageJetFuelView();
         logonStage.close();
     }
 
-    private void createMainStage() {
+    private void createMainStageJetFuelView() {
         SystemViewPanel systemViewPanel = new SystemViewPanel(environment, propertiesFile, username, credential, jetFuelViewActions);
         jetFuelViewActions.setGraphModel(systemViewPanel.getJetFuelGraphModel());
         BorderPane topPanels = new BorderPane();
@@ -127,7 +159,7 @@ public class JetFuelView extends Application {
         mainStage = new Stage();
         mainStage.setScene(mainScene);
 
-        String title = "JetFuelView - " + version + " [Environment - " + environment + "]";
+        String title = appType + " - " + version + " [Environment - " + environment + "]";
         mainStage.setTitle(title);
         mainStage.setWidth(1200);
         mainStage.setHeight(900);

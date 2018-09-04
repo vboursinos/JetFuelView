@@ -76,5 +76,26 @@ task runJetFuelView(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'headfront.jetfuelview.JetFuelView'
     jvmArgs '-Dlog4j.configurationFile=log4j2-JetFuelView.xml', '-XX:MaxGCPauseMillis=10', '-XX:SurvivorRatio=4', '-XX:+UseConcMarkSweepGC'
+    args 'JetFuelView'
+}
+
+task runJetFuelExplorer(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'headfront.jetfuelview.JetFuelView'
+    jvmArgs '-Dlog4j.configurationFile=log4j2-JetFuelView.xml', '-XX:MaxGCPauseMillis=10', '-XX:SurvivorRatio=4', '-XX:+UseConcMarkSweepGC'
+    args 'JetFuelExplorer'
+}
+
+task runJetFuelError(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'headfront.jetfuelview.JetFuelView'
+    jvmArgs '-Dlog4j.configurationFile=log4j2-JetFuelView.xml', '-XX:MaxGCPauseMillis=10', '-XX:SurvivorRatio=4', '-XX:+UseConcMarkSweepGC'
+    args 'NoApp'
+}
+
+task runJetFuelNone(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'headfront.jetfuelview.JetFuelView'
+    jvmArgs '-Dlog4j.configurationFile=log4j2-JetFuelView.xml', '-XX:MaxGCPauseMillis=10', '-XX:SurvivorRatio=4', '-XX:+UseConcMarkSweepGC'
 }
 

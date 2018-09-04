@@ -10,3 +10,4 @@ bookmarks
 *.zip
 out
 JetFuelView-*.xml
+gradle.properties
