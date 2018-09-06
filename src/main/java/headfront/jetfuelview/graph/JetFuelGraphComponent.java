@@ -78,7 +78,7 @@ public class JetFuelGraphComponent extends mxGraphComponent {
                             menu.add(startJetFuelExplorer);
                         }
                         JMenuItem properties = new JMenuItem("Properties");
-                        properties.addActionListener(et -> System.out.println("Properties"));
+                        properties.addActionListener(et -> PopUpDialog.showWarningPopup("Properties", "Coming Soon!"));
                         menu.add(properties);
                         menu.show(JetFuelGraphComponent.this, e.getX(), e.getY());
                     }

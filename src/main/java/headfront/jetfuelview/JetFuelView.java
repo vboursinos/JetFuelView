@@ -94,13 +94,14 @@ public class JetFuelView extends Application {
             stage.setScene(scene);
             String title = appType + " - " + version;
             stage.setTitle(title);
-            stage.setWidth(350);
             if (isAppJetFuelView) {
                 stage.setHeight(240);
+                stage.setWidth(350);
             } else {
                 stage.setHeight(270);
+                stage.setWidth(400);
             }
-            stage.setResizable(true);
+            stage.setResizable(false);
             stage.getIcons().add(jetfuelTitlebarImage);
             logonStage = stage;
         } catch (Exception e) {

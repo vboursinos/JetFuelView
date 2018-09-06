@@ -50,7 +50,6 @@ public abstract class AbstractLogonPanel {
     public abstract Pane getCenterPane(List<Path> files);
 
     public Pane getMainPane() {
-
         final List<Path> files = FileUtils.getFiles("config", "properties");
         if (files.size() == 0) {
             PopUpDialog.showWarningPopup("No properties found", "No properties founds in folder config", 999999999);

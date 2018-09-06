@@ -154,7 +154,7 @@ public class JetFuelExplorerLogonPanel extends AbstractLogonPanel {
                     break;
                 }
             }
-            return StringUtils.getAdminUrl(selectedAmpsConnectionUrl, selecteAdminPort);
+            return StringUtils.getAmpsAdminUrlWithCredential(selectedAmpsConnectionUrl, selecteAdminPort, username, password);
         } catch (Exception var3) {
             LOG.error("Unable to login to amps " + fileToLoad, var3);
             maskerPane.setVisible(false);
@@ -169,7 +169,8 @@ public class JetFuelExplorerLogonPanel extends AbstractLogonPanel {
         List<String> logonDetails = new ArrayList<>();
         logonDetails.add(username);
         logonDetails.add(password);
-        logonDetails.add(selectedAmpsConnectionUrl);
+        final String ampsJsonConnectionStringWithCredentials = StringUtils.getAmpsJsonConnectionStringWithCredentials(selectedAmpsConnectionUrl, username, password);
+        logonDetails.add(ampsJsonConnectionStringWithCredentials);
         logonDetails.add(selecteAdminPort);
         logonDetails.add(selecteEnvironment);
         return logonDetails;

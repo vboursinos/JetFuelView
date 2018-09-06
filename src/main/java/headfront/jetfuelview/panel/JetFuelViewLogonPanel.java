@@ -92,7 +92,7 @@ public class JetFuelViewLogonPanel extends AbstractLogonPanel {
                 maskerPane.setVisible(false);
                 return null;
             }
-            return StringUtils.getAdminUrl(allServers[0], allAdminPorts[0]);
+            return StringUtils.getAmpsAdminUrlWithCredential(allServers[0], allAdminPorts[0], username, password);
 
         } catch (Exception var3) {
             LOG.error("Unable to login to amps " + fileToLoad, var3);
