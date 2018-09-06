@@ -33,9 +33,12 @@ dependencies {
 }
 FileTree tree = fileTree(dir: 'libs', include: 'headfront-jetfuel-*.jar')
 def nameToUse = ""
+def jetFuelVersion = ""
 tree.visit { element ->
     def (company, project, version) = element.name.split("-");
-    nameToUse = "JetFuelView-" + version.replaceAll('.jar', '')
+    jetFuelVersion = version.replaceAll('.jar', '')
+    nameToUse = "JetFuelView-" +jetFuelVersion
+
 }
 
 distributions {
@@ -44,6 +47,7 @@ distributions {
         contents {
             baseName = nameToUse
             from 'StartJetFuelView.bat'
+            from 'StartJetFuelExplorer.bat'
             from 'Notes.txt'
             from 'ReadMe.txt'
             into('libs') {
@@ -68,7 +72,7 @@ github {
     targetCommitish = 'master'
     body = "Latest Stable release"
     assets = [
-            'build/distributions/JetFuelView-1.38.zip'
+            'build/distributions/JetFuelView-' + jetFuelVersion + '.zip'
     ]
 }
 
