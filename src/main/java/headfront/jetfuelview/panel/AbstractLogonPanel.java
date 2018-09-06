@@ -6,8 +6,6 @@ import headfront.utils.FileUtils;
 import headfront.utils.StringUtils;
 import headfront.utils.WebServiceRequest;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -19,16 +17,13 @@ import org.controlsfx.control.MaskerPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileReader;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * Created by Deepak on 19/08/2018.
@@ -42,12 +37,20 @@ public abstract class AbstractLogonPanel {
     private final StackPane mainPanelWithMasker = new StackPane();
     private final MaskerPane maskerPane = new MaskerPane();
     private final BorderPane mainPane = new BorderPane();
+    private Runnable shutdownProcess;
     private Consumer<List<String>> validLogon;
     private boolean isJetFuelView;
 
     public AbstractLogonPanel(Runnable shutdownProcess, Consumer<List<String>> validLogon, boolean isJetFuelView) {
+        this.shutdownProcess = shutdownProcess;
         this.validLogon = validLogon;
         this.isJetFuelView = isJetFuelView;
+    }
+
+    public abstract Pane getCenterPane(List<Path> files);
+
+    public Pane getMainPane() {
+
         final List<Path> files = FileUtils.getFiles("config", "properties");
         if (files.size() == 0) {
             PopUpDialog.showWarningPopup("No properties found", "No properties founds in folder config", 999999999);
@@ -100,87 +103,57 @@ public abstract class AbstractLogonPanel {
             mainPane.setCenter(nestedPane);
             mainPanelWithMasker.getChildren().addAll(mainPane, maskerPane);
         }
-    }
-
-    public abstract Pane getCenterPane(List<Path> files);
-
-    public Pane getMainPane() {
         return mainPanelWithMasker;
     }
 
-
     private void validate(String env, String username, String password) {
         new Thread(() -> {
-            String fileToLoad = "config/" + env;
-            LOG.info("Loading " + fileToLoad);
             try {
-                Properties properties = new Properties();
-                properties.load(new FileReader(fileToLoad));
-                final String servers = properties.getProperty("servers");
-                final String adminPorts = properties.getProperty("adminports");
-                final String environment = properties.getProperty("environment");
-                checkValidProperties(servers, "servers should be set");
-                checkValidProperties(adminPorts, "adminports should be set");
-                checkValidProperties(environment, "environment should be set");
-                final String[] allServers = servers.split(",");
-                final String[] allAdminPorts = adminPorts.split(",");
-                if (allServers.length != allAdminPorts.length) {
-                    PopUpDialog.showWarningPopup("Invalid config", "Number of servers and adminports should be same in the config");
-                    maskerPane.setVisible(false);
-                    return;
-                }
-                if (!isJetFuelView) {
-                    final String ampsNames = properties.getProperty("ampsNames");
-                    checkValidProperties(ampsNames, "ampsNames should be set");
-                    final String[] allAmpsNames = ampsNames.split(",");
-                    if (allServers.length != allAmpsNames.length) {
-                        PopUpDialog.showWarningPopup("Invalid config", "Number of servers and ampsNames should be same in the config");
+                final String adminUrl = getAdminUrl(env, username, password, maskerPane);
+                if (adminUrl != null) {
+                    WebServiceRequest request = new WebServiceRequest();
+                    CountDownLatch waitForReply = new CountDownLatch(1);
+                    AtomicBoolean loggedIn = new AtomicBoolean(false);
+                    new Thread(() -> {
+                        final String reply = request.doWebRequests(adminUrl);
+                        if (reply != null) {
+                            loggedIn.set(true);
+                        }
+                        waitForReply.countDown();
+                    }).start();
+                    final boolean timeOut = waitForReply.await(5, TimeUnit.SECONDS);
+                    if (!timeOut) {
                         maskerPane.setVisible(false);
-                        return;
-                    }
-                }
-                final String adminUrl = StringUtils.getAdminUrl(allServers[0], allAdminPorts[0]);
-                WebServiceRequest request = new WebServiceRequest();
-                CountDownLatch waitForReply = new CountDownLatch(1);
-                AtomicBoolean loggedIn = new AtomicBoolean(false);
-                new Thread(() -> {
-                    final String reply = request.doWebRequests(adminUrl);
-                    if (reply != null) {
-                        loggedIn.set(true);
-                    }
-                    waitForReply.countDown();
-                }).start();
-                final boolean timeOut = waitForReply.await(5, TimeUnit.SECONDS);
-                if (!timeOut) {
-                    maskerPane.setVisible(false);
-                    PopUpDialog.showWarningPopup("Amps unreachable", "JetFuelView cant connect to AMPS.");
+                        PopUpDialog.showWarningPopup("Amps unreachable", "JetFuelView cant connect to AMPS.");
 
-                } else if (loggedIn.get()) {
-                    maskerPane.setVisible(false);
-                    List<String> logonDetails = new ArrayList<>();
-                    logonDetails.add(env);
-                    logonDetails.add(username);
-                    logonDetails.add(password);
-                    Platform.runLater(() -> {
-                        validLogon.accept(logonDetails);
-                    });
-                } else {
-                    maskerPane.setVisible(false);
-                    PopUpDialog.showWarningPopup("Invalid Login Details Environment", "Please Try again");
-
+                    } else if (loggedIn.get()) {
+                        maskerPane.setVisible(false);
+                        List<String> logonDetails = getLoginDetails(env, username, password);
+                        Platform.runLater(() -> {
+                            validLogon.accept(logonDetails);
+                        });
+                    } else {
+                        maskerPane.setVisible(false);
+                        PopUpDialog.showWarningPopup("Invalid Login Details Environment", "Please Try again");
+                    }
                 }
             } catch (Exception var3) {
-                LOG.error("Unable to login to amps " + fileToLoad, var3);
+                LOG.error("Unable to login to amps " + env, var3);
+                maskerPane.setVisible(false);
+                PopUpDialog.showWarningPopup("Invalid selection " + env, var3.getMessage());
             }
         }).start();
-
     }
 
-    private void checkValidProperties(String properties, String message) {
+    protected abstract List<String> getLoginDetails(String env, String username, String password);
+
+    protected abstract String getAdminUrl(String env, String username, String password, MaskerPane maskerPane);
+
+    protected void checkValidProperties(String properties, String message) {
         if (properties == null || properties.length() == 0) {
             PopUpDialog.showWarningPopup("Invalid config", message);
         }
     }
 
-    public abstract String getSelectedItem() ;
+    public abstract String getSelectedItem();
 }

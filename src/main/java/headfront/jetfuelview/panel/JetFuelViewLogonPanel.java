@@ -1,5 +1,7 @@
 package headfront.jetfuelview.panel;
 
+import headfront.guiwidgets.PopUpDialog;
+import headfront.utils.StringUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -9,9 +11,15 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import org.controlsfx.control.MaskerPane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.FileReader;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -19,6 +27,8 @@ import java.util.stream.Collectors;
  * Created by Deepak on 31/08/2018.
  */
 public class JetFuelViewLogonPanel extends AbstractLogonPanel {
+
+    private static final Logger LOG = LoggerFactory.getLogger(JetFuelViewLogonPanel.class);
 
     private ComboBox<String> systemsComboBox = new ComboBox<>();
 
@@ -44,6 +54,7 @@ public class JetFuelViewLogonPanel extends AbstractLogonPanel {
         selectionPane.setAlignment(Pos.CENTER_LEFT);
         systemsComboBox.getItems().addAll(listToUse);
         systemsComboBox.setMaxWidth(Double.MAX_VALUE);
+        systemsComboBox.getSelectionModel().select(0);
         GridPane.setHgrow(systemsComboBox, Priority.ALWAYS);
         GridPane.setFillWidth(systemsComboBox, true);
 
@@ -59,5 +70,45 @@ public class JetFuelViewLogonPanel extends AbstractLogonPanel {
     @Override
     public String getSelectedItem() {
         return systemsComboBox.getSelectionModel().getSelectedItem();
+    }
+
+    @Override
+    protected String getAdminUrl(String env, String username, String password, MaskerPane maskerPane) {
+        String fileToLoad = "config/" + env;
+        LOG.info("Loading " + fileToLoad);
+        try {
+            Properties properties = new Properties();
+            properties.load(new FileReader(fileToLoad));
+            final String servers = properties.getProperty("servers");
+            final String adminPorts = properties.getProperty("adminports");
+            final String environment = properties.getProperty("environment");
+            checkValidProperties(servers, "servers should be set");
+            checkValidProperties(adminPorts, "adminports should be set");
+            checkValidProperties(environment, "environment should be set");
+            final String[] allServers = servers.split(",");
+            final String[] allAdminPorts = adminPorts.split(",");
+            if (allServers.length != allAdminPorts.length) {
+                PopUpDialog.showWarningPopup("Invalid config", "Number of servers and adminports should be same in the config");
+                maskerPane.setVisible(false);
+                return null;
+            }
+            return StringUtils.getAdminUrl(allServers[0], allAdminPorts[0]);
+
+        } catch (Exception var3) {
+            LOG.error("Unable to login to amps " + fileToLoad, var3);
+            maskerPane.setVisible(false);
+            PopUpDialog.showWarningPopup("Invalid selection", var3.getMessage());
+
+        }
+        return null;
+    }
+
+    @Override
+    protected List<String> getLoginDetails(String env, String username, String password) {
+        List<String> logonDetails = new ArrayList<>();
+        logonDetails.add(username);
+        logonDetails.add(password);
+        logonDetails.add(env);
+        return logonDetails;
     }
 }

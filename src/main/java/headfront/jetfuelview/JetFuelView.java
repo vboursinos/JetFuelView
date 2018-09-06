@@ -1,13 +1,16 @@
 package headfront.jetfuelview;
 
+import headfront.dataexplorer.DataExplorer;
 import headfront.dataexplorer.FXConfiguraion;
 import headfront.dataexplorer.JetFuelDataExplorerProperties;
+import headfront.guiwidgets.PopUpDialog;
 import headfront.jetfuelview.panel.AbstractLogonPanel;
 import headfront.jetfuelview.panel.JetFuelExplorerLogonPanel;
 import headfront.jetfuelview.panel.JetFuelViewLogonPanel;
 import headfront.jetfuelview.panel.SystemViewPanel;
 import headfront.jetfuelview.util.JetFuelViewActions;
 import headfront.utils.GuiUtil;
+import headfront.utils.StringUtils;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -112,7 +115,7 @@ public class JetFuelView extends Application {
         if (isAppJetFuelView) {
             logonPanel = new JetFuelViewLogonPanel(this::shutDownJetFuelView, this::loggedOnJetFuelView);
         } else {
-            logonPanel = new JetFuelExplorerLogonPanel(this::shutDownJetFuelView, this::loggedOnJetFuelView);
+            logonPanel = new JetFuelExplorerLogonPanel(this::shutDownJetFuelView, this::loggedOnJetFuelExplorer);
         }
         borderPane.setCenter(logonPanel.getMainPane());
         return borderPane;
@@ -126,15 +129,35 @@ public class JetFuelView extends Application {
     }
 
     private void loggedOnJetFuelView(List<String> logonDetails) {
-        environment = logonDetails.get(0).replace(".properties", "");
-        propertiesFile = logonDetails.get(0);
-        username = logonDetails.get(1);
-        credential = logonDetails.get(2);
+        username = logonDetails.get(0);
+        credential = logonDetails.get(1);
+        environment = logonDetails.get(2).replace(".properties", "");
+        propertiesFile = logonDetails.get(2);
         LOG.info("Starting " + appType);
         jetFuelViewActions = new JetFuelViewActions(environment, this::shutDownJetFuelView);
         jetFuelViewActions.setHostServices(getHostServices());
         createMainStageJetFuelView();
         logonStage.close();
+    }
+
+    private void loggedOnJetFuelExplorer(List<String> logonDetails) {
+        environment = logonDetails.get(0).replace(".properties", "");
+        propertiesFile = logonDetails.get(0);
+        username = logonDetails.get(0);
+        credential = logonDetails.get(1);
+        String connectionsStr = logonDetails.get(2);
+        String adminPortStr = logonDetails.get(3);
+        String environmentStr = logonDetails.get(4);
+        LOG.info("Starting " + appType);
+        DataExplorer dataExplorer = new DataExplorer(connectionsStr, adminPortStr, environmentStr);
+        try {
+            dataExplorer.start(logonStage);
+        } catch (Exception e) {
+            final String connStr = StringUtils.removePassword(connectionsStr);
+            LOG.error("Unable to start JetFuelExplorer " + connStr, e);
+            PopUpDialog.showWarningPopup("Unable to start JetFuelExplorer",
+                    "Unable to start JetFuelExplorer to" + connStr + " " + e.getMessage());
+        }
     }
 
     private void createMainStageJetFuelView() {
