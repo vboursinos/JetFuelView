@@ -35,10 +35,9 @@ FileTree tree = fileTree(dir: 'libs', include: 'headfront-jetfuel-*.jar')
 def nameToUse = ""
 def jetFuelVersion = ""
 tree.visit { element ->
-    def (company, project, version) = element.name.split("-");
+    def (company, project, version) = element.name.split("-")
     jetFuelVersion = version.replaceAll('.jar', '')
     nameToUse = "JetFuelView-" +jetFuelVersion
-
 }
 
 distributions {
