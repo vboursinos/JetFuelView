@@ -152,13 +152,14 @@ public class JetFuelView extends Application {
         LOG.info("Starting " + appType);
         DataExplorer dataExplorer = new DataExplorer(connectionsStr, adminPortStr, environmentStr);
         try {
-            dataExplorer.start(logonStage);
+            dataExplorer.start(new Stage());
         } catch (Exception e) {
             final String connStr = StringUtils.removePassword(connectionsStr);
             LOG.error("Unable to start JetFuelExplorer " + connStr, e);
             PopUpDialog.showWarningPopup("Unable to start JetFuelExplorer",
                     "Unable to start JetFuelExplorer to" + connStr + " " + e.getMessage());
         }
+        logonStage.close();
     }
 
     private void createMainStageJetFuelView() {

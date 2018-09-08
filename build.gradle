@@ -54,7 +54,7 @@ distributions {
                 from(project.configurations.runtime)
             }
             into('config') {
-                from 'config'
+                from 'config\\Example-UAT.properties'
             }
             into('config') {
                 from 'src\\main\\resources\\log4j2-JetFuelView.xml'
