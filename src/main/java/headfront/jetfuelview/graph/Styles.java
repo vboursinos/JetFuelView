@@ -28,7 +28,8 @@ public class Styles {
     public static void registerStyles(mxStylesheet stylesheet) {
         stylesheet.putCellStyle(USER_CONNECTED, createConnectedUserStyle());
         stylesheet.putCellStyle(AMPS_GROUP, createAmpsGroupStyle());
-        stylesheet.putCellStyle(AMPS_LINK_GOOD, createAmpsGoodLinktyle());
+        stylesheet.putCellStyle(AMPS_LINK_GOOD, createAmpsGoodLinkStyle());
+        stylesheet.putCellStyle(AMPS_LINK_BAD, createAmpsBadLinkStyle());
         stylesheet.putCellStyle(JETFUEL_CONNECTED, createConnectedJetfuelStyle());
         stylesheet.putCellStyle(AMPS_SERVER_GOOD, createAmpsGoodServerStyle());
         stylesheet.putCellStyle(AMPS_SERVER_BAD, createAmpsBadServerStyle());
@@ -154,9 +155,18 @@ public class Styles {
         return style;
     }
 
-    private static Hashtable<String, Object> createAmpsGoodLinktyle() {
+    private static Hashtable<String, Object> createAmpsGoodLinkStyle() {
         Hashtable<String, Object> style = new Hashtable<>();
         style.put(mxConstants.STYLE_STROKECOLOR, mxUtils.getHexColorString(Color.BLACK));
+        style.put(mxConstants.STYLE_ENDARROW, mxConstants.ARROW_CLASSIC);
+        style.put(mxConstants.STYLE_ENDSIZE, 10);
+        style.put(mxConstants.STYLE_STROKEWIDTH, 2);
+        return style;
+    }
+
+    private static Hashtable<String, Object> createAmpsBadLinkStyle() {
+        Hashtable<String, Object> style = new Hashtable<>();
+        style.put(mxConstants.STYLE_STROKECOLOR, mxUtils.getHexColorString(Color.RED));
         style.put(mxConstants.STYLE_ENDARROW, mxConstants.ARROW_CLASSIC);
         style.put(mxConstants.STYLE_ENDSIZE, 10);
         style.put(mxConstants.STYLE_STROKEWIDTH, 2);

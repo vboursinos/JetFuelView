@@ -2,6 +2,7 @@ package headfront.jetfuelview.graph;
 
 import headfront.convertor.JacksonJsonConvertor;
 import headfront.jetfuelview.panel.JetFuelViewStatusBar;
+import headfront.jetfuelview.util.ObjectHolder;
 import headfront.utils.MessageUtil;
 import headfront.utils.StringUtils;
 import headfront.utils.WebServiceRequest;
@@ -238,7 +239,7 @@ public class JetFuelGraphModel {
             Object server = graph.insertVertex(defaultParent, null, "pricePublisher", 145, 20, 30, 30, AMPS_COMPONENT_GOOD);
             Object jetFuel = graph.insertVertex(defaultParent, null, "DeepakJetFuel", 265, 20, 30, 30, JETFUEL_CONNECTED);
             final Collection<Map<String, Object>> values = allDataFromServer.values();
-            Map<String, List<String>> replications = new HashMap<>();
+            Map<String, List<ObjectHolder>> replications = new HashMap<>();
             Map<String, List<String>> groupToAmpsServers = new TreeMap<>();
             values.forEach(map -> {
                 final String newGroup = map.get("group").toString();
@@ -251,8 +252,10 @@ public class JetFuelGraphModel {
                 servers.add(newamps);
 
                 List<Map<String, Object>> reps = (List<Map<String, Object>>) map.get("replication");
-                final List<String> repNames = reps.stream().map(m -> m.get("name").toString()).collect(Collectors.toList());
-                replications.put(map.get("name").toString(), repNames);
+                final List<ObjectHolder> repNamesAndSecondsBehind = reps.stream().map(
+                        m -> new ObjectHolder(m.get("name").toString(), m.get("secondsBehind").toString())
+                ).collect(Collectors.toList());
+                replications.put(map.get("name").toString(), repNamesAndSecondsBehind);
             });
             int groupCount = 0;
             Map<String, Object> createdGroups = new HashMap<>();
@@ -322,17 +325,18 @@ public class JetFuelGraphModel {
                 }
             }
 
-//        graph.insertEdge(defaultParent, "1", "", user, createdServers.get(allAmpsServer[0]), AMPS_LINK_GOOD);
-//        graph.insertEdge(defaultParent, "2", "", user, jetFuel, AMPS_LINK_GOOD);
-//        graph.insertEdge(defaultParent, "3", "", jetFuel, user, AMPS_LINK_GOOD);
             for (Map.Entry repEntry : replications.entrySet()) {
                 final String from = repEntry.getKey().toString();
-                final List<String> reps = (List<String>) repEntry.getValue();
-                reps.forEach(arep -> {
+                final List<ObjectHolder> reps = (List<ObjectHolder>) repEntry.getValue();
+                reps.forEach(aRep -> {
                     final Object fromServer = createdServers.get(from);
-                    final Object toServer = createdServers.get(arep);
-
-                    graph.insertEdge(createdGroups.get(fromServer), null, "", fromServer, toServer, AMPS_LINK_GOOD);
+                    final Object toServer = createdServers.get(aRep.get(0));
+                    Double doubleSecondsBehind = Double.parseDouble(aRep.get(1).toString());
+                    if (doubleSecondsBehind > 2) {
+                        graph.insertEdge(createdGroups.get(fromServer), null, "", fromServer, toServer, AMPS_LINK_BAD);
+                    } else {
+                        graph.insertEdge(createdGroups.get(fromServer), null, "", fromServer, toServer, AMPS_LINK_GOOD);
+                    }
                 });
             }
             graph.getModel().endUpdate();

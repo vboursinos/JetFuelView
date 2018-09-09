@@ -45,8 +45,8 @@ distributions {
     main {
         contents {
             baseName = nameToUse
-            from 'StartJetFuelView.bat'
-            from 'StartJetFuelExplorer.bat'
+            from 'bin\\StartJetFuelView.bat'
+            from 'bin\\StartJetFuelExplorer.bat'
             from 'Notes.txt'
             from 'ReadMe.txt'
             into('libs') {
@@ -55,9 +55,10 @@ distributions {
             }
             into('config') {
                 from 'config\\Example-UAT.properties'
-            }
-            into('config') {
                 from 'src\\main\\resources\\log4j2-JetFuelView.xml'
+            }
+            into('bin') {
+                from 'bin\\StartJetFuelExplorerDirect.bat'
             }
         }
     }

@@ -26,6 +26,7 @@ public class JetFuelGraph extends mxGraph {
 
     @Override
     public String getToolTipForCell(Object cell) {
-        return super.getToolTipForCell(cell);
+        final String toolTipForCell = super.getToolTipForCell(cell);
+        return toolTipForCell + " [Better ToolTip Coming soon !!!]"  ;
     }
 }
