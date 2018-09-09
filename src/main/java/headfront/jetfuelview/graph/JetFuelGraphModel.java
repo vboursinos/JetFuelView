@@ -2,8 +2,8 @@ package headfront.jetfuelview.graph;
 
 import headfront.convertor.JacksonJsonConvertor;
 import headfront.jetfuelview.panel.JetFuelViewStatusBar;
-import headfront.jetfuelview.util.ObjectHolder;
 import headfront.utils.MessageUtil;
+import headfront.utils.ObjectHolder;
 import headfront.utils.StringUtils;
 import headfront.utils.WebServiceRequest;
 import org.controlsfx.control.MaskerPane;
