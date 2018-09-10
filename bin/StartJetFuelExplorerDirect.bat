@@ -1,4 +1,4 @@
-set CLASSPATH=./libs/*;
+set CLASSPATH=../libs/*;
 
 
 set JAVA_HOME=C:\Program Files\Java\jdk1.8.0_92
