@@ -38,6 +38,7 @@ import static org.controlsfx.control.action.ActionMap.actions;
 public class JetFuelViewActions {
 
     private static final String update1Image = "images/icons/update1.png";
+    private static final String jetFuelImage = "images/icons/JetFuelSmallNoBg.png";
     private static final String update2Image = "images/icons/update2.png";
     private static final String findImage = "images/icons/find.png";
     private static final String savePathImage = "images/icons/Save.png";
@@ -63,7 +64,7 @@ public class JetFuelViewActions {
         menuBarActions = Arrays.asList(
                 new ActionGroup("File", action("save"), action("exit")),
                 new ActionGroup("Edit", actions("preference")),
-                new ActionGroup("Help", action("help"), action("about"))
+                new ActionGroup("Help", action("help"), action("about"),  action("jetFuel"))
         );
 
         toolBarActions = new ArrayList();
@@ -141,6 +142,11 @@ public class JetFuelViewActions {
         new AboutPopup(hostServices);
     }
 
+
+    @ActionProxy(text = "JetFuel", graphic = jetFuelImage)
+    private void jetFuel() {
+        hostServices.showDocument("https://jetfuel.solutions/");
+    }
 
     @ActionProxy(text = "Help", graphic = helpPathImage)
     private void help() {
