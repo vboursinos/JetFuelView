@@ -17,6 +17,7 @@ import org.controlsfx.control.MaskerPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +51,14 @@ public abstract class AbstractLogonPanel {
     public abstract Pane getCenterPane(List<Path> files);
 
     public Pane getMainPane() {
-        final List<Path> files = FileUtils.getFiles("config", "properties");
+        File configLocation = new File("resource");
+        if (!configLocation.exists()) {
+            configLocation = new File("resources");
+            if (!configLocation.exists()) {
+                configLocation = new File("config");
+            }
+        }
+        final List<Path> files = FileUtils.getFiles(configLocation.getName(), "properties");
         if (files.size() == 0) {
             PopUpDialog.showWarningPopup("No properties found", "No properties founds in folder config", 999999999);
         } else {
@@ -105,7 +113,7 @@ public abstract class AbstractLogonPanel {
         return mainPanelWithMasker;
     }
 
-    private void validate(String env, String username, String password) {
+    private void validate(String env, String username, String password, String useSecureHttp) {
         new Thread(() -> {
             try {
                 final String adminUrl = getAdminUrl(env, username, password, maskerPane);
@@ -127,7 +135,7 @@ public abstract class AbstractLogonPanel {
 
                     } else if (loggedIn.get()) {
                         maskerPane.setVisible(false);
-                        List<String> logonDetails = getLoginDetails(env, username, password);
+                        List<String> logonDetails = getLoginDetails(env, username, password, useSecureHttp);
                         Platform.runLater(() -> {
                             validLogon.accept(logonDetails);
                         });
@@ -144,7 +152,7 @@ public abstract class AbstractLogonPanel {
         }).start();
     }
 
-    protected abstract List<String> getLoginDetails(String env, String username, String password);
+    protected abstract List<String> getLoginDetails(String env, String username, String password, String useSecureHttp);
 
     protected abstract String getAdminUrl(String env, String username, String password, MaskerPane maskerPane);
 

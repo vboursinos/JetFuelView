@@ -69,8 +69,10 @@ public class JetFuelGraphModel {
                 final String servers = properties.getProperty("servers");
                 final String adminPorts = properties.getProperty("adminports");
                 final String environment = properties.getProperty("environment");
+                final String securehttps = properties.getProperty("securehttp");
                 final String[] allServers = servers.split(",");
                 final String[] allAdminPorts = adminPorts.split(",");
+                final String[] securehttp = securehttps.split(",");
                 allDataFromServer.clear();
                 unknownServers.clear();
                 mappedServers.clear();
@@ -78,7 +80,8 @@ public class JetFuelGraphModel {
                 for (int i = 0; i < allServers.length; i++) {
                     String serverToLoad = allServers[i];
                     String adminPortToLoad = allAdminPorts[i];
-                    String metaDatUrl = StringUtils.getAdminUrl(serverToLoad, adminPortToLoad) + ".json";
+                    boolean useSecureHttp = Boolean.parseBoolean(securehttp[i]);
+                    String metaDatUrl = StringUtils.getAdminUrl(serverToLoad, adminPortToLoad,useSecureHttp) + ".json";
                     final String serverStats = getServerConfig(metaDatUrl);
                     if (serverStats != null && serverStats.trim().length() > 1) {
                         updateState(serverStats, serverToLoad, adminPortToLoad);

@@ -40,6 +40,19 @@ tree.visit { element ->
     nameToUse = "JetFuelView-" +jetFuelVersion
 }
 
+jar{
+    baseName = 'headfront-jetfuelview-' + jetFuelVersion
+    manifest {
+        attributes 'Company': 'Head Front Consulting',
+                'App': 'JetFuel',
+                'Version': jetFuelVersion,
+                'ContactEmail': 'deepakcdo@gmail.com',
+                'ContactNumber': '+44 7958 707 212',
+                'Owner': 'Deepak Dhayatker',
+                'Web': 'http://headfront.co.uk/'
+    }
+}
+
 distributions {
 
     main {

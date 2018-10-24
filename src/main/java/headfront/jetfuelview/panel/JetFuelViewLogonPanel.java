@@ -82,17 +82,26 @@ public class JetFuelViewLogonPanel extends AbstractLogonPanel {
             final String servers = properties.getProperty("servers");
             final String adminPorts = properties.getProperty("adminports");
             final String environment = properties.getProperty("environment");
+            final String securehttps = properties.getProperty("securehttp");
             checkValidProperties(servers, "servers should be set");
             checkValidProperties(adminPorts, "adminports should be set");
             checkValidProperties(environment, "environment should be set");
+            checkValidProperties(securehttps, "securehttp should be set");
             final String[] allServers = servers.split(",");
             final String[] allAdminPorts = adminPorts.split(",");
+            final String[] securehttp = securehttps.split(",");
             if (allServers.length != allAdminPorts.length) {
                 PopUpDialog.showWarningPopup("Invalid config", "Number of servers and adminports should be same in the config");
                 maskerPane.setVisible(false);
                 return null;
             }
-            return StringUtils.getAmpsAdminUrlWithCredential(allServers[0], allAdminPorts[0], username, password);
+            if (allServers.length != securehttp.length) {
+                PopUpDialog.showWarningPopup("Invalid config", "Number of servers and securehttp should be same in the config");
+                maskerPane.setVisible(false);
+                return null;
+            }
+            return StringUtils.getAmpsAdminUrlWithCredential(allServers[0], allAdminPorts[0], username, password,
+                    Boolean.parseBoolean(securehttp[0]));
 
         } catch (Exception var3) {
             LOG.error("Unable to login to amps " + fileToLoad, var3);
@@ -104,11 +113,12 @@ public class JetFuelViewLogonPanel extends AbstractLogonPanel {
     }
 
     @Override
-    protected List<String> getLoginDetails(String env, String username, String password) {
+    protected List<String> getLoginDetails(String env, String username, String password, String useSecureHttp) {
         List<String> logonDetails = new ArrayList<>();
         logonDetails.add(username);
         logonDetails.add(password);
         logonDetails.add(env);
+        logonDetails.add(useSecureHttp);
         return logonDetails;
     }
 }

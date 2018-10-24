@@ -149,8 +149,9 @@ public class JetFuelView extends Application {
         String connectionsStr = logonDetails.get(2);
         String adminPortStr = logonDetails.get(3);
         String environmentStr = logonDetails.get(4);
+        boolean useSecureHttp = Boolean.parseBoolean(logonDetails.get(5));
         LOG.info("Starting " + appType);
-        DataExplorer dataExplorer = new DataExplorer(connectionsStr, adminPortStr, environmentStr);
+        DataExplorer dataExplorer = new DataExplorer(connectionsStr, adminPortStr, environmentStr, useSecureHttp);
         try {
             dataExplorer.start(new Stage());
         } catch (Exception e) {

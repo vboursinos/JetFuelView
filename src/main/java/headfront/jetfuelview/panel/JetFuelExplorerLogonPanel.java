@@ -32,8 +32,9 @@ public class JetFuelExplorerLogonPanel extends AbstractLogonPanel {
     private final Map<String, ComboBox> allCombobBoxes = new ConcurrentHashMap<>();
     private final TabPane tabPane = new TabPane();
     private String selectedAmpsConnectionUrl = "";
-    private  String selecteAdminPort = "";
-    private  String selecteEnvironment = "";
+    private String selecteAdminPort = "";
+    private String selecteEnvironment = "";
+    private boolean selectedSecureHttp = false;
 
     public JetFuelExplorerLogonPanel(Runnable shutdownProcess, Consumer<List<String>> validLogon) {
         super(shutdownProcess, validLogon, false);
@@ -127,13 +128,21 @@ public class JetFuelExplorerLogonPanel extends AbstractLogonPanel {
             final String servers = properties.getProperty("servers");
             final String adminPorts = properties.getProperty("adminports");
             final String environment = properties.getProperty("environment");
+            final String securehttps = properties.getProperty("securehttp");
             checkValidProperties(servers, "servers should be set");
             checkValidProperties(adminPorts, "adminports should be set");
             checkValidProperties(environment, "environment should be set");
+            checkValidProperties(securehttps, "securehttp should be set");
             final String[] allServers = servers.split(",");
             final String[] allAdminPorts = adminPorts.split(",");
+            final String[] securehttp = securehttps.split(",");
             if (allServers.length != allAdminPorts.length) {
                 PopUpDialog.showWarningPopup("Invalid config", "Number of servers and adminports should be same in the config");
+                maskerPane.setVisible(false);
+                return null;
+            }
+            if (allServers.length != securehttp.length) {
+                PopUpDialog.showWarningPopup("Invalid config", "Number of servers and securehttp should be same in the config");
                 maskerPane.setVisible(false);
                 return null;
             }
@@ -151,10 +160,11 @@ public class JetFuelExplorerLogonPanel extends AbstractLogonPanel {
                     selectedAmpsConnectionUrl = allServers[i];
                     selecteAdminPort = allAdminPorts[i];
                     selecteEnvironment = environment;
+                    selectedSecureHttp = Boolean.parseBoolean(securehttp[i]);
                     break;
                 }
             }
-            return StringUtils.getAmpsAdminUrlWithCredential(selectedAmpsConnectionUrl, selecteAdminPort, username, password);
+            return StringUtils.getAmpsAdminUrlWithCredential(selectedAmpsConnectionUrl, selecteAdminPort, username, password, selectedSecureHttp);
         } catch (Exception var3) {
             LOG.error("Unable to login to amps " + fileToLoad, var3);
             maskerPane.setVisible(false);
@@ -165,7 +175,7 @@ public class JetFuelExplorerLogonPanel extends AbstractLogonPanel {
     }
 
     @Override
-    protected List<String> getLoginDetails(String env, String username, String password) {
+    protected List<String> getLoginDetails(String env, String username, String password, String useSecureHttp) {
         List<String> logonDetails = new ArrayList<>();
         logonDetails.add(username);
         logonDetails.add(password);
@@ -173,6 +183,7 @@ public class JetFuelExplorerLogonPanel extends AbstractLogonPanel {
         logonDetails.add(ampsJsonConnectionStringWithCredentials);
         logonDetails.add(selecteAdminPort);
         logonDetails.add(selecteEnvironment);
+        logonDetails.add(useSecureHttp);
         return logonDetails;
     }
 }
