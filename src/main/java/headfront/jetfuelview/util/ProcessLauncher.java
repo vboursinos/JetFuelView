@@ -51,7 +51,8 @@ public class ProcessLauncher {
                             "headfront.dataexplorer.DataExplorer",
                             ampsJsonUrlWithCredential,
                             server.get("adminPort").toString(),
-                            server.get("environment").toString()
+                            server.get("environment").toString(),
+                            server.get("securehttp").toString()
                     )
                             .inheritIO()
                             .start();

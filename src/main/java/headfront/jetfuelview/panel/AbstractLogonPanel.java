@@ -79,6 +79,7 @@ public abstract class AbstractLogonPanel {
             });
 
             Button loginButton = new Button("Login");
+            loginButton.setDefaultButton(true);
             loginButton.setOnAction(e -> {
                 final String selectedItem = getSelectedItem();
                 if (selectedItem == null) {
@@ -113,7 +114,7 @@ public abstract class AbstractLogonPanel {
         return mainPanelWithMasker;
     }
 
-    private void validate(String env, String username, String password, String useSecureHttp) {
+    private void validate(String env, String username, String password) {
         new Thread(() -> {
             try {
                 final String adminUrl = getAdminUrl(env, username, password, maskerPane);
@@ -135,6 +136,7 @@ public abstract class AbstractLogonPanel {
 
                     } else if (loggedIn.get()) {
                         maskerPane.setVisible(false);
+                        String useSecureHttp = adminUrl.contains("https://") ? "true" : "false";
                         List<String> logonDetails = getLoginDetails(env, username, password, useSecureHttp);
                         Platform.runLater(() -> {
                             validLogon.accept(logonDetails);
@@ -158,7 +160,7 @@ public abstract class AbstractLogonPanel {
 
     protected void checkValidProperties(String properties, String message) {
         if (properties == null || properties.length() == 0) {
-            PopUpDialog.showWarningPopup("Invalid config", message);
+            PopUpDialog.showWarningPopup("Invalid config", message + " in the config.", 888);
         }
     }
 
