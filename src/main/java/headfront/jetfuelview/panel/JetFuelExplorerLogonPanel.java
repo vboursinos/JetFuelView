@@ -15,6 +15,7 @@ import org.controlsfx.control.MaskerPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.FileReader;
 import java.nio.file.Path;
 import java.util.*;
@@ -120,7 +121,7 @@ public class JetFuelExplorerLogonPanel extends AbstractLogonPanel {
 
     @Override
     protected String getAdminUrl(String env, String username, String password, MaskerPane maskerPane) {
-        String fileToLoad = "config/" + tabPane.getSelectionModel().getSelectedItem().getText() + ".properties";
+        String fileToLoad = getResourceDir() + File.separator + tabPane.getSelectionModel().getSelectedItem().getText() + ".properties";
         LOG.info("Loading " + fileToLoad);
         try {
             Properties properties = new Properties();

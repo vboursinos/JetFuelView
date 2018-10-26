@@ -41,6 +41,7 @@ public abstract class AbstractLogonPanel {
     private Runnable shutdownProcess;
     private Consumer<List<String>> validLogon;
     private boolean isJetFuelView;
+    private String resourceDir = "";
 
     public AbstractLogonPanel(Runnable shutdownProcess, Consumer<List<String>> validLogon, boolean isJetFuelView) {
         this.shutdownProcess = shutdownProcess;
@@ -50,6 +51,10 @@ public abstract class AbstractLogonPanel {
 
     public abstract Pane getCenterPane(List<Path> files);
 
+    public String getResourceDir() {
+        return resourceDir;
+    }
+
     public Pane getMainPane() {
         File configLocation = new File("resource");
         if (!configLocation.exists()) {
@@ -58,7 +63,8 @@ public abstract class AbstractLogonPanel {
                 configLocation = new File("config");
             }
         }
-        final List<Path> files = FileUtils.getFiles(configLocation.getName(), "properties");
+        resourceDir = configLocation.getName();
+        final List<Path> files = FileUtils.getFiles(resourceDir, "properties");
         if (files.size() == 0) {
             PopUpDialog.showWarningPopup("No properties found", "No properties founds in folder config", 999999999);
         } else {

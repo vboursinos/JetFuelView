@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import javax.swing.*;
+import java.io.File;
 import java.io.FileReader;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -44,9 +45,10 @@ public class JetFuelGraphModel {
     private String environment;
     private JetFuelViewStatusBar jetFuelViewStatusBar;
     private MaskerPane maskerPane;
+    private String resourceDir;
 
     public JetFuelGraphModel(JetFuelGraph graph, String propertiesFile, String username, String credentials, String environment,
-                             JetFuelViewStatusBar jetFuelViewStatusBar, MaskerPane maskerPane) {
+                             JetFuelViewStatusBar jetFuelViewStatusBar, MaskerPane maskerPane, String resourceDir) {
         this.graph = graph;
         this.propertiesFile = propertiesFile;
         this.username = username;
@@ -54,6 +56,7 @@ public class JetFuelGraphModel {
         this.environment = environment;
         this.jetFuelViewStatusBar = jetFuelViewStatusBar;
         this.maskerPane = maskerPane;
+        this.resourceDir = resourceDir;
     }
 
     public void updateFromServer(boolean redraw) {
@@ -62,7 +65,7 @@ public class JetFuelGraphModel {
                 if (redraw) {
                     maskerPane.setVisible(true);
                 }
-                String fileToLoad = "config/" + propertiesFile;
+                String fileToLoad = resourceDir + File.separator + propertiesFile;
                 LOG.info("Loading " + fileToLoad);
                 Properties properties = new Properties();
                 properties.load(new FileReader(fileToLoad));

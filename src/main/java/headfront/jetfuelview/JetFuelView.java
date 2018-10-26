@@ -51,6 +51,7 @@ public class JetFuelView extends Application {
     private String APP_TYPE_JETFUEL_EXPLORER = "JetFuelExplorer";
     private String appType = APP_TYPE_JETFUEL_EXPLORER;
     private boolean isAppJetFuelView = false;
+    private AbstractLogonPanel logonPanel = null;
 
     public static void main(String[] args) {
         launch(args);
@@ -112,7 +113,6 @@ public class JetFuelView extends Application {
 
     private Parent createLogonPanel() {
         BorderPane borderPane = new BorderPane();
-        AbstractLogonPanel logonPanel;
         if (isAppJetFuelView) {
             logonPanel = new JetFuelViewLogonPanel(this::shutDownJetFuelView, this::loggedOnJetFuelView);
         } else {
@@ -164,7 +164,8 @@ public class JetFuelView extends Application {
     }
 
     private void createMainStageJetFuelView() {
-        SystemViewPanel systemViewPanel = new SystemViewPanel(environment, propertiesFile, username, credential, jetFuelViewActions);
+        SystemViewPanel systemViewPanel = new SystemViewPanel(environment, propertiesFile, username, credential,
+                jetFuelViewActions, logonPanel.getResourceDir());
         jetFuelViewActions.setGraphModel(systemViewPanel.getJetFuelGraphModel());
         BorderPane topPanels = new BorderPane();
         topPanels.setTop(jetFuelViewActions.getMenuBar());

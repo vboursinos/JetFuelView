@@ -43,7 +43,7 @@ public class SystemViewPanel {
     private final MaskerPane maskerPane = new MaskerPane();
 
     public SystemViewPanel(String environment, String propertiesFile, String username, String credentials,
-                           JetFuelViewActions jetFuelViewActions) {
+                           JetFuelViewActions jetFuelViewActions, String resourceDir) {
         this.environment = environment;
         this.propertiesFile = propertiesFile;
         this.username = username;
@@ -53,7 +53,7 @@ public class SystemViewPanel {
         graphComponent = new JetFuelGraphComponent(graph);
         jetFuelViewStatusBar = new JetFuelViewStatusBar(new NotificationPane());
         jetFuelGraphModel = new JetFuelGraphModel(graph, propertiesFile, username, credentials, environment,
-                jetFuelViewStatusBar, maskerPane);
+                jetFuelViewStatusBar, maskerPane, resourceDir);
         jetFuelViewActions.setJetFuelStatusBar(jetFuelViewStatusBar);
         jetFuelViewActions.setMaskerPane(maskerPane);
         graphComponent.setJetFuelGraphModel(jetFuelGraphModel);
