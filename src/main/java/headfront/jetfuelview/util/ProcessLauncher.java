@@ -43,6 +43,7 @@ public class ProcessLauncher {
                     Process process = new ProcessBuilder(
                             System.getProperty("java.home") + "/bin/java",
                             "-Dlog4j.configurationFile=log4j2-JetFuel.xml",
+                            "-DJetFuel="+ System.getProperty("JetFuel"),
                             "-XX:MaxGCPauseMillis=10",
                             "-XX:SurvivorRatio=4",
                             "-XX:+UseConcMarkSweepGC",
