@@ -85,7 +85,7 @@ public class JetFuelExplorerLogonPanel extends AbstractLogonPanel {
             final List<String> strings = Arrays.asList(allAmpsNames);
             ObservableList<String> listToUse = FXCollections.observableArrayList();
             listToUse.addAll(strings);
-            FXCollections.sort(listToUse);
+            //FXCollections.sort(listToUse);
             serverOptions.setItems(listToUse);
 
             tabGrid.add(textLabel, 0, 0);

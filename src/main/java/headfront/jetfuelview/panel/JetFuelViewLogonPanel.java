@@ -47,7 +47,7 @@ public class JetFuelViewLogonPanel extends AbstractLogonPanel {
         final List<String> names = getOptionsList(files);
         ObservableList<String> listToUse = FXCollections.observableArrayList();
         listToUse.addAll(names);
-        FXCollections.sort(listToUse);
+        //FXCollections.sort(listToUse);
         selectionPane.setHgap(10);
         selectionPane.setVgap(10);
         selectionPane.setPadding(new Insets(5, 5, 0, 5));
