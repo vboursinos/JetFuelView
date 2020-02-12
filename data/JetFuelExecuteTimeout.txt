@@ -1,0 +1,6 @@
+Subscribe =JETFUEL_EXECUTE_BUS -> 1=1
+
+PUBLISH=JETFUEL_EXECUTE_BUS ->{"ID":"JetFuel_Deepak.2018-07-14T12:31:35.974_1111","MsgCreationTime":"2018-07-14T12:31:58.296","MsgCreationName":"JetFuel_Deepak","FunctionCallerHostName":"Box.local","CurrentState":"RequestNew","FunctionToCall":"JunitServerTest_59546.getLastQuote","FunctionInitiatorName":"JetFuel_Deepak","FunctionParameters":["DE00045245"]}
+
+Delete=JETFUEL_EXECUTE_BUS -> 1=1
+Delete=JETFUEL_EXECUTE_STATS-> 1=1

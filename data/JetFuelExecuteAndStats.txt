@@ -1,0 +1,16 @@
+Subscribe =JETFUEL_EXECUTE_BUS -> 1=1
+
+PUBLISH=JETFUEL_EXECUTE_BUS ->{"ID":"JetFuel_Deepak.2018-07-14T12:31:35.974_1111","MsgCreationTime":"2018-07-14T12:31:58.296","MsgCreationName":"JetFuel_Deepak","FunctionCallerHostName":"Box.local","CurrentState":"RequestNew","FunctionToCall":"JunitServerTest_59546.getLastQuote","FunctionInitiatorName":"JetFuel_Deepak","FunctionParameters":["DE00045245"]}
+
+
+Delete=JETFUEL_EXECUTE_BUS -> 1=1
+//Delete=JETFUEL_EXECUTE_STATS-> 1=1
+Subscribe=JETFUEL_EXECUTE_BUS -> /FunctionToCall="JunitServerTest_1_18476.updateBankStatus"
+//Subscribe=JETFUEL_EXECUTE_STATS -> /FunctionToCall="JunitServerTest_1_18476.updateBankStatus"
+publish =JETFUEL_EXECUTE_BUS -> {"MsgCreationTime":"2018-07-14T12:41:14.508","MsgCreationName":"JunitClientTest_57717","FunctionCallerHostName":"Box.local","CurrentState":"RequestNew","FunctionToCall":"JunitServerTest_1_18476.updateBankStatus","ID":"JunitClientTest_57717.1001","FunctionInitiatorName":"JunitClientTest_57717","FunctionParameters":["Deepak",true]}
+publish =JETFUEL_EXECUTE_BUS -> {"MsgCreationTime":"2018-07-14T12:41:14.54","MsgCreationName":"JunitServerTest_1_18476","FunctionCallerHostName":"Box.local","CurrentState":"Completed","ReturnValue":true,"ID":"JunitClientTest_57717.1001","FunctionInitiatorName":"JunitClientTest_57717","CurrentStateMsg":"Deepak is authorised, Bank status is ON","FunctionToCall":"JunitServerTest_1_18476.updateBankStatus","FunctionParameters":["Deepak",true]}
+
+
+,"AmpsInstanceOwner":"LDN-BACKUP"
+,"AmpsInstanceOwner":"LDN-BACKUP"
+Run test file 

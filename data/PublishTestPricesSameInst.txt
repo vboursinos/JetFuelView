@@ -1,0 +1,12 @@
+delete=TEST_PRICE  -> /ID="DE000751"
+PUBLISH=TEST_PRICE -> {"ID":"DE000751","message":"Calculated using Benchmark","BID":99.90,"OFFER":100.90} 
+PUBLISH=TEST_PRICE -> {"ID":"DE000751","message":"Calculated using Benchmark","BID":99.91,"OFFER":100.91} 
+
+PUBLISH=TEST_PRICE -> {"ID":"DE000751","message":"Calculated using Benchmark","BID":99.93,"OFFER":100.93} 
+PUBLISH=TEST_PRICE -> {"ID":"DE000751","message":"Calculated using Benchmark","BID":99.92,"OFFER":100.92} 
+PUBLISH=TEST_PRICE -> {"ID":"DE000751","message":"Calculated using Benchmark","BID":99.91,"OFFER":100.91} 
+PUBLISH=TEST_PRICE -> {"ID":"DE000751","message":"Calculated using Benchmark","BID":99.93,"OFFER":100.93} 
+PUBLISH=TEST_PRICE -> {"ID":"DE000751","message":"Calculated using Benchmark","BID":99.91,"OFFER":100.91} 
+PUBLISH=TEST_PRICE -> {"ID":"DE000751","message":"Calculated using Benchmark","BID":99.90,"OFFER":100.90} 
+PUBLISH=TEST_PRICE -> {"ID":"DE000751","message":"Calculated using Benchmark","BID":99.92,"OFFER":100.92} 
+PUBLISH=TEST_PRICE -> {"ID":"DE000751","message":"Calculated using Benchmark","BID":99.91,"OFFER":100.91} 

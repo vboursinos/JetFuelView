@@ -1,0 +1,84 @@
+.root {
+    -fx-base_d: black;
+    -fx-background-color_disable: black;
+    -fx-text-fill_d: orange;
+}
+
+#fancytextLarge {
+    -fx-fill: white;
+    -fx-font: 45px Harlow;
+}
+
+#fancytextSmall {
+    -fx-fill: white;
+    -fx-font: 30px Harlow;
+}
+
+#fancytextSmaller {
+    -fx-fill: white;
+    -fx-font: 23px Harlow;
+}
+
+#fancytextSmallest {
+    -fx-fill: white;
+    -fx-font: 16px Harlow;
+}
+
+#choosebutton {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 5, 0.0, 0, 1);
+    -fx-background-color: rgba(142, 255, 12, 0.7);
+    -fx-font: 14px Harlow;
+}
+
+#choosebutton:pressed {
+    -fx-background-color: rgba(120, 205, 40, 0.7);
+}
+
+#choosebutton:hover {
+    -fx-background-color: rgba(174, 255, 20, 0.7);
+}
+
+#choosebutton:focused {
+    -fx-background-color: rgba(120, 205, 40, 0.7);
+
+}
+
+.samples-tree {
+    -fx-background-color: -fx-outer-border, -fx-background;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 2, 0;
+}
+
+.right-panel {
+    -fx-padding: 5;
+}
+
+.right-panel > .sample-name {
+    -fx-font-size: 18;
+    -fx-font-weight: bold;
+}
+
+.right-panel > .separator {
+    -fx-padding: 5 0 5 0;
+}
+
+.right-panel > .description {
+    -fx-text-alignment: justify;
+}
+
+.right-panel > * > .project-name-title,
+.right-panel > * > .property {
+    -fx-font-weight: bold;
+}
+
+.right-panel > * > .project-name {
+    -fx-text-alignment: justify;
+}
+
+/* 
+ * The area beneath the description specifically to allow people to interact with
+ * the sample.
+ */
+.right-panel > .control-panel {
+    -fx-padding: 5 0 0 0;
+}

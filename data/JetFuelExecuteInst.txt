@@ -1,0 +1,5 @@
+
+
+PUBLISH=/BBG/INSTRUMENT -> {"ID":"DE000452045","RecordPrefix":"INSTRUMENT","Coupon":58.3,"IssueAmpunt":32.78,"Company":"Amazon","Count":1339,"NoOfIssue":17,"Desc":"Asian Junction","Active":true,"DV01":96.32,"Currency":"EUR","Country":"Germany","Outstanding":7,"IsJunk":true,"Topic":"INSTRUMENT"}
+
+DELETE = /BBG/INSTRUMENT -> /ID='DE000452045'

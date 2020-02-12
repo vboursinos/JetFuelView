@@ -1,0 +1,19 @@
+DELETE=COMPANIES_TOPIC -> /ID!=1
+DELETE=ORDERS_TOPIC -> /ID!=1
+
+
+PUBLISH=COMPANIES_TOPIC -> {"ID":"12345", "CompanyId":"12345","Tick":"IBM","Name":"IBM Private Ltd"} 
+PUBLISH=COMPANIES_TOPIC -> {"ID":"67890", "CompanyId":"67890","Tick":"BMW","Name":"BMW Motors Ltd"} 
+PUBLISH=ORDERS_TOPIC -> {"ID":"A1","Tick":"IBM","Shares":56} 
+PUBLISH=ORDERS_TOPIC -> {"ID":"A2","Tick":"IBM","Shares":5} 
+PUBLISH=ORDERS_TOPIC -> {"ID":"A3","Tick":"BMW","Shares":5} 
+
+
+SowDeltaSubscribe=ORDERS_TOPIC ->
+
+Subscribe=ORDERS_TOPIC ->
+PUBLISH=ORDERS_TOPIC -> {"ID":"A1","Tick":"IBM","Shares":56} 
+PUBLISH=ORDERS_TOPIC -> {"ID":"A2","Tick":"IBM","Shares":5} 
+PUBLISH=ORDERS_TOPIC -> {"ID":"A3","Tick":"BMW","Shares":5} 
+
+Sow=ORDERS_TOPIC ->  

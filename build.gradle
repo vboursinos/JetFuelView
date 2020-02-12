@@ -30,22 +30,70 @@ dependencies {
     compile("org.apache.logging.log4j:log4j-jcl:2.1") { exclude group: '*' }
     compile("org.apache.logging.log4j:log4j-1.2-api:2.1") { exclude group: '*' }
     compile("org.slf4j:slf4j-api:1.7.25") { exclude group: '*' }
+
+    testCompile ('junit:junit:4.12')
 }
-FileTree tree = fileTree(dir: 'libs', include: 'headfront-jetfuel-*.jar')
+//This bit of code finds the version of the file -- start
+//FileTree tree = fileTree(dir: 'libs', include: 'headfront-jetfuel-*.jar')
+//def nameToUse = ""
+//def jetFuelVersion = ""
+//tree.visit { element ->
+//    def (company, project, version) = element.name.split("-")
+//    jetFuelVersion = version.replaceAll('.jar', '')
+//    nameToUse = "JetFuelView-" +jetFuelVersion
+//}
+//
+//jar{
+//    baseName = 'headfront-jetfuelview-' + jetFuelVersion
+//    manifest {
+//        attributes 'Company': 'Head Front Consulting',
+//                'App': 'JetFuel',
+//                'Version': jetFuelVersion,
+//                'ContactEmail': 'deepakcdo@gmail.com',
+//                'ContactNumber': '+44 7958 707 212',
+//                'Owner': 'Deepak Dhayatker',
+//                'Web': 'http://headfront.co.uk/'
+//    }
+//}
+//-- End 
+
 def nameToUse = ""
-def jetFuelVersion = ""
-tree.visit { element ->
-    def (company, project, version) = element.name.split("-")
-    jetFuelVersion = version.replaceAll('.jar', '')
-    nameToUse = "JetFuelView-" +jetFuelVersion
+def props = new Properties()
+file("src/main/resources/jetfueldataexplorer.properties").withInputStream { props.load(it) }
+nameToUse = "JetFuelView-" +props.getProperty("version")
+def buildLoc = "build/BuildApp/JetFuel-" + props.getProperty("version")
+task BuildApp{
+    delete(buildLoc)
+    mkdir(buildLoc)
+    copy{
+        from 'src/main/resources/'
+        into buildLoc
+        include 'log4j2-JetFuel.xml'
+        include 'StartJetFuel.bat'
+        include 'Notes.txt'
+    }
+
+    copy{
+        into buildLoc + '/libs/'
+        from  configurations.runtime
+    }
+
+}
+task zipBuild( dependsOn: [BuildApp, jar], type: Zip) {
+    from 'build/BuildApp'
+    include '*'
+    include '**/*' //to include contents of a folder present inside Reports directory
+    archiveName 'JetFuel-' + props.getProperty("version") + '.zip'
+    destinationDir(file('.'))
 }
 
 jar{
-    baseName = 'headfront-jetfuelview-' + jetFuelVersion
+    baseName = 'headfront-jetfuelview-' + props.getProperty("version")
+    destinationDir = file(buildLoc + '/libs/')
     manifest {
         attributes 'Company': 'Head Front Consulting',
                 'App': 'JetFuel',
-                'Version': jetFuelVersion,
+                'Version': props.getProperty("version"),
                 'ContactEmail': 'deepakcdo@gmail.com',
                 'ContactNumber': '+44 7958 707 212',
                 'Owner': 'Deepak Dhayatker',
@@ -85,8 +133,50 @@ github {
     targetCommitish = 'master'
     body = "Latest Stable release"
     assets = [
-            'build/distributions/JetFuelView-' + jetFuelVersion + '.zip'
+            'build/distributions/' + nameToUse + '.zip'
     ]
+}
+
+
+task runAmpsPublisher(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'headfront.amps.AmpsPublisher'
+    jvmArgs '-Dlog4j.configurationFile=log4j2-JetFuel.xml'
+}
+
+task runBbgGateway(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'headfront.markets.MarketGateway'
+    jvmArgs '-Dlog4j.configurationFile=log4j2-JetFuel.xml'
+    args 'BBG', '2000', '1643'
+}
+
+task runTradeWebGateway(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'headfront.markets.MarketGateway'
+    jvmArgs '-Dlog4j.configurationFile=log4j2-JetFuel.xml'
+    args 'TRADEWEB', '2000', '1337'
+}
+
+task runDataExplorerMacPrimary(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'headfront.dataexplorer.DataExplorer'
+    jvmArgs '-Dlog4j.configurationFile=log4j2-JetFuel.xml', '-XX:MaxGCPauseMillis=10', '-XX:SurvivorRatio=4','-XX:+UseConcMarkSweepGC'
+    args 'tcp://192.168.56.101:8001/amps/json', '8199', 'UAT', 'false'
+}
+
+task runDataExplorerMacBackup(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'headfront.dataexplorer.DataExplorer'
+    jvmArgs '-Dlog4j.configurationFile=log4j2-JetFuel.xml', '-XX:MaxGCPauseMillis=10', '-XX:SurvivorRatio=4','-XX:+UseConcMarkSweepGC'
+    args 'tcp://192.168.56.101:9001/amps/json', '8198', 'UAT', 'false'
+}
+
+task runDataExplorerMacPrimary_PROD(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'headfront.dataexplorer.DataExplorer'
+    jvmArgs '-Dlog4j.configurationFile=log4j2-JetFuel.xml', '-XX:MaxGCPauseMillis=10', '-XX:SurvivorRatio=4','-XX:+UseConcMarkSweepGC'
+    args 'tcp://192.168.56.101:8001/amps/json', '8199', 'PROD', 'false'
 }
 
 task runJetFuelView(type: JavaExec) {

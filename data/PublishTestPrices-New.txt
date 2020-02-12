@@ -1,0 +1,13 @@
+DELETE=TEST_PRICE -> /ID!=1
+wait ->3
+PUBLISH=TEST_PRICE -> {"ID":"DE000751","message":"Calculated using Benchmark","BID":10,"OFFER":11} 
+PUBLISH=TEST_PRICE -> {"ID":"DE000752","message":"Calculated using Benchmark","BID":20,"OFFER":21} 
+wait ->4
+PUBLISH=TEST_PRICE -> {"ID":"DE000753","message":"Calculated using Benchmark","BID":30,"OFFER":31} 
+PUBLISH=TEST_PRICE -> {"ID":"DE000754","message":"Calculated using Benchmark","BID":40,"OFFER":41.652} 
+PUBLISH=TEST_PRICE -> {"ID":"DE000755","message":"Calculated using Benchmark","BID":50,"OFFER":51.652} 
+PUBLISH=TEST_PRICE -> {"ID":"DE000756","message":"Calculated using Benchmark","BID":60,"OFFER":61.652} 
+PUBLISH=TEST_PRICE -> {"ID":"DE000757","message":"Calculated using Benchmark","BID":70,"OFFER":71.652} 
+PUBLISH=TEST_PRICE -> {"ID":"DE000758","message":"Calculated using Benchmark","BID":80,"OFFER":81.652} 
+PUBLISH=TEST_PRICE -> {"ID":"DE000759","message":"Calculated using Benchmark","BID":90,"OFFER":91.652} 
+PUBLISH=TEST_PRICE -> {"ID":"DE000760","message":"Calculated using Benchmark","BID":10,"OFFER":11.652} 

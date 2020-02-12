@@ -1,0 +1,9 @@
+Subscribe=FAST_PRICE-> 1=1
+var = ID_TO_USE1 ->"TEST_ID_1" 
+var = Bid ->45.55 
+var = Bid2 ->99.999 
+var = ID_TO_USE2 ->"TEST_ID_22" 
+PUBLISH=FAST_PRICE ->  {"ID":%ID_TO_USE1,"message":"Calculated using Benchmark","BID":10,"OFFER":99.652} 
+PUBLISH=FAST_PRICE ->  {"ID":%ID_TO_USE1,"message":"Calculated using Benchmark","BID":%Bid,"OFFER":99.652} 
+PUBLISH=FAST_PRICE ->  {"ID":%ID_TO_USE2,"message":"Calculated using Benchmark","BID":10,"OFFER":99.652} 
+PUBLISH=FAST_PRICE ->  {"ID":%ID_TO_USE2,"message":"Calculated using Benchmark","BID":%Bid2,"OFFER":99.652} 

@@ -1,0 +1,26 @@
+
+DELETE=COMPANIES_TOPIC  -> 1=1
+DELETE=ORDERS_TOPIC  -> 1=1
+wait ->2
+
+// Subscribe to View
+Subscribe=TOTAL_COMPANY_VOLUME_NAME_VIEW ->
+
+// publish compnay
+PUBLISH=COMPANIES_TOPIC  -> {"ID":"Compnay1","Tick":"IBM","CompanyId":10,"Name":"IBM Shares"} 
+PUBLISH=COMPANIES_TOPIC  -> {"ID":"Compnay2","Tick":"VOD","CompanyId":10,"Name":"VOD Shares"} 
+
+// publish orders
+wait ->2
+PUBLISH=ORDERS_TOPIC-> {"ID":"Deepak1","Tick":"IBM","BID":10,"OFFER":99.652,"Shares":8} 
+wait ->2
+PUBLISH=ORDERS_TOPIC-> {"ID":"Deepak2","Tick":"IBM","BID":10,"OFFER":99.652,"Shares":10}
+wait ->2
+PUBLISH=ORDERS_TOPIC-> {"ID":"Deepak3","Tick":"IBM","BID":10,"OFFER":99.652,"Shares":10}  
+wait ->2
+PUBLISH=ORDERS_TOPIC-> {"ID":"Deepak11","Tick":"VOD","BID":10,"OFFER":99.652,"Shares":55} 
+wait ->2
+PUBLISH=ORDERS_TOPIC-> {"ID":"Deepak12","Tick":"VOD","BID":10,"OFFER":99.652,"Shares":10}
+wait ->2
+PUBLISH=ORDERS_TOPIC-> {"ID":"Deepak13","Tick":"VOD","BID":10,"OFFER":99.652,"Shares":10}  
+wait ->2

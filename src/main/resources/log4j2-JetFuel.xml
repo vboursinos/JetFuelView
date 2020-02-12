@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="ERROR" name="example-config">
+    <Properties>
+        <Property name="PATTERN">%-5level %d [%t] %c:%M(%L): %m%n</Property>
+    </Properties>
+    <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="${PATTERN}"/>
+        </Console>
+
+        <RollingFile name="fileWriter"
+                     fileName="logs/JetFuel.log"
+                     filePattern="logs/JetFuel%d{yyyy-MM-dd_HH-mm}.log">
+            <PatternLayout pattern="${PATTERN}"/>
+            <Policies>
+                <OnStartupTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="500 MB"/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root level="INFO">
+            <AppenderRef ref="fileWriter"/>
+            <AppenderRef ref="STDOUT"/>
+        </Root>
+        <Logger name="Deepak" level="DEBUG" additivity="true"/>
+        <Logger name="headfront.jetfuel.execute.impl.AmpsJetFuelExecute132" level="DEBUG" additivity="true"/>
+    </Loggers>
+</Configuration>

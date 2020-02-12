@@ -1,0 +1,4 @@
+
+DELETE=/BBG/QUOTES -> /ID='QUOTES_1016'
+
+PUBLISH_DELTA=/BBG/QUOTES ->{"ID":"QUOTES_1016","Status":46,"RecordPrefix":"QUOTES","AutoNegOn":false,"Trader":"Asian Fusion","QuoteOn":false,"Count":10322,"BidQty":17.49,"OfferQty":19.18,"Offer":83.63,"TraderID":53,"Bid":74.07,"Topic":"QUOTES"}

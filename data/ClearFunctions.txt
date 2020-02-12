@@ -1,0 +1,3 @@
+Delete=FUNCTIONS.* -> 1=1
+Delete=Alerts.* -> 1=1
+Alerts - Topic

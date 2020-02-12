@@ -1,0 +1,3 @@
+publish=/BBG/QUOTES ->  {"Status":82,"RecordPrefix":"QUOTES","AutoNegOn":false,"Trader":"Alert Alarm","QuoteOn":false,"Count":6906,"BidQty":66.1,"OfferQty":96.72,"Offer":63.51,"TraderID":57,"ID":"QUOTES_1","Bid":27.61,"Topic":"QUOTES"}
+publish=/BBG/QUOTES -> {"Status":32,"RecordPrefix":"QUOTES","AutoNegOn":true,"Trader":"Asian Plan","QuoteOn":false,"Count":7894,"BidQty":55.1,"OfferQty":83.09,"Offer":75.92,"TraderID":52,"ID":"QUOTES_10","Bid":23.54,"Topic":"QUOTES"}
+publish=/BBG/QUOTES ->  {"Status":26,"RecordPrefix":"QUOTES","AutoNegOn":true,"Trader":"Acuserv","QuoteOn":false,"Count":8199,"BidQty":44.1,"OfferQty":37.44,"Offer":4.93,"TraderID":83,"ID":"QUOTES_0","Bid":65.45,"Topic":"QUOTES"}

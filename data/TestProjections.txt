@@ -1,0 +1,15 @@
+// delete all orders
+DELETE=TEST_ORDERS -> 1=1
+
+// publish some orders
+
+PUBLISH=TEST_ORDERS -> {"ID":1,"order_key":1, "symbol":"MSFT", "price":62.30, "qty":100}
+PUBLISH=TEST_ORDERS ->{"ID":2,"order_key":2, "symbol":"MSFT", "price":62.28, "qty":150}
+PUBLISH=TEST_ORDERS ->{"ID":3,"order_key":3, "symbol":"IBM", "price":180.20, "qty":16}
+PUBLISH=TEST_ORDERS ->{"ID":4,"order_key":4, "symbol":"FIZZ", "price":61.77, "qty":4000}
+PUBLISH=TEST_ORDERS -> {"ID":5,"order_key":5, "symbol":"YUM", "price":64.07, "qty":123}
+PUBLISH=TEST_ORDERS -> {"ID":6,"order_key":6, "symbol":"MSFT", "price":72.30, "qty":1000}
+PUBLISH=TEST_ORDERS ->{"ID":7,"order_key":7, "symbol":"MSFT", "price":92.28, "qty":1500}
+PUBLISH=TEST_ORDERS ->{"ID":8,"order_key":8, "symbol":"IBM", "price":150.20, "qty":160}
+PUBLISH=TEST_ORDERS ->{"ID":9,"order_key":9, "symbol":"FIZZ", "price":11.77, "qty":400}
+PUBLISH=TEST_ORDERS -> {"ID":10,"order_key":10, "symbol":"YUM", "price":34.07, "qty":13}

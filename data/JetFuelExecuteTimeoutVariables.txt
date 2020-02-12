@@ -1,0 +1,5 @@
+
+var=USE_ID-> "JetFuel_Deepak.2018-07-14T12:31:35.974_1171"
+Subscribe =JETFUEL_EXECUTE_BUS ->/ID=%USE_ID
+Delete=JETFUEL_EXECUTE_BUS -> /ID=%USE_ID
+PUBLISH=JETFUEL_EXECUTE_BUS ->{"ID":%USE_ID,"MsgCreationTime":"2018-07-14T12:31:58.296","MsgCreationName":"JetFuel_Deepak","FunctionCallerHostName":"Box.local","CurrentState":"RequestNew","FunctionToCall":"JunitServerTest_59546.getLastQuote","FunctionInitiatorName":"JetFuel_Deepak","FunctionParameters":["DE00045245"]}

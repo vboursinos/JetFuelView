@@ -1,0 +1,16 @@
+2016-09-27T21:39:01.6328860+01:00 [26] trace: 12-0005 client[JetFuel_Deepak] sow_delete command received: {"c":"sow_delete","cid":"5","t":"TEST_TRADES","filter":"/ID!=1","a":"processed,stats"}
+
+2016-09-27T21:39:01.6328860+01:00 [26] trace: 12-0005 client[JetFuel_Deepak] sow_delete command received: {"c":"sow_delete","cid":"5","t":"TEST_TRADES","filter":"/ID!=1","a":"processed,stats"}
+
+2016-09-27T21:38:34.3074200+01:00 [26] trace: 12-0009 client[JetFuel_Deepak] heartbeat command received: {"c":"heartbeat","opts":"start,10"}
+
+sow command received: {"c":"sow","cid":"3","t":"/BBG/ORDERS","orderby":"/ID DESC","a":"processed,completed,stats","query_id":"3","batch_size":2000,"top_n":2000}
+
+
+2016-09-27T21:38:45.4549750+01:00 [26] trace: 12-0004 client[JetFuel_Deepak] sow_and_delta_subscribe command received: {"c":"sow_and_delta_subscribe","cid":"4","t":"/BBG/ORDERS","filter":"/ID IN ('ORDERS_0')","a":"processed","opts":"send_keys,no_empties,oof,,oof,no_empties","sub_id":"4","query_id":"4","batch_size":100}
+
+
+2016-09-27T21:39:22.8306440+01:00 [26] trace: 12-0004 client[JetFuel_Deepak] sow_and_delta_subscribe command received: {"c":"sow_and_delta_subscribe","cid":"6","t":"/AMPS/SOWStats","filter":"","a":"processed","opts":"send_keys,no_empties,oof,,oof,no_empties","sub_id":"6","query_id":"6","batch_size":100}
+
+2016-09-27T21:39:08.5140000+01:00 [26] trace: 12-0001 client[JetFuel_Deepak] publish command received: {"c":"publish","t":"TEST_TRADES"}{"ID":"TRADE_0005","STATE":"BOOKED","TIME":90,"PRICE":99.652,"UPDATED_BY":"ALICE JONES"}
+2016-09-27T21:39:08.5142760+01:00 [26] trace: 12-0001 client[JetFuel_Deepak] publish command received: {"c":"publish","t":"TEST_TRADES"}{"ID":"TRADE_0005","STATE":"SENT_TO_COMPLIANCE","TIME":100,"PRICE":99.652}

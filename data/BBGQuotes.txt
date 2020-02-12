@@ -1,0 +1,18 @@
+Delete=/BBG/QUOTES->/ID="QUOTES_0999900"
+
+PUBLISH=/BBG/QUOTES-> {"Status":7,"RecordPrefix":"QUOTES","AutoNegOn":false,"Trader":"Adaptabiz","QuoteOn":false,"Count":1333,"BidQty":72.43,"OfferQty":62.09,"Offer":65.15,"TraderID":90,"ID":"QUOTES_100","Bid":17.05,"Topic":"QUOTES"}
+PUBLISH=/BBG/QUOTES-> {"Status":88,"RecordPrefix":"QUOTES","AutoNegOn":false,"Trader":"Alert Alarm","QuoteOn":false,"Count":6906,"BidQty":5,"OfferQty":96.72,"Offer":63.51,"TraderID":57,"ID":"QUOTES_1","Bid":27.61,"Topic":"QUOTES"}
+PUBLISH=/BBG/QUOTES-> {"Status":3792,"RecordPrefix":"QUOTES","AutoNegOn":true,"Trader":"Asian Plan","QuoteOn":false,"Count":7894,"BidQty":4,"OfferQty":83.09,"Offer":75.92,"TraderID":52,"ID":"QUOTES_10","Bid":23.54,"Topic":"QUOTES"}
+PUBLISH=/BBG/QUOTES-> {"Status":8848,"RecordPrefix":null,"AutoNegOn":true,"Trader":null,"QuoteOn":false,"Count":8199,"BidQty":5,"OfferQty":37.44,"Offer":4.93,"TraderID":83,"ID":"QUOTES_0","Bid":65.45,"Topic":"QUOTES"}
+PUBLISH=/BBG/QUOTES-> {"Status":73,"RecordPrefix":"QUOTES","AutoNegOn":false,"Trader":"Adaptabiz","QuoteOn":false,"Count":1333,"BidQty":72.43,"OfferQty":62.09,"Offer":65.15,"TraderID":90,"ID":"QUOTES_100","Bid":17.05,"Topic":"QUOTES"}
+PUBLISH=/BBG/QUOTES-> {"Status":838,"RecordPrefix":"QUOTES","AutoNegOn":false,"Trader":"Alert Alarm","QuoteOn":false,"Count":6906,"BidQty":5,"OfferQty":96.72,"Offer":63.51,"TraderID":57,"ID":"QUOTES_1","Bid":27.61,"Topic":"QUOTES"}
+PUBLISH=/BBG/QUOTES-> {"Status":33792,"RecordPrefix":"QUOTES","AutoNegOn":true,"Trader":"Asian Plan","QuoteOn":false,"Count":7894,"BidQty":4,"OfferQty":83.09,"Offer":75.92,"TraderID":52,"ID":"QUOTES_10","Bid":23.54,"Topic":"QUOTES"}
+PUBLISH=/BBG/QUOTES-> {"Status":1888,"RecordPrefix":null,"AutoNegOn":true,"Trader":null,"QuoteOn":false,"Count":8199,"BidQty":5,"OfferQty":37.44,"Offer":4.93,"TraderID":83,"ID":"QUOTES_0","Bid":65.45,"Topic":"QUOTES"}
+PUBLISH=/BBG/QUOTES-> {"Status":17,"RecordPrefix":"QUOTES","AutoNegOn":false,"Trader":"Adaptabiz","QuoteOn":false,"Count":1333,"BidQty":72.43,"OfferQty":62.09,"Offer":65.15,"TraderID":90,"ID":"QUOTES_100","Bid":17.05,"Topic":"QUOTES"}
+PUBLISH=/BBG/QUOTES-> {"Status":188,"RecordPrefix":"QUOTES","AutoNegOn":false,"Trader":"Alert Alarm","QuoteOn":false,"Count":6906,"BidQty":5,"OfferQty":96.72,"Offer":63.51,"TraderID":57,"ID":"QUOTES_1","Bid":27.61,"Topic":"QUOTES"}
+PUBLISH=/BBG/QUOTES-> {"Status":31792,"RecordPrefix":"QUOTES","AutoNegOn":true,"Trader":"Asian Plan","QuoteOn":false,"Count":7894,"BidQty":4,"OfferQty":83.09,"Offer":75.92,"TraderID":52,"ID":"QUOTES_10","Bid":23.54,"Topic":"QUOTES"}
+PUBLISH=/BBG/QUOTES-> {"Status":8188,"RecordPrefix":null,"AutoNegOn":true,"Trader":null,"QuoteOn":false,"Count":8199,"BidQty":5,"OfferQty":37.44,"Offer":4.93,"TraderID":83,"ID":"QUOTES_0","Bid":65.45,"Topic":"QUOTES"}
+PUBLISH=/BBG/QUOTES-> {"Status":71,"RecordPrefix":"QUOTES","AutoNegOn":false,"Trader":"Adaptabiz","QuoteOn":false,"Count":1333,"BidQty":72.43,"OfferQty":62.09,"Offer":65.15,"TraderID":90,"ID":"QUOTES_100","Bid":17.05,"Topic":"QUOTES"}
+PUBLISH=/BBG/QUOTES-> {"Status":881,"RecordPrefix":"QUOTES","AutoNegOn":false,"Trader":"Alert Alarm","QuoteOn":false,"Count":6906,"BidQty":5,"OfferQty":96.72,"Offer":63.51,"TraderID":57,"ID":"QUOTES_1","Bid":27.61,"Topic":"QUOTES"}
+PUBLISH=/BBG/QUOTES-> {"Status":37192,"RecordPrefix":"QUOTES","AutoNegOn":true,"Trader":"Asian Plan","QuoteOn":false,"Count":7894,"BidQty":4,"OfferQty":83.09,"Offer":75.92,"TraderID":52,"ID":"QUOTES_10","Bid":23.54,"Topic":"QUOTES"}
+PUBLISH=/BBG/QUOTES-> {"Status":8818,"RecordPrefix":null,"AutoNegOn":true,"Trader":null,"QuoteOn":false,"Count":8199,"BidQty":5,"OfferQty":37.44,"Offer":4.93,"TraderID":83,"ID":"QUOTES_0","Bid":65.45,"Topic":"QUOTES"}

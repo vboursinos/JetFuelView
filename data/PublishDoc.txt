@@ -1,0 +1,39 @@
+PublishDoc=ORDERS_TOPIC->{
+	"ID": "0aaaa000_DOC_123",
+	"String": "NEW",
+	"Integer": 20,
+	"Double": 99.652,
+	"Boolean": false,
+	"String_LIST": ["GBP", "EUR", "USD"],
+	"double_LIST": [4.5, 334.44, 656.777, 0.99, -9.003],
+	"Single_MAP": {
+		"String": "NEW",
+		"Integer": 20,
+		"Double": 99.652,
+		"Boolean": false,
+		"String_LIST": ["GBP", "EUR", "USD"],
+		"double_LIST": [4.5, 334.44, 656.777, 0.99, -9.003]
+	},
+	"LIST_OF_MAPS": [{
+		"String": "NEW",
+		"Integer": 20,
+		"Double": 99.652,
+		"Boolean": false,
+		"String_LIST": ["GBP", "EUR", "USD"],
+		"double_LIST": [4.5, 334.44, 656.777, 0.99, -9.003]
+	}, {
+		"String": "NEW",
+		"Integer": 20,
+		"Double": 99.652,
+		"Boolean": false,
+		"String_LIST": ["GBP", "EUR", "USD"],
+		"double_LIST": [4.5, 334.44, 656.777, 0.99, -9.003]
+	}, {
+		"String": "NEW",
+		"Integer": 20,
+		"Double": 99.652,
+		"Boolean": false,
+		"String_LIST": ["GBP", "EUR", "USD"],
+		"double_LIST": [4.5, 334.44, 656.777, 0.99, -9.003]
+	}]
+}

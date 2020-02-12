@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+
+
+    <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+    <title>HeadFront Consulting - JetFuel</title></head>
+<body>
+<div style="text-align: center;"><big><big><big><big><big><span
+        style="font-weight: bold;"></span></big></big></big></big></big><img style="width: 480px; height: 480px;"
+                                                                             alt="Logo" src="JetFuelLarge.png"><br>
+    <br>
+    <div style="text-align: left;">
+        <ul id="mozToc"><!--mozToc h1 1 h2 2 h3 3 h4 4 h5 5 h6 6-->
+            <li><a href="#mozTocId141963">What is JetFuel?</a></li>
+            <li><a href="#mozTocId760395">JetFuel Components</a>
+                <ul>
+                    <li><a href="#mozTocId540148">JetFuel - DashBoard</a></li>
+                    <li><a href="#mozTocId573107">JetFuel - Execute</a></li>
+                    <li><a href="#mozTocId524232">JetFuel - Engine</a></li>
+                    <li><a href="#mozTocId223378">JetFuel - Launchpad
+                    </a></li>
+                    <li><a href="#mozTocId780431">JetFuel - Explorer</a></li>
+                </ul>
+            </li>
+        </ul>
+        <h1><a class="mozTocH1" name="mozTocId141963"></a><span style="color: rgb(51, 0, 153);">What is JetFuel?</span>
+        </h1>
+        JetFuel is an integration and monitoring tool set used to ease
+        development of distributed application. At the core of JetFuel is a
+        very fast journal based message bus. JetFuel has a few components
+        that allows users to use the tools straight out of the box. <br>
+        <br>Originally JetFuel's aim was to build a full Fixed Income trading
+        platform. This is on hold for the moment, a basic JetFuel sytem would have had: <br>
+        <ul>
+            <li>Bloomberg price feed (B-Pipe). <br>
+            </li>
+            <li>Fix based feeds in and out of bloomberg for quoting and rfq
+                negogiation.
+            </li>
+            <li>A few database adapters that will load
+                static data to the fast bus. <br>
+            </li>
+            <li>Basic pricing and risk engine. <br>
+            </li>
+            <li>Frontend gui to send quotes and respond to RFQs on Bloomberg. <br>
+            </li>
+            <li>They gui will
+                also have fast blotters for viewing trade, positions, prices and risk.
+            </li>
+            <li>Basic monitoring tools over the fast bus.<br>
+            </li>
+        </ul>
+        <h1><a class="mozTocH1" name="mozTocId760395"></a><span
+                style="color: rgb(51, 0, 153);">JetFuel Components</span></h1>
+        Currently JetFuel has five core components built on a fast messaging bus. See
+        below for details.<br>
+        <h2><a class="mozTocH2" name="mozTocId540148"></a><span
+                style="color: rgb(51, 0, 153);">JetFuel - DashBoard</span></h2>
+        This is system view of JeftFuel. You can see every component running on
+        JetFuel. Here you can see the fast brokers and how they are
+        connected to each other. All publishers and subscribers that are connected or missing
+        from JetFuel are also shown. <br>
+        <br>
+        Below is how JetFuel Dashboard will show connected publishers,
+        subscribers and users. Light grey icons indicate missing users or
+        pulishers<br>
+        <br>
+        <div style="text-align: center;"><img style="width: 900px; height: 454px;" alt="JetFuel DashBoard Screenshot"
+                                              src="JetFuel-DashBoard.png"><br>
+            <br>
+
+        </div>
+        <h2><a class="mozTocH2" name="mozTocId573107"></a>JetFuel - Execute</h2>
+        This library alows Remote Procedure Call (RPC) over a fast
+        journaled message bus. The journaled bus allows users to track every
+        function call and its respose. In brief it allows any component to
+        publish a
+        function on the message bus and any client connected to bus to call the
+        function.
+        This is an extremely flexible model as new components that publish
+        different functions can easily be added or removed. The function
+        describes the list of parameter it takes and the return
+        type. You can test the functions in JetFuel Explorer. Testing
+        functions&nbsp; through the JetFuel Explorer is very useful feature in
+        development
+        and support lifecycles.<br>
+        <br>
+        <div style="text-align: center;"><img style="width: 900px; height: 589px;" alt="JetFuel - Execute"
+                                              src="JetFuel-Execute.png"><br>
+            <br>
+            <img style="width: 400px; height: 281px;" alt="JetFuel-Execute_test" src="JetFuel-Execute_Test.png"><br>
+        </div>
+        <h2><a class="mozTocH2" name="mozTocId524232"></a><span style="color: rgb(51, 0, 153);">JetFuel - Engine</span>
+        </h2>
+
+        This is a Apache camel based components that gives you the ability to
+        import and export data from a fast message bus. Eg loading instrument static
+        data from database,&nbsp; importing prices from bloomberg, exporting
+        trades to a file for audit etc.<br>
+        <br>
+        Below is an example how easily you could publish data from and to
+        JetFuel Bus in four easy steps. Please note a lot more transformation
+        will be available<br>
+        <br>
+        <img style="width: 300px; height: 217px;" alt="New" src="JetFuel-EngineNewComponent.png">&nbsp;&nbsp; <img
+            style="width: 300px; height: 149px;" alt="Set Soruce" src="JetFuel-EngineSetSource.png">&nbsp; <img
+            style="width: 300px; height: 143px;" alt="Set Dest" src="JetFuel-EngineSetDest.png">&nbsp; <br>
+        <br>
+        <div style="text-align: center;"><img style="width: 400px; height: 417px;" alt="Transform"
+                                              src="JetFuel-EngineTransformFields.png"><br>
+
+        </div>
+        <h2><a class="mozTocH2" name="mozTocId223378"></a><span style="color: rgb(51, 0, 153);">JetFuel - Launchpad<br>
+</span></h2>
+        This component allows you to configure and monitor JetFuel Engines.
+        Here you can also stop, restart and schedule JetFuel Engines.<br>
+        <h2><a class="mozTocH2" name="mozTocId780431"></a><span
+                style="color: rgb(51, 0, 153);">JetFuel - Explorer</span></h2>
+        &nbsp;JetFuel Explorer is the first toolset that is being
+        developed.&nbsp;
+        Today it is an excellent query tool which can view data on a very fast
+        bus. <a href="JetFuelExplorer.html">Click here to see more details</a><br>
+        <br>
+        <div style="text-align: center;"><img style="width: 900px; height: 626px;" alt="JetFuel-Explorer"
+                                              src="JetFuel-Explorer.png"><br>
+        </div>
+
+        <br>
+    </div>
+</div>
+
+</body>
+</html>

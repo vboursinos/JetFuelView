@@ -1,0 +1,12 @@
+//Test 1
+SOWDeltasubscribe=FAST_PRICE_CONFLATED -> 
+PUBLISH=FAST_PRICE -> {"ID":"DE0001754","region":"A","message":"Calculated using Benchmark","BID":10,"OFFER":99.651} 
+wait ->6
+DELETE=FAST_PRICE -> /ID!="asdf"
+
+
+//Test 2
+SOWDeltasubscribe=FAST_PRICE_CONFLATED -> 
+PUBLISH=FAST_PRICE -> {"ID":"DE0001754","region":"A","message":"Calculated using Benchmark","BID":10,"OFFER":99.651} 
+wait ->6
+PUBLISH=FAST_PRICE -> {"ID":"DE0001754","region":"AB","message":"Calculated using Benchmark","BID":10,"OFFER":99.652} 

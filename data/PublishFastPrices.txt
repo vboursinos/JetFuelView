@@ -1,0 +1,13 @@
+DELETE=FAST_PRICE -> /ID!=1
+PUBLISH=FAST_PRICE -> {"ID":"DE0001754","region":"A","message":"Calculated using Benchmark","BID":10,"OFFER":99.652} 
+PUBLISH=FAST_PRICE -> {"ID":"DE0002754","region":"B","message":"Calculated using Benchmark","BID":10,"OFFER":99.652} 
+PUBLISH=FAST_PRICE -> {"ID":"DE0001754","message":"Calculated using Benchmark","BID":20,"OFFER":99.652} 
+wait ->5
+PUBLISH=FAST_PRICE -> {"ID":"DE0001754","message":"Calculated using Benchmark","BID":30,"OFFER":99.652} 
+PUBLISH=FAST_PRICE -> {"ID":"DE0001754","message":"Calculated using Benchmark","BID":40,"OFFER":99.652} 
+PUBLISH=FAST_PRICE -> {"ID":"DE0001754","message":"Calculated using Benchmark","BID":50,"OFFER":99.652} 
+PUBLISH=FAST_PRICE -> {"ID":"DE0001754","message":"Calculated using Benchmark","BID":60,"OFFER":99.652} 
+PUBLISH=FAST_PRICE -> {"ID":"DE0001754","message":"Calculated using Benchmark","BID":70,"OFFER":99.652} 
+PUBLISH=FAST_PRICE -> {"ID":"DE0001754","message":"Calculated using Benchmark","BID":80,"OFFER":99.652} 
+PUBLISH=FAST_PRICE -> {"ID":"DE0001754","message":"Calculated using Benchmark","BID":90,"OFFER":99.652} 
+PUBLISH=FAST_PRICE -> {"ID":"DE0001754","message":"Calculated using Benchmark","BID":10,"OFFER":99.652} 

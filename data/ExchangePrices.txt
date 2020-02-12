@@ -1,0 +1,25 @@
+DELETE=EXCHANGE_PRICE_2  -> 1=1
+
+
+PUBLISH=EXCHANGE_PRICE_3 ->  {"EXN_NAME":"Deepak","EXN_ID":"TRADER1_40052","Offer":110.2,"State":"New","topic":"EXCHANGE_PRICE_2","client":"Who knows","ID":"TRADER1_40051","Bid":100,"Date":"Sat Sep 24 21:29:28 BST 2016"}
+PUBLISH=EXCHANGE_PRICE_3 -> {"EXN_NAME":"Deepak2","EXN_ID":"TRADER1_40052","Offer":1880.2,"State":"Done","topic":"EXCHANGE_PRICE_2","client":"Who knows","ID":"TRADER1_40051","Bid":100,"Date":"Sat Sep 24 21:29:28 BST 2016"}
+PUBLISH=EXCHANGE_PRICE_3 ->  {"EXN_NAME":"Deepak","EXN_ID":"TRADER2_40052","Offer":110.2,"State":"Good","topic":"EXCHANGE_PRICE_2","client":"Who knows","ID":"TRADER1_40051","Bid":100,"Date":"Sat Sep 24 21:29:28 BST 2016"}
+PUBLISH=EXCHANGE_PRICE_3 ->  {"EXN_NAME":"Deepak","EXN_ID":"TRADER13_40055","Offer":10.2,"State":"Done","topic":"EXCHANGE_PRICE_2","client":"Who knows","ID":"TRADER1_40054","Bid":100,"Date":"Sat Sep 24 21:29:28 BST 2016"}
+
+
+PUBLISH=EXCHANGE_PRICE_2  ->{"EXN_NAME":"Deepak","EXN_ID":"TRADER1_40052","Offer":10.2,"State":"Done","topic":"EXCHANGE_PRICE_2","client":"Who knows","ID":"TRADER1_40051","Bid":100,"Date":"Sat Sep 24 21:29:28 BST 2016"}
+PUBLISH=EXCHANGE_PRICE_2  ->{"EXN_NAME":"James","EXN_ID":"TRADER1_40055","Offer":10.2,"State":"Done","topic":"EXCHANGE_PRICE_2","client":"Who knows","ID":"TRADER1_40054","Bid":100,"Date":"Sat Sep 24 21:29:28 BST 2016"}
+PUBLISH=EXCHANGE_PRICE_2  ->{"EXN_NAME":"Howard","EXN_ID":"TRADER1_40058","Offer":10.2,"State":"Done","topic":"EXCHANGE_PRICE_2","client":"Who knows","ID":"TRADER1_40057","Bid":100,"Date":"Sat Sep 24 21:29:28 BST 2016"}
+PUBLISH=EXCHANGE_PRICE_2  -> {"EXN_NAME":"Sara","EXN_ID":"TRADER1_40061","Offer":10.2,"State":"Done","topic":"EXCHANGE_PRICE_2","client":"Who knows","ID":"TRADER1_40060","Bid":100,"Date":"Sat Sep 24 21:29:28 BST 2016"}
+PUBLISH=EXCHANGE_PRICE_2  ->{"EXN_NAME":"Jone","EXN_ID":"TRADER1_40052","Offer":10.2,"State":"Done","topic":"EXCHANGE_PRICE_2","client":"Who knows","ID":"TRADER1_40051","Bid":100,"Date":"Sat Sep 24 21:29:28 BST 2016"}
+PUBLISH=EXCHANGE_PRICE_2  ->{"EXN_NAME":"Laura","EXN_ID":"TRADER1_40055","Offer":10.2,"State":"Done","topic":"EXCHANGE_PRICE_2","client":"Who knows","ID":"TRADER1_40054","Bid":100,"Date":"Sat Sep 24 21:29:28 BST 2016"}
+PUBLISH=EXCHANGE_PRICE_2  ->{"EXN_NAME":"Reka","EXN_ID":"TRADER1_40058","Offer":10.2,"State":"Done","topic":"EXCHANGE_PRICE_2","client":"Who knows","ID":"TRADER1_40057","Bid":100,"Date":"Sat Sep 24 21:29:28 BST 2016"}
+PUBLISH=EXCHANGE_PRICE_2  -> {"EXN_NAME":"Mindy1","EXN_ID":"TRADER1_40061","Offer":10.2,"State":"Done","topic":"EXCHANGE_PRICE_2","client":"Who knows","ID":"TRADER1_40060","Bid":100,"Date":"Sat Sep 24 21:29:28 BST 2016"}
+PUBLISH=EXCHANGE_PRICE_2  ->{"EXN_NAME":"Deepak2","EXN_ID":"TRADER1_40052","Offer":10.2,"State":"Done","topic":"EXCHANGE_PRICE_2","client":"Who knows","ID":"TRADER1_40051","Bid":100,"Date":"Sat Sep 24 21:29:28 BST 2016"}
+PUBLISH=EXCHANGE_PRICE_2  ->{"EXN_NAME":"James2","EXN_ID":"TRADER1_40055","Offer":10.2,"State":"Done","topic":"EXCHANGE_PRICE_2","client":"Who knows","ID":"TRADER1_40054","Bid":100,"Date":"Sat Sep 24 21:29:28 BST 2016"}
+PUBLISH=EXCHANGE_PRICE_2  ->{"EXN_NAME":"Howard2","EXN_ID":"TRADER1_40058","Offer":10.2,"State":"Done","topic":"EXCHANGE_PRICE_2","client":"Who knows","ID":"TRADER1_40057","Bid":100,"Date":"Sat Sep 24 21:29:28 BST 2016"}
+PUBLISH=EXCHANGE_PRICE_2  -> {"EXN_NAME":"Sara2","EXN_ID":"TRADER1_40061","Offer":10.2,"State":"Done","topic":"EXCHANGE_PRICE_2","client":"Who knows","ID":"TRADER1_40060","Bid":100,"Date":"Sat Sep 24 21:29:28 BST 2016"}
+PUBLISH=EXCHANGE_PRICE_2  ->{"EXN_NAME":"Jone2","EXN_ID":"TRADER1_40052","Offer":10.2,"State":"Done","topic":"EXCHANGE_PRICE_2","client":"Who knows","ID":"TRADER1_40051","Bid":100,"Date":"Sat Sep 24 21:29:28 BST 2016"}
+PUBLISH=EXCHANGE_PRICE_2  ->{"EXN_NAME":"Laura2","EXN_ID":"TRADER1_40055","Offer":10.2,"State":"Done","topic":"EXCHANGE_PRICE_2","client":"Who knows","ID":"TRADER1_40054","Bid":100,"Date":"Sat Sep 24 21:29:28 BST 2016"}
+PUBLISH=EXCHANGE_PRICE_2  ->{"EXN_NAME":"Reka2","EXN_ID":"TRADER1_40058","Offer":10.2,"State":"Done","topic":"EXCHANGE_PRICE_2","client":"Who knows","ID":"TRADER1_40057","Bid":100,"Date":"Sat Sep 24 21:29:28 BST 2016"}
+PUBLISH=EXCHANGE_PRICE_2  -> {"EXN_NAME":"Mindy2","EXN_ID":"TRADER1_40061","Offer":10.2,"State":"Done","topic":"EXCHANGE_PRICE_2","client":"Who knows","ID":"TRADER1_40060","Bid":100,"Date":"Sat Sep 24 21:29:28 BST 2016"}

@@ -1,0 +1,4 @@
+subscribe=.*BBG.* -> 
+publish=/BBG/INSTRUMENT -> {"ID":"DE0001754","region":"A","message":"Calculated using Bench456456mark","BID":1660,"OFFER":969.651}
+publish= /BBG/QUOTES ->  {"Status":36,"RecordPrefix":"QUOTES","AutoNegOn":true,"Trader":"Alladin Realty","QuoteOn":false,"Count":6330,"BidQty":20.11,"OfferQty":78.18,"Offer":24.26,"TraderID":83,"ID":"QUOTES_1013","Bid":79.81,"Topic":"QUOTES"}
+publish= /BBG/ORDERS ->  {"Yeild":423.78,"RecordPrefix":"ORDERS","Company":"Ford","Done":false,"Quantity":72.68,"Count":422,"Desc":"Adapt","Price":38.73,"State":15,"Currency":"PLN","Booked":false,"Country":"Canada","ClientID":70,"ID":"ORDERS_0","Client":"John Smith","Topic":"ORDERS"}

@@ -1,0 +1,35 @@
+delete=JETFUEL_EXECUTE_STATS -> 1=1
+subscribe=JETFUEL_EXECUTE_STATS -> 1=1
+
+// sub then cancel 
+PUBLISH_DELTA=JETFUEL_EXECUTE_BUS -> {"MsgCreationTime":"2018-02-26T21:55:15.709","MsgCreationName":"JunitClientTest_91475","FunctionCallerHostName":"Box.local","CurrentState":"RequestNew","FunctionToCall":"JunitServerTest_63217.getMarketPrice","ID":"JunitClientTest_91475.1001","FunctionInitiatorName":"JunitClientTest_91475","FunctionParameters":["DE123908"]}
+PUBLISH_DELTA=JETFUEL_EXECUTE_BUS ->{"MsgCreationTime":"2018-02-26T21:55:15.833","MsgCreationName":"JunitServerTest_63217","CurrentState":"SubActive","ID":"JunitClientTest_91475.1001","CurrentStateMsg":"Subscription  for DE123908 is valid"}
+PUBLISH_DELTA=JETFUEL_EXECUTE_BUS ->{"MsgCreationTime":"2018-02-26T21:55:16.838","FunctionUpdateMsg":"100.25","CurrentState":"SubUpdate","ID":"JunitClientTest_91475.1001","CurrentStateMsg":"Sending price 1"}
+PUBLISH_DELTA=JETFUEL_EXECUTE_BUS -> {"MsgCreationTime":"2018-02-26T21:55:17.842","FunctionUpdateMsg":"200.5","ID":"JunitClientTest_91475.1001","CurrentStateMsg":"Sending price 2"}
+PUBLISH_DELTA=JETFUEL_EXECUTE_BUS ->{"MsgCreationTime":"2018-02-26T21:55:18.635","MsgCreationName":"JunitClientTest_91475","CurrentState":"RequestCancelSub","ID":"JunitClientTest_91475.1001","CurrentStateMsg":"Cancel request from client"}
+PUBLISH_DELTA=JETFUEL_EXECUTE_BUS -> {"MsgCreationTime":"2018-02-26T21:55:18.737","MsgCreationName":"JunitServerTest_63217","CurrentState":"SubCancelled","ID":"JunitClientTest_91475.1001","CurrentStateMsg":"Subscription cancelled by user"}
+
+// 3 price updates then cancel
+PUBLISH_DELTA=JETFUEL_EXECUTE_BUS ->  {"MsgCreationTime":"2018-02-26T21:55:33.66","MsgCreationName":"JunitClientTest_91475","FunctionCallerHostName":"Box.local","CurrentState":"RequestNew","FunctionToCall":"JunitServerTest_63217.getNextThreePriceTicks","ID":"JunitClientTest_91475.1005","FunctionInitiatorName":"JunitClientTest_91475","FunctionParameters":["DE123908"]}
+PUBLISH_DELTA=JETFUEL_EXECUTE_BUS ->  {"MsgCreationTime":"2018-02-26T21:55:33.762","MsgCreationName":"JunitServerTest_63217","CurrentState":"SubActive","ID":"JunitClientTest_91475.1005","CurrentStateMsg":"Subscription  for DE123908 is valid"}
+PUBLISH_DELTA=JETFUEL_EXECUTE_BUS ->  {"MsgCreationTime":"2018-02-26T21:55:34.764","FunctionUpdateMsg":"100.25","CurrentState":"SubUpdate","ID":"JunitClientTest_91475.1005","CurrentStateMsg":"Sending price 1"}
+PUBLISH_DELTA=JETFUEL_EXECUTE_BUS ->  {"MsgCreationTime":"2018-02-26T21:55:35.768","FunctionUpdateMsg":"200.5","ID":"JunitClientTest_91475.1005","CurrentStateMsg":"Sending price 2"}
+PUBLISH_DELTA=JETFUEL_EXECUTE_BUS -> {"MsgCreationTime":"2018-02-26T21:55:36.774","FunctionUpdateMsg":"300.75","ID":"JunitClientTest_91475.1005","CurrentStateMsg":"Sending price 3"}
+PUBLISH_DELTA=JETFUEL_EXECUTE_BUS -> {"CurrentState":"Completed","ReturnValue":"300.75","ID":"JunitClientTest_91475.1005","CurrentStateMsg":"Subscription completed as we sent the required prices"}
+
+//Req then response 
+PUBLISH_DELTA=JETFUEL_EXECUTE_BUS -> {"MsgCreationTime":"2018-02-26T21:55:43.723","MsgCreationName":"JunitClientTest_91475","FunctionCallerHostName":"Box.local","CurrentState":"RequestNew","FunctionToCall":"JunitServerTest_63217.updateBankStatus","ID":"JunitClientTest_91475.1007","FunctionInitiatorName":"JunitClientTest_91475","FunctionParameters":["Deepak",true],"AmpsInstanceOwner":"LDN-BACKUP"}
+PUBLISH_DELTA=JETFUEL_EXECUTE_BUS ->  {"MsgCreationTime":"2018-02-26T21:55:43.886","MsgCreationName":"JunitServerTest_63217","CurrentState":"Completed","ReturnValue":true,"ID":"JunitClientTest_91475.1007","CurrentStateMsg":"Deepak is authorised, Bank status is ON"}
+
+//Request timeout complete
+PUBLISH_DELTA=JETFUEL_EXECUTE_BUS ->  {"MsgCreationTime":"2018-02-26T21:55:48.776","MsgCreationName":"JunitClientTest_91475","FunctionCallerHostName":"Box.local","CurrentState":"RequestNew","FunctionToCall":"JunitServerTest_63217.updateBankStatus","ID":"JunitClientTest_91475.1009","FunctionInitiatorName":"JunitClientTest_91475","FunctionParameters":["Sarah",true],"AmpsInstanceOwner":"LDN-BACKUP"}
+PUBLISH_DELTA=JETFUEL_EXECUTE_BUS ->  {"ID":"JunitClientTest_91475.1009","MsgCreationName":"LDN-BACKUP","MsgCreationTime":"2018-02-26T21:55:53.778","CurrentState":"Timeout","CurrentStateMsg":"Function publisher that published this function is not available now."}
+PUBLISH_DELTA=JETFUEL_EXECUTE_BUS ->  {"MsgCreationTime":"2018-02-26T21:55:54.89","MsgCreationName":"JunitServerTest_63217","CurrentState":"Completed","ReturnValue":true,"ID":"JunitClientTest_91475.1009","CurrentStateMsg":"Sarah is authorised, Bank status is ON"}
+
+// sub then cancel 
+PUBLISH_DELTA=JETFUEL_EXECUTE_BUS ->  {"MsgCreationTime":"2018-02-26T21:56:01.827","MsgCreationName":"JunitClientTest_91475","FunctionCallerHostName":"Box.local","CurrentState":"RequestNew","FunctionToCall":"JunitServerTest_63217.getMarketPrice","ID":"JunitClientTest_91475.1011","FunctionInitiatorName":"JunitClientTest_91475","FunctionParameters":["DE123908"],"AmpsInstanceOwner":"LDN-BACKUP"}
+PUBLISH_DELTA=JETFUEL_EXECUTE_BUS ->  {"MsgCreationTime":"2018-02-26T21:56:01.938","MsgCreationName":"JunitServerTest_63217","CurrentState":"SubActive","ID":"JunitClientTest_91475.1011","CurrentStateMsg":"Subscription  for DE123908 is valid"}
+PUBLISH_DELTA=JETFUEL_EXECUTE_BUS ->  {"MsgCreationTime":"2018-02-26T21:56:02.94","FunctionUpdateMsg":"100.25","CurrentState":"SubUpdate","ID":"JunitClientTest_91475.1011","CurrentStateMsg":"Sending price 1"}
+PUBLISH_DELTA=JETFUEL_EXECUTE_BUS ->  {"MsgCreationTime":"2018-02-26T21:56:03.943","FunctionUpdateMsg":"200.5","ID":"JunitClientTest_91475.1011","CurrentStateMsg":"Sending price 2"}
+PUBLISH_DELTA=JETFUEL_EXECUTE_BUS ->  {"MsgCreationTime":"2018-02-26T21:56:04.731","MsgCreationName":"JunitClientTest_91475","CurrentState":"RequestCancelSub","ID":"JunitClientTest_91475.1011","CurrentStateMsg":"Cancel request from client"}
+PUBLISH_DELTA=JETFUEL_EXECUTE_BUS -> {"MsgCreationTime":"2018-02-26T21:56:04.834","MsgCreationName":"JunitServerTest_63217","CurrentState":"SubCancelled","ID":"JunitClientTest_91475.1011","CurrentStateMsg":"Subscription cancelled by user"}

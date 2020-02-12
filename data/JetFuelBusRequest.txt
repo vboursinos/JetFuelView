@@ -1,0 +1,1 @@
+Publish=JETFUEL_EXECUTE_BUS ->{"MsgCreationTime":"2018-02-11T19:15:47.621","MsgCreationName":"JunitClientTest_9155","FunctionCallerHostName":"Box.local","CurrentState":"StateNew","FunctionToCall":"JunitServerTest_3230.getTradingDate","ID":"JunitClientTest_9155.1201","FunctionInitiatorName":"JunitClientTest_9155","FunctionParameters":[]}
