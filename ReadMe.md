@@ -19,3 +19,6 @@ Below are some sample views
 
 * Showing data in a Vertical table
 ![screenshot](src/main/resources/doc/VerticalView.png)
+
+* Publish and Subscribe data - Extremely usefult to test View
+![screenshot](src/main/resources/doc/JetFuel-PublishTab.png)
