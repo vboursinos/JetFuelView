@@ -3,7 +3,7 @@ JetFuelView is an Amps admin viewer, that helps you to look at how Amps servers 
 
 This is a screenshot of the JetFuelView
 
-![screenshot](http://headfront.co.uk/JetFuelView.png)
+![screenshot](src/main/resources/doc/JetFuelView.png)
 
 JetFuelExplorer can be launched by right clicking on the amps instance in the view. This is a very powerful tool that can help you to do great things with amps. You can do the following 
 * Subscribe to data and view the data in nice tables, tree or text format
@@ -11,11 +11,11 @@ JetFuelExplorer can be launched by right clicking on the amps instance in the vi
 * Publish test data, record and playback data
 * Much much more
 
-It is more advanced version of the spark tool that comes with amps. Have a look at this site http://headfront.co.uk/JetFuelExplorer.html for more details.
+It is more advanced version of the spark tool that comes with amps. Have a look at this site https://jetfuel.solutions/ for more details.
 
 Below are some sample views
 * Showing data in a Horizontal table
-![screenshot](http://headfront.co.uk/HorizontalView.png)
+![screenshot](src/main/resources/doc/HorizontalView.png)
 
 * Showing data in a Vertical table
-![screenshot](http://headfront.co.uk/VerticalView.png)
+![screenshot](src/main/resources/doc/VerticalView.png)
