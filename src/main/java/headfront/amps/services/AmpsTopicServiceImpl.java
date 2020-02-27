@@ -31,7 +31,7 @@ public class AmpsTopicServiceImpl implements TopicService {
     private volatile CommandId currentCommand2 = null;
     private AmpsConnection connection;
     private Map<String, Map<String, Object>> allTopicDetails = new HashMap<>();
-    private Map<Pair<String,String>, String> messageTypeToPortMapping = new HashMap<>();
+    private Map<Pair<String, String>, String> messageTypeToPortMapping = new HashMap<>();
     private List<String> allSowsAndType = new ArrayList<>();
     private List<String> allSowsNames = new ArrayList<>();
 
@@ -86,62 +86,72 @@ public class AmpsTopicServiceImpl implements TopicService {
         // really bad code ahead.
         setTypeAndMessageTypeMapping(stringObjectMap);
         final HashMap actions = (HashMap) stringObjectMap.get("actions");
-        if (actions != null) {
-            final Collection values = actions.values();
-            values.forEach(l -> {
-                List list = (List) l;
-                list.forEach(m -> {
-                    Map map = (Map) m;
-                    Object aDoObject = map.get("do");
-                    if (aDoObject instanceof List) {
-                        List aDoList = (List) aDoObject;
-                        for (Object listMap : aDoList) {
-                            Map properListMap = (Map) listMap;
-                            if (properListMap.containsKey("module")) {
-                                final String module = properListMap.get("module").toString();
+        try {
+            if (actions != null) {
+                final Collection values = actions.values();
+                values.forEach(l -> {
+                    if (l == null) {
+                        return;
+                    }
+                    List list = (List) l;
+                    list.forEach(m -> {
+                        if (m == null) {
+                            return;
+                        }
+                        Map map = (Map) m;
+                        Object aDoObject = map.get("do");
+                        if (aDoObject instanceof List) {
+                            List aDoList = (List) aDoObject;
+                            for (Object listMap : aDoList) {
+                                Map properListMap = (Map) listMap;
+                                if (properListMap.containsKey("module")) {
+                                    final String module = properListMap.get("module").toString();
+                                    if (module.equalsIgnoreCase("amps-action-do-publish-message")) {
+                                        aDoObject = properListMap;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if (aDoObject instanceof Map) {
+                            Map aDo = (Map) aDoObject;
+                            if (aDo.containsKey("module")) {
+                                final String module = aDo.get("module").toString();
+                                if (module.equalsIgnoreCase("amps-action-do-delete-sow")) {
+                                    if (aDo.containsKey("options")) {
+                                        final Map options = (Map) aDo.get("options");
+                                        final Object topic = options.get("topic");
+                                        final Object filter = options.get("filter");
+                                        if (topic != null && filter != null) {
+                                            String strTopic = topic.toString();
+                                            String strFitler = filter.toString();
+                                            if (strFitler.contains(JetFuelExecuteConstants.FUNCTION_PUBLISHER_NAME)) {
+                                                jetFuelExecuteFunction = strTopic;
+                                            }
+                                        }
+                                    }
+                                }
                                 if (module.equalsIgnoreCase("amps-action-do-publish-message")) {
-                                    aDoObject = properListMap;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    if (aDoObject instanceof Map) {
-                        Map aDo = (Map) aDoObject;
-                        if (aDo.containsKey("module")) {
-                            final String module = aDo.get("module").toString();
-                            if (module.equalsIgnoreCase("amps-action-do-delete-sow")) {
-                                if (aDo.containsKey("options")) {
-                                    final Map options = (Map) aDo.get("options");
-                                    final Object topic = options.get("topic");
-                                    final Object filter = options.get("filter");
-                                    if (topic != null && filter != null){
-                                        String strTopic = topic.toString();
-                                        String strFitler = filter.toString();
-                                        if (strFitler.contains(JetFuelExecuteConstants.FUNCTION_PUBLISHER_NAME)) {
-                                            jetFuelExecuteFunction = strTopic;
-                                        }
-                                    }
-                                }
-                            }
-                            if (module.equalsIgnoreCase("amps-action-do-publish-message")) {
-                                if (aDo.containsKey("options")) {
-                                    final Map options = (Map) aDo.get("options");
-                                    final Object topic = options.get("topic");
-                                    final Object filter = options.get("data");
-                                    if (topic != null && filter != null){
-                                        String strTopic = topic.toString();
-                                        String strFitler = filter.toString();
-                                        if (strFitler.contains(JetFuelExecuteConstants.FUNCTION_CALLER_HOSTNAME)) {
-                                            jetFuelExecuteFunctionBus = strTopic;
+                                    if (aDo.containsKey("options")) {
+                                        final Map options = (Map) aDo.get("options");
+                                        final Object topic = options.get("topic");
+                                        final Object filter = options.get("data");
+                                        if (topic != null && filter != null) {
+                                            String strTopic = topic.toString();
+                                            String strFitler = filter.toString();
+                                            if (strFitler.contains(JetFuelExecuteConstants.FUNCTION_CALLER_HOSTNAME)) {
+                                                jetFuelExecuteFunctionBus = strTopic;
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
-                    }
+                    });
                 });
-            });
+            }
+        } catch (Exception e) {
+            LOG.warn("Unable to set JetFuelExecute Configs. This not configured so its ok.");
         }
 
         processData(sows, "topic", this::processTopic);
@@ -152,17 +162,18 @@ public class AmpsTopicServiceImpl implements TopicService {
         processData(sows, "queue", this::processQueues);
         processData(sows, "queuedefinition", this::processQueues);
     }
+
     private void setTypeAndMessageTypeMapping(Map<String, Object> stringObjectMap) {
-        Map transports = (Map)stringObjectMap.get("transports");
-        List transport = (List)transports.get("transport");
+        Map transports = (Map) stringObjectMap.get("transports");
+        List transport = (List) transports.get("transport");
         transport.forEach(item -> {
-            Map mapOfTransports = (Map)item;
+            Map mapOfTransports = (Map) item;
             Object messageType = mapOfTransports.get("messagetype");
             if (messageType != null) {
                 String port = mapOfTransports.get("inetaddr").toString();
                 String type = mapOfTransports.get("type").toString();
                 Pair pair = new Pair(messageType.toString(), type);
-                messageTypeToPortMapping.put(pair,port);
+                messageTypeToPortMapping.put(pair, port);
             }
         });
         LOG.info("Loaded transports " + messageTypeToPortMapping);
