@@ -262,16 +262,15 @@ public class AmpsTopicServiceImpl implements TopicService {
         topicDetails.put(TOPIC_SOW_ENABLED, "False");
         topicDetails.put(TOPIC_TXN_ENABLED, "False");
         processCommonFields(mapData, topicDetails);
-        String topicKey = (String) topicDetails.get(TOPIC_KEY);
-        if (topicKey == null || topicKey.equals(DEFAULT_UNKNOWN)) {
-            String underlyingTopic = (String) mapData.get("underlyingtopic");
-            if (underlyingTopic != null) {
-                Map<String, Object> underlyingTopicDetails = allTopicDetails.get(underlyingTopic);
-                if (underlyingTopicDetails != null) {
-                    String underlyingTopicKey = (String) underlyingTopicDetails.get(TOPIC_KEY);
-                    if (underlyingTopicKey != null) {
-                        topicDetails.put(TOPIC_KEY, underlyingTopicKey);
-                    }
+        String underlyingTopic = (String) mapData.get("underlyingtopic");
+        if (underlyingTopic != null) {
+            Map<String, Object> underlyingTopicDetails = allTopicDetails.get(underlyingTopic);
+            if (underlyingTopicDetails != null) {
+                Object underlyingTopicKey = underlyingTopicDetails.get(TOPIC_KEY);
+                if (underlyingTopicKey != null) {
+                    topicDetails.put(TOPIC_KEY, underlyingTopicKey);
+                } else {
+                    topicDetails.put(TOPIC_KEY, "SOW_KEY");
                 }
             }
         }
