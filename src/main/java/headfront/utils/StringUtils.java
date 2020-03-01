@@ -265,7 +265,8 @@ public class StringUtils {
     }
 
     public static String removeInvalidCharFromJson(String dataToProcess) {
-        String processedData = dataToProcess.replace("nan", "null");
+        String processedData = dataToProcess.replaceAll(":nan", ":null");
+        dataToProcess.replaceAll(": nan", ": null");
         processedData = processedData.replaceAll("\\n", "");
         return processedData;
 
