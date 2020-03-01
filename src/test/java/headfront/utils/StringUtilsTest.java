@@ -258,8 +258,8 @@ public class StringUtilsTest {
 
     @Test
     public void testInvalidCharRemovePassword() {
-        String[] input = {"Deepak \n test", "Deepak \n nan", "Deepak \n test\n", "\nDeepak  test"};
-        String[] output = {"Deepak  test", "Deepak  null", "Deepak  test", "Deepak  test"};
+        String[] input = {"Deepak \n test", "Deepak \n :nan", "Deepak \n test\n", "\nDeepak  test"};
+        String[] output = {"Deepak  test", "Deepak  :null", "Deepak  test", "Deepak  test"};
         for (int i = 0; i < input.length; i++) {
             String fixed = StringUtils.removeInvalidCharFromJson(input[i]);
             assertEquals(output[i], fixed);
