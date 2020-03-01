@@ -71,11 +71,16 @@ public class JetFuelGraphModel {
                 properties.load(new FileReader(fileToLoad));
                 final String servers = properties.getProperty("servers");
                 final String adminPorts = properties.getProperty("adminports");
-                final String environment = properties.getProperty("environment");
+                String environment = properties.getProperty("environment");
+                final String overrideEnvironment = properties.getProperty("overrideEnvironment");
                 final String securehttps = properties.getProperty("securehttp");
                 final String[] allServers = servers.split(",");
                 final String[] allAdminPorts = adminPorts.split(",");
                 final String[] securehttp = securehttps.split(",");
+                String[] allEnviroments = null;
+                if (overrideEnvironment != null){
+                    allEnviroments = overrideEnvironment.split(",");
+                }
                 allDataFromServer.clear();
                 unknownServers.clear();
                 mappedServers.clear();
@@ -83,20 +88,23 @@ public class JetFuelGraphModel {
                 for (int i = 0; i < allServers.length; i++) {
                     String serverToLoad = allServers[i];
                     String adminPortToLoad = allAdminPorts[i];
+                    if(allEnviroments != null) {
+                        environment = allEnviroments[i];
+                    }
                     boolean useSecureHttp = Boolean.parseBoolean(securehttp[i]);
                     String metaDatUrl = StringUtils.getAmpsAdminUrlWithCredential(serverToLoad, adminPortToLoad,
                             username, credentials, useSecureHttp) + ".json";
                     metaDatUrl = metaDatUrl.replace(".json.json", ".json");
                     final String serverStats = getServerConfig(metaDatUrl);
                     if (serverStats != null && serverStats.trim().length() > 1) {
-                        updateState(serverStats, serverToLoad, adminPortToLoad, securehttp[i]);
+                        updateState(serverStats, serverToLoad, adminPortToLoad, securehttp[i], environment);
                     } else {
                         String s = StringUtils.getShortServerAndPortFromUrl(serverToLoad);
                         final String registeredServer = mappedServers.get(serverToLoad);
                         if (registeredServer != null) {
                             final String[] split = registeredServer.split(SEPARATOR);
                             allDataFromServer.put(registeredServer, createServer(split[1], split[0], "",
-                                    null, null, null, null, null, securehttp[i]));
+                                    null, null, null, null, null, securehttp[i], environment));
                         } else {
                             unknownServers.add(s);
                         }
@@ -114,7 +122,7 @@ public class JetFuelGraphModel {
     }
 
     private Map<String, Object> createServer(String name, String group, String date, Object reps, Object clients,
-                                             String serverHost, String url, String adminPort, String securehttp) {
+                                             String serverHost, String url, String adminPort, String securehttp, String env) {
         Map<String, Object> server = new HashMap<>();
         server.put("name", name);
         server.put("group", group);
@@ -123,7 +131,7 @@ public class JetFuelGraphModel {
         server.put("messagesOut", random.nextInt(100000));
         server.put("serverHost", serverHost);
         server.put("securehttp", securehttp);
-        server.put("environment", environment);
+        server.put("environment", env);
         server.put("url", url);
         server.put("username", username);
         server.put("credentials", credentials);
@@ -185,7 +193,7 @@ public class JetFuelGraphModel {
         final String fullServerName = getFullServerName("" + group, "" + name);
         if (!allDataFromServer.containsKey(fullServerName)) {
             allDataFromServer.put(fullServerName, createServer(name.toString(), group.toString(), "",
-                    null, null, null, null, null, "false"));
+                    null, null, null, null, null, "false", environment));
         }
         return replication;
     }
@@ -203,7 +211,7 @@ public class JetFuelGraphModel {
         return prefix + "_" + ran;
     }
 
-    private void updateState(String allJson, String url, String adminPortToLoad, String securehttp) {
+    private void updateState(String allJson, String url, String adminPortToLoad, String securehttp, String env) {
         final Map<String, Object> mapData = jsonConvertor.convertToMap(allJson);
         final Map amps = (Map) mapData.get("amps");
         final Map instance = (Map) amps.get("instance");
@@ -215,7 +223,7 @@ public class JetFuelGraphModel {
         final String fullServerName = getFullServerName("" + group, "" + name);
         final String serverHost = StringUtils.getShortServerAndPortFromUrl(url);
         allDataFromServer.put(fullServerName, createServer(name.toString(), group.toString(), timestamp.toString(),
-                replication, null, serverHost, url, adminPortToLoad, securehttp));
+                replication, null, serverHost, url, adminPortToLoad, securehttp, env));
         mappedServers.put(url, fullServerName);
     }
 

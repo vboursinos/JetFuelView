@@ -84,6 +84,7 @@ public class JetFuelViewLogonPanel extends AbstractLogonPanel {
             final String adminPorts = properties.getProperty("adminports");
             final String environment = properties.getProperty("environment");
             final String securehttps = properties.getProperty("securehttp");
+            final String overrideEnvironment = properties.getProperty("overrideEnvironment");
             checkValidProperties(servers, "servers should be set");
             checkValidProperties(adminPorts, "adminports should be set");
             checkValidProperties(environment, "environment should be set");
@@ -100,6 +101,15 @@ public class JetFuelViewLogonPanel extends AbstractLogonPanel {
                 PopUpDialog.showWarningPopup("Invalid config", "Number of servers and securehttp should be same in the config");
                 maskerPane.setVisible(false);
                 return null;
+            }
+            String[] allOverrideEnvironment = null;
+            if (overrideEnvironment != null) {
+                allOverrideEnvironment  = overrideEnvironment.split(",");
+                if (allServers.length != allOverrideEnvironment.length) {
+                    PopUpDialog.showWarningPopup("Invalid config", "Number of servers and overrideEnvironment should be same in the config");
+                    maskerPane.setVisible(false);
+                    return null;
+                }
             }
             return StringUtils.getAmpsAdminUrlWithCredential(allServers[0], allAdminPorts[0], username, password,
                     Boolean.parseBoolean(securehttp[0]));
