@@ -50,17 +50,20 @@ public class JetFuelExplorerLogonPanel extends AbstractLogonPanel {
         }
         selectionPane.setCenter(tabPane);
         selectionPane.setMaxWidth(Double.MAX_VALUE);
-        GridPane loginPane = new GridPane();
-        loginPane.setPadding(new Insets(0, 10, 0, 10));
-        loginPane.setHgap(5);
-        loginPane.setVgap(5);
-        GridPane.setHgrow(usernameTextField, Priority.ALWAYS);
-        GridPane.setFillWidth(usernameTextField, true);
-        loginPane.add(new Label("Username"), 0, 1);
-        loginPane.add(usernameTextField, 1, 1);
-        loginPane.add(new Label("Password"), 0, 2);
-        loginPane.add(passwordTextField, 1, 2);
-        selectionPane.setBottom(loginPane);
+        String disableAuth = System.getProperty("DisableAuth");
+        if(disableAuth == null) {
+            GridPane loginPane = new GridPane();
+            loginPane.setPadding(new Insets(0, 10, 0, 10));
+            loginPane.setHgap(5);
+            loginPane.setVgap(5);
+            GridPane.setHgrow(usernameTextField, Priority.ALWAYS);
+            GridPane.setFillWidth(usernameTextField, true);
+            loginPane.add(new Label("Username"), 0, 1);
+            loginPane.add(usernameTextField, 1, 1);
+            loginPane.add(new Label("Password"), 0, 2);
+            loginPane.add(passwordTextField, 1, 2);
+            selectionPane.setBottom(loginPane);
+        }
         return selectionPane;
     }
 

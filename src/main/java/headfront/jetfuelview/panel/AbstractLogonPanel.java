@@ -87,6 +87,11 @@ public abstract class AbstractLogonPanel {
             Button loginButton = new Button("Login");
             loginButton.setDefaultButton(true);
             loginButton.setOnAction(e -> {
+                String disableAuth = System.getProperty("DisableAuth");
+                if(disableAuth != null) {
+                    usernameTextField.setText("JetFuel");
+                    passwordTextField.setText("JetFuel");
+                }
                 final String selectedItem = getSelectedItem();
                 if (selectedItem == null) {
                     PopUpDialog.showWarningPopup("Select Environment", "Please select an environment");

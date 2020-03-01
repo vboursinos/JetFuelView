@@ -61,10 +61,13 @@ public class JetFuelViewLogonPanel extends AbstractLogonPanel {
 
         selectionPane.add(new Label("Environment"), 0, 0);
         selectionPane.add(systemsComboBox, 1, 0);
-        selectionPane.add(new Label("Username"), 0, 1);
-        selectionPane.add(usernameTextField, 1, 1);
-        selectionPane.add(new Label("Password"), 0, 2);
-        selectionPane.add(passwordTextField, 1, 2);
+        String disableAuth = System.getProperty("DisableAuth");
+        if(disableAuth == null) {
+            selectionPane.add(new Label("Username"), 0, 1);
+            selectionPane.add(usernameTextField, 1, 1);
+            selectionPane.add(new Label("Password"), 0, 2);
+            selectionPane.add(passwordTextField, 1, 2);
+        }
         return selectionPane;
     }
 

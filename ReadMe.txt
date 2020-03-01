@@ -12,3 +12,4 @@ To Start using JetFuelView
 Note if your amps has no authentication then just pass in any username and password this is ignored safely
 Optional features
     Add overrideEnvironment in your config it you want to override the enviroment variable. You will need to add one value per server eg overrideEnvironment=PROD,UAT,PROD,UAT
+    Add -DDisableAuth=true to your jvm parameters if you want to use JetFuel without authentication

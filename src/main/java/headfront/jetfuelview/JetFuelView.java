@@ -102,6 +102,10 @@ public class JetFuelView extends Application {
                 stage.setHeight(270);
                 stage.setWidth(400);
             }
+            String disableAuth = System.getProperty("DisableAuth");
+            if(disableAuth != null) {
+                stage.setHeight(stage.getHeight() - 60);
+            }
             stage.setResizable(false);
             stage.getIcons().add(jetfuelTitlebarImage);
             logonStage = stage;
