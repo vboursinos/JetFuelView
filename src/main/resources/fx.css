@@ -40,8 +40,24 @@
 
 #choosebutton:focused {
     -fx-background-color: rgba(120, 205, 40, 0.7);
-
 }
+
+#prodTab {
+    -fx-background-color: #b45c5c
+}
+#prodTab:selected {
+    -fx-background-color: #fa5c5c;
+}
+
+
+#uatTab {
+    -fx-background-color: #006400
+}
+#uatTab:selected {
+    -fx-background-color: #00b400;
+}
+
+
 
 .samples-tree {
     -fx-background-color: -fx-outer-border, -fx-background;

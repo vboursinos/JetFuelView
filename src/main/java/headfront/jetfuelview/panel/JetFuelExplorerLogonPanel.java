@@ -97,11 +97,11 @@ public class JetFuelExplorerLogonPanel extends AbstractLogonPanel {
             allCombobBoxes.put(tabName, serverOptions);
             Tab newTab = new Tab(tabName, tabGrid);
             if (GuiUtil.isProd(environment)) {
-                newTab.setStyle("-fx-background-color: #CD5C5C;");
-                tabGrid.setStyle("-fx-background-color: #CD5C5C;");
+                newTab.setId("prodTab");
+                tabGrid.setStyle("-fx-background-color: #fa5c5c");
             } else {
-                newTab.setStyle("-fx-background-color: #008000");
-                tabGrid.setStyle("-fx-background-color: #008000;");
+                newTab.setId("uatTab");
+                tabGrid.setStyle("-fx-background-color: #00b400");
             }
             return newTab;
         } catch (Exception e) {
