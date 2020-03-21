@@ -39,7 +39,26 @@ public class AmpsStatsLoader {
                            TreeItem<String> treeItem,
                            LocalDateTime startDate, LocalDateTime stopDate, boolean useSecureHttp) {
         String data = StringUtils.getFullTreePath(treeItem);
-        final String url = StringUtils.getAmpsUrl(connectionsStr, adminPortStr,useSecureHttp) + "/" + data + ".json?t0=" + formatter.format(startDate) +
+        final String url = StringUtils.getAmpsUrl(connectionsStr, adminPortStr, useSecureHttp) + "/" + data + ".json?t0=" + formatter.format(startDate) +
+                "&t1=" + formatter.format(stopDate);
+        if (refreshTimeInSec > 0) {
+            new Thread(() -> {
+                final long sleepTime = refreshTimeInSec * 1000;
+                while (keepRunning) {
+                    doRequest(messageListener, url, sleepTime);
+                }
+            }).start();
+        } else {
+            doRequest(messageListener, url, 0);
+        }
+    }
+
+    public AmpsStatsLoader(String connectionsStr, String adminPortStr,
+                           Consumer<String> messageListener, int refreshTimeInSec,
+                           String data,
+                           LocalDateTime startDate, LocalDateTime stopDate, boolean useSecureHttp, String type) {
+        final String url = StringUtils.getAmpsUrl(connectionsStr, adminPortStr, useSecureHttp) +
+                "/" + data + "." + type + "?t0=" + formatter.format(startDate) +
                 "&t1=" + formatter.format(stopDate);
         if (refreshTimeInSec > 0) {
             new Thread(() -> {

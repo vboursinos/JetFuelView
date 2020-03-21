@@ -1,15 +1,13 @@
 package headfront.dataexplorer.tabs;
 
-import com.crankuptheamps.client.Message;
-import com.crankuptheamps.client.exception.AMPSException;
 import headfront.amps.services.AmpsStatsLoader;
-import headfront.dataexplorer.tabs.dialog.JetFuelDateSelectorDialog;
+import headfront.dataexplorer.ContentProperties;
 import headfront.guiwidgets.DateTimePicker;
 import headfront.guiwidgets.PopUpDialog;
+import headfront.guiwidgets.TextAreaDialog;
 import headfront.utils.FileUtils;
 import headfront.utils.StringUtils;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -26,10 +24,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
-import java.io.StringReader;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -45,26 +44,32 @@ public class AmpsStatsExtractor extends Tab {
     private Consumer<Integer> recordCountListener = count -> {
     };
     private int publishedMessage = 0;
-    private File choosenOutputDir = new File ("/Users/deepakcdo/Documents/MySpace/Dev/JetFuelView/out");
+    private File choosenOutputDir = new File("/Users/deepakcdo/Documents/MySpace/Dev/JetFuelView/out/");
     private File choosenInputFile = new File("/Users/deepakcdo/Documents/MySpace/Dev/JetFuelView/statsExtractor/ExtractMemory.txt");
     private Button chooseOutputButton = new Button("Output Folder");
     private Button chooseInputFileButton = new Button("Input File");
     private Button extractButton = new Button("Extract");
+    private Button helplButton = new Button("Help");
     private DateTimePicker startDatePicker = new DateTimePicker();
     private DateTimePicker toDatePicker = new DateTimePicker();
     private boolean sendUpdate = true;
     private MaskerPane maskerPane = new MaskerPane();
-    private String adminUrl;
     private String ampsInstanceName;
+    private String connectionsStr;
+    private String adminPortStr;
+    private boolean useSecureHttp;
 
-    public AmpsStatsExtractor(String tabName,String adminUrl, String ampsInstanceName) {
+    public AmpsStatsExtractor(String tabName, String connectionsStr, String adminPortStr, boolean useSecureHttp,
+                              String ampsInstanceName) {
         super(tabName);
-        this.adminUrl = adminUrl;
-        this.ampsInstanceName = ampsInstanceName;
+        this.connectionsStr = connectionsStr;
+        this.adminPortStr = adminPortStr;
+        this.useSecureHttp = useSecureHttp;
+        startDatePicker.setDateTimeValue(LocalDateTime.now().minusDays(1));
+        toDatePicker.setDateTimeValue(LocalDateTime.now().plusMinutes(1));
+        this.ampsInstanceName = ampsInstanceName.replace("[Instance - ", "").replace("]", "");
         setupTab();
         BorderPane mainPane = new BorderPane();
-        startDatePicker.setDateTimeValue(LocalDateTime.now().minusDays(1));
-        toDatePicker.setDateTimeValue(LocalDateTime.now());
         chooseOutputButton.setOnAction(e -> {
             DirectoryChooser directoryChooser = new DirectoryChooser();
             directoryChooser.setTitle("Choose folder where the extracts  will be saved");
@@ -99,13 +104,16 @@ public class AmpsStatsExtractor extends Tab {
             publishedMessage = 0;
             updateMessageSent();
         });
+        helplButton.setOnAction(e ->{
+            showHelpDialog();
+        });
 
         HBox topPanel = new HBox();
         topPanel.setPadding(new Insets(5, 5, 5, 5));
         topPanel.setSpacing(10);
         topPanel.getChildren().addAll(new Label("From Date"), startDatePicker,
                 new Label("To Date"), toDatePicker,
-                chooseOutputButton, chooseInputFileButton, extractButton, clearOutput);
+                chooseOutputButton, chooseInputFileButton, extractButton, clearOutput, helplButton);
         topPanel.setAlignment(Pos.BASELINE_CENTER);
         mainPane.setTop(topPanel);
         Node titledLogTextArea = Borders.wrap(createLogPane())
@@ -125,6 +133,9 @@ public class AmpsStatsExtractor extends Tab {
     }
 
     private void processExtract() {
+        addToLog("--------------------Staring extract--------------------");
+        addToLog("Using Input file " + choosenInputFile);
+        addToLog("Using Output Directory " + choosenOutputDir);
         updateMessageSent();
         maskerPane.setVisible(true);
         Properties prop = new Properties();
@@ -133,32 +144,42 @@ public class AmpsStatsExtractor extends Tab {
             CountDownLatch coundownLatch = new CountDownLatch(prop.size());
             Map<String, Object> allData = new ConcurrentHashMap<>();
             prop.entrySet().forEach(entry -> {
-                System.out.println(ampsInstanceName + "--£" + entry.getKey() + "---" + adminUrl + "/" + entry.getValue());
-            });
-            Thread.sleep(1000);
-            coundownLatch.await(10, TimeUnit.MINUTES);
-            maskerPane.setVisible(false);
+                if (!entry.getKey().toString().startsWith("#")) {
+                    Runnable r = () -> {
+                        addToLog("Loading stats for key " + entry.getKey() + "and Value " + entry.getValue());
+                        new AmpsStatsLoader(connectionsStr, adminPortStr, json -> {
+                            try {
+                                if (json != null) {
+                                    addToLog("Got data for " + entry.getKey());
+                                    List<String> data = new ArrayList<>();
+                                    data.add(json);
+                                    File fileToWrite = new File(choosenOutputDir, ampsInstanceName + "--" + entry.getKey() + ".csv");
+                                    addToLog("Writing file " + fileToWrite.getAbsolutePath());
+                                    FileUtils.saveFile(fileToWrite, data, false);
+                                    addToLog("Written file " + fileToWrite.getAbsolutePath());
+                                } else {
+                                    addToLog("Did not get data for " + entry.getKey());
+                                    PopUpDialog.showWarningPopup("Did not receive data", "Did not receive data for " + entry.getValue() + ". Just showing the data we got.");
+                                }
+                                coundownLatch.countDown();
+                            } catch (Exception e) {
+                                addToLog("Unable to extract  stats for key " + entry.getKey() + " " + e.getMessage());
+                                LOG.error("Unable to extract stats for " + entry.getKey(), e);
 
+                            }
+                        }, 0, entry.getValue().toString(),
+                                startDatePicker.getDateTimeValue(), toDatePicker.getDateTimeValue(), useSecureHttp, "csv");
+                    };
+                    new Thread(r).start();
+                }
+            });
+            coundownLatch.await(10, TimeUnit.SECONDS);
+            maskerPane.setVisible(false);
+            addToLog("--------------------Finished  extract--------------------");
         } catch (Exception e) {
             LOG.error("Unable to extract stats ", e);
             maskerPane.setVisible(false);
         }
-
-
-//        statsToGather.forEach(stats -> {
-//                    Runnable r = () -> {
-//                        new AmpsStatsLoader(connectionsStr, adminPortStr, json -> {
-//                            if (json != null) {
-//                                data.put(stats, json);
-//                            } else {
-//                                PopUpDialog.showWarningPopup("Did not receive data", "Did not receive data for " + StringUtils.getFullTreePath(stats) + ". Just showing the data we got.");
-//                            }
-//                            coundownLatch.countDown();
-//                        }, 0, stats, chooser.getStartDate(), chooser.getToDate(), useSecureHttp);
-//                    };
-//                    new Thread(r).start();
-//                }
-//        );
     }
 
     private void validateOutputFolder(File file) {
@@ -205,7 +226,7 @@ public class AmpsStatsExtractor extends Tab {
         GridPane.setVgrow(tabPane, Priority.ALWAYS);
         Tab logTab = new Tab("Full Logs");
         logTab.setContent(logTextArea);
-        tabPane.getTabs().setAll(logTab);//, outputTab);
+        tabPane.getTabs().setAll(logTab);
         return tabPane;
     }
 
@@ -235,5 +256,15 @@ public class AmpsStatsExtractor extends Tab {
         if (sendUpdate) {
             recordCountListener.accept(publishedMessage);
         }
+    }
+
+    private void showHelpDialog() {
+        Object helpText = ContentProperties.getInstance().getProperty("statsExtractor.help");
+        TextAreaDialog dlg = new TextAreaDialog(helpText.toString());
+        dlg.initModality(Modality.APPLICATION_MODAL);
+        dlg.initOwner(null);
+        dlg.setTitle("Stats Extractor Help ");
+        dlg.getDialogPane().setHeaderText("You can extract amps stats from here. Below is an example of the expected input file");
+        dlg.show();
     }
 }

@@ -595,7 +595,7 @@ public class DataExplorer extends Application {
         dataExplorerActions.setOnShowAmpsStatsExtractorButtonPressed(() -> {
             if (statsExtractor == null) {
                 statsExtractor = new AmpsStatsExtractor("Amps Stats Extractor",
-                        StringUtils.getAdminUrl(connectionsStr, adminPortStr, useSecureHttp),
+                        connectionsStr, adminPortStr, useSecureHttp,
                         ampsConfigLoader.getInstanceName());
                 tabPane.getTabs().add(statsExtractor);
             }

@@ -46,6 +46,8 @@ public class StatsTimeSeriesDataChooser extends Stage {
     public StatsTimeSeriesDataChooser(boolean allowSingleSelection, Runnable reloadTreeListener) {
         this.allowSingleSelection = allowSingleSelection;
         this.reloadTreeListener = reloadTreeListener;
+        startDatePicker.setDateTimeValue(LocalDateTime.now().minusDays(1));
+        toDatePicker.setDateTimeValue(LocalDateTime.now().plusMinutes(1));
         BorderPane pane = new BorderPane();
         HBox datePane = new HBox();
         datePane.setAlignment(Pos.BASELINE_CENTER);

@@ -36,6 +36,8 @@ public class JetFuelDateSelectorDialog extends Dialog<String> {
         final DialogPane dialogPane = getDialogPane();
         setTitle(title);
         dialogPane.getButtonTypes().addAll(ButtonType.CANCEL);
+        startDatePicker.setDateTimeValue(LocalDateTime.now().minusDays(1));
+        toDatePicker.setDateTimeValue(LocalDateTime.now().plusMinutes(1));
 
         Label lbMessage = new Label("Select All or enter date range");  //$NON-NLS-1$
         lbMessage.setStyle("-fx-font-weight: bold;");

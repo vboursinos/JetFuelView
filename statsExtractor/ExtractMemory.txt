@@ -1,2 +1,3 @@
-messages_out=instance/replication/LDN-BACKUP/messages_out
-free=host/memory/free
+messages_out=amps/instance/replication/LDN-BACKUP/messages_out
+free=amps/host/memory/free
+#fastPrice=amps/instance/sow/FAST_PRICE!json/valid_keys
