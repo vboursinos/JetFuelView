@@ -25,10 +25,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileReader;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -104,7 +101,7 @@ public class AmpsStatsExtractor extends Tab {
             publishedMessage = 0;
             updateMessageSent();
         });
-        helplButton.setOnAction(e ->{
+        helplButton.setOnAction(e -> {
             showHelpDialog();
         });
 
@@ -153,6 +150,7 @@ public class AmpsStatsExtractor extends Tab {
                                     addToLog("Got data for " + entry.getKey());
                                     List<String> data = new ArrayList<>();
                                     data.add(json);
+                                    allData.put(ampsInstanceName + "--" + entry.getKey(), json);
                                     File fileToWrite = new File(choosenOutputDir, ampsInstanceName + "--" + entry.getKey() + ".csv");
                                     addToLog("Writing file " + fileToWrite.getAbsolutePath());
                                     FileUtils.saveFile(fileToWrite, data, false);
@@ -174,11 +172,49 @@ public class AmpsStatsExtractor extends Tab {
                 }
             });
             coundownLatch.await(10, TimeUnit.SECONDS);
+            writeAllFile(allData);
             maskerPane.setVisible(false);
             addToLog("--------------------Finished  extract--------------------");
         } catch (Exception e) {
             LOG.error("Unable to extract stats ", e);
             maskerPane.setVisible(false);
+        }
+    }
+
+    private void writeAllFile(Map<String, Object> sourceData) {
+        addToLog("Creating All File");
+        StringBuffer headers = new StringBuffer();
+        headers.append("Timestamp,");
+        Map<String, StringBuffer> allData = new LinkedHashMap();
+        sourceData.entrySet().forEach(e -> {
+                    headers.append(e.getKey() + ",");
+                    addToAllData(allData, e.getValue());
+                }
+        );
+
+        List<String> listToWrite = new ArrayList<>();
+        listToWrite.add(headers.toString());
+        allData.entrySet().forEach(e -> {
+            String txt = e.getKey() + "," + e.getValue().toString();
+            listToWrite.add(txt);
+
+        });
+        File fileToWrite = new File(choosenOutputDir, ampsInstanceName + "--ALL.csv");
+        addToLog("Writing All file " + fileToWrite.getAbsolutePath());
+        FileUtils.saveFile(fileToWrite, listToWrite, false);
+        addToLog("Written All file " + fileToWrite.getAbsolutePath());
+    }
+
+    private void addToAllData(Map<String, StringBuffer> allData, Object value) {
+        String[] lines = value.toString().split("\n");
+        for (String line : lines) {
+            String[] nameValuePair = line.split(",");
+            StringBuffer bufferToUpdate = allData.get(nameValuePair[0]);
+            if (bufferToUpdate == null) {
+                bufferToUpdate = new StringBuffer();
+                allData.put(nameValuePair[0], bufferToUpdate);
+            }
+            bufferToUpdate.append(nameValuePair[1] + ",");
         }
     }
 
