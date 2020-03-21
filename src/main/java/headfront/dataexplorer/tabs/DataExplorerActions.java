@@ -35,6 +35,7 @@ public class DataExplorerActions {
     private static final String jetFuelImage = "images/icons/JetFuelSmallNoBg.png";
     private static final String undockPathImage = "images/icons/Undock.png";
     private static final String statPathImage = "images/icons/Stat.png";
+    private static final String statExtratorPathImage = "images/icons/ExtractStats.png";
     private static final String savePathImage = "images/icons/Save.png";
     private static final String helpPathImage = "images/icons/doc.png";
     private static final String adminIconPathImage = "images/icons/Admin.png";
@@ -67,6 +68,7 @@ public class DataExplorerActions {
     private Runnable onSubscriptionsButtonPressed;
     private Runnable onSaveTableToFileButtonPressed;
     private Runnable onShowAmpsStatsButtonPressed;
+    private Runnable onShowAmpsStatsExtractorButtonPressed;
     private Runnable onShowTimeSeriesGraphButtonPressed;
     private Runnable onShowTimeSeriesStatsButtonPressed;
     private Runnable onShowInNewWindowButtonPressed;
@@ -85,6 +87,7 @@ public class DataExplorerActions {
         ActionGroup viewsActionGroup = new ActionGroup("Views",
                 new ActionGroup("Stats",
                         action("showAmpsStats"),
+                        action("showAmpsStatsExtractor"),
                         action("showTimeSeriesStats"),
                         action("showTimeSeriesGraph")));
 
@@ -159,6 +162,11 @@ public class DataExplorerActions {
     @ActionProxy(text = "Amps Stats", graphic = statPathImage)
     private void showAmpsStats() {
         onShowAmpsStatsButtonPressed.run();
+    }
+
+    @ActionProxy(text = "Amps Stats Extractor", graphic = statExtratorPathImage)
+    private void showAmpsStatsExtractor() {
+        onShowAmpsStatsExtractorButtonPressed.run();
     }
 
     @ActionProxy(text = "TimeSeries Graphs", graphic = timeSeriesGraphStatsPathImage, accelerator = "ctrl+G")
@@ -307,6 +315,8 @@ public class DataExplorerActions {
     public void onShowAmpsStatsButtonPressed(Runnable runnable) {
         onShowAmpsStatsButtonPressed = runnable;
     }
+
+    public void setOnShowAmpsStatsExtractorButtonPressed(Runnable runnable) { onShowAmpsStatsExtractorButtonPressed = runnable; }
 
     public void onShowInNewWindowButtonPressed(Runnable runnable) {
         onShowInNewWindowButtonPressed = runnable;

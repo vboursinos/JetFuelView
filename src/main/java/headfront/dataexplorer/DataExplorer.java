@@ -69,6 +69,7 @@ public class DataExplorer extends Application {
     private DataSheetTab dataSheetTab = null;
     private FilePublisherTab filePublishTab = null;
     private AmpsSubscriberToLogFileTab subFromAmpstoFileTab = null;
+    private AmpsStatsExtractor statsExtractor = null;
     private ExecuteTab executeTab = null;
     private SimpleStatusTableTab sowStatsTab = null;
     private SimpleStatusTableTab clientStatusTab = null;
@@ -589,6 +590,18 @@ public class DataExplorer extends Application {
                             this::showSubscritpions);
                 }
             }
+        });
+
+        dataExplorerActions.setOnShowAmpsStatsExtractorButtonPressed(() -> {
+            if (statsExtractor == null) {
+                statsExtractor = new AmpsStatsExtractor("Amps Stats Extractor",
+                        StringUtils.getAdminUrl(connectionsStr, adminPortStr, useSecureHttp),
+                        ampsConfigLoader.getInstanceName());
+                tabPane.getTabs().add(statsExtractor);
+            }
+            tabPane.getSelectionModel().select(statsExtractor);
+            statsExtractor.setRecordCountListener(statusBar::updateRowCount);
+            showWindowIfExits(statsExtractor);
         });
 
         dataExplorerActions.onShowAmpsStatsButtonPressed(() -> {
