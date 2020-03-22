@@ -41,8 +41,8 @@ public class AmpsStatsExtractor extends Tab {
     private Consumer<Integer> recordCountListener = count -> {
     };
     private int publishedMessage = 0;
-    private File choosenOutputDir = new File("/Users/deepakcdo/Documents/MySpace/Dev/JetFuelView/out/");
-    private File choosenInputFile = new File("/Users/deepakcdo/Documents/MySpace/Dev/JetFuelView/statsExtractor/ExtractMemory.txt");
+    private File choosenOutputDir = new File(".");
+    private File choosenInputFile = null;
     private Button chooseOutputButton = new Button("Output Folder");
     private Button chooseInputFileButton = new Button("Input File");
     private Button extractButton = new Button("Extract");
@@ -130,6 +130,11 @@ public class AmpsStatsExtractor extends Tab {
     }
 
     private void processExtract() {
+        if ( choosenInputFile == null){
+            PopUpDialog.showWarningPopup("Input file not specified",
+                    "Please set Input file. Click on help for file format.");
+            return;
+        }
         addToLog("--------------------Staring extract--------------------");
         addToLog("Using Input file " + choosenInputFile);
         addToLog("Using Output Directory " + choosenOutputDir);
