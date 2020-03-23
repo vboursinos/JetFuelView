@@ -130,16 +130,16 @@ public class AmpsStatsExtractor extends Tab {
     }
 
     private void processExtract() {
-        if ( choosenInputFile == null){
+        if (choosenInputFile == null) {
             PopUpDialog.showWarningPopup("Input file not specified",
                     "Please set Input file. Click on help for file format.");
             return;
         }
+        Platform.runLater(() -> maskerPane.setVisible(true));
         addToLog("--------------------Staring extract--------------------");
         addToLog("Using Input file " + choosenInputFile);
         addToLog("Using Output Directory " + choosenOutputDir);
         updateMessageSent();
-        maskerPane.setVisible(true);
         Properties prop = new Properties();
         try {
             prop.load(new FileReader(choosenInputFile));
@@ -178,11 +178,11 @@ public class AmpsStatsExtractor extends Tab {
             });
             coundownLatch.await(10, TimeUnit.SECONDS);
             writeAllFile(allData);
-            maskerPane.setVisible(false);
+            Platform.runLater(() -> maskerPane.setVisible(false));
             addToLog("--------------------Finished  extract--------------------");
         } catch (Exception e) {
             LOG.error("Unable to extract stats ", e);
-            maskerPane.setVisible(false);
+            Platform.runLater(() -> maskerPane.setVisible(false));
         }
     }
 

@@ -1,3 +1,7 @@
 messages_out=amps/instance/replication/LDN-BACKUP/messages_out
 free=amps/host/memory/free
 fastPrice=amps/instance/sow/FAST_PRICE!json/valid_keys
+messagesFromRep=amps/instance/processors/replication/messages_received_per_sec
+messagesFromRepPerSec=amps/instance/processors/replication/messages_received_bytes_per_sec
+messageFromPublisher=amps/instance/processors/external/messages_received_per_sec
+messageFromPublisherPerSec=amps/instance/processors/external/messages_received_bytes_per_sec
