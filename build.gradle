@@ -9,6 +9,7 @@ apply plugin: 'distribution'
 repositories {
     jcenter()
 }
+sourceCompatibility = 8
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')

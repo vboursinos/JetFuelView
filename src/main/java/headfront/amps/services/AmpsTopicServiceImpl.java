@@ -7,6 +7,7 @@ import com.crankuptheamps.client.exception.AMPSException;
 import headfront.amps.AmpsConnection;
 import headfront.convertor.XmlConvertor;
 import headfront.jetfuel.execute.JetFuelExecuteConstants;
+import headfront.utils.MessageUtil;
 import headfront.utils.PrimativeClassUtil;
 import headfront.utils.StringUtils;
 import javafx.scene.control.CheckBoxTreeItem;
@@ -427,8 +428,15 @@ public class AmpsTopicServiceImpl implements TopicService {
                         } else {
                             StringJoiner joiner = new StringJoiner(StringUtils.KEY_SEPERATOR);
                             sowKeys.forEach(k -> {
-                                Object o = mappedData.get(k);
-                                joiner.add(o == null ? "null" : o.toString());
+                                if (k.contains("/")) {
+                                    String[] parts = k.split("/");
+                                    Object leafNode = MessageUtil.getLeafNode(mappedData, parts[parts.length - 1]);
+                                    joiner.add(leafNode == null ? "null" : leafNode.toString());
+
+                                } else {
+                                    Object o = mappedData.get(k);
+                                    joiner.add(o == null ? "null" : o.toString());
+                                }
                             });
                             String newKey = joiner.toString();
                             if (newKey.length() > 1) {

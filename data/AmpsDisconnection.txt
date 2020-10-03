@@ -1,0 +1,1 @@
+Subscribe=/AMPS/ClientStatus -> /event IN("disconnect", "logon")
