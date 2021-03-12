@@ -180,6 +180,20 @@ task runDataExplorerMacPrimary_PROD(type: JavaExec) {
     args 'tcp://192.168.56.101:8001/amps/json', '8199', 'PROD', 'false'
 }
 
+task runDataExplorerGcp_Primary(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'headfront.dataexplorer.DataExplorer'
+    jvmArgs '-Dlog4j.configurationFile=log4j2-JetFuel.xml', '-XX:MaxGCPauseMillis=10', '-XX:SurvivorRatio=4','-XX:+UseConcMarkSweepGC'
+    args 'tcp://35.228.172.118:8001/amps/json', '8199', 'UAT', 'false'
+}
+
+task runDataExplorerGcp_Backup(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'headfront.dataexplorer.DataExplorer'
+    jvmArgs '-Dlog4j.configurationFile=log4j2-JetFuel.xml', '-XX:MaxGCPauseMillis=10', '-XX:SurvivorRatio=4','-XX:+UseConcMarkSweepGC'
+    args 'tcp://35.228.111.20:8001/amps/json', '8199', 'UAT', 'false'
+}
+
 task runJetFuelView(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'headfront.jetfuelview.JetFuelView'

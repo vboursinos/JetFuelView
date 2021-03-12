@@ -89,7 +89,7 @@ public class DataExplorer extends Application {
     private StatsTimeSeriesDataChooser statsTimeSeriesDataChooser;
     private String title = "";
     private String DATA_SHEET_PREFIX = "Data Sheet";
-    private LocalDate freeLicenceWarningDate = LocalDate.of(2024, 03, 1);
+    private LocalDate freeLicenceWarningDate = LocalDate.of(2025, 03, 1);
     private int noOfFreeDaysAfterFreeTrial = 30;
     private boolean checkVersion = true;
     private Object version = "";
