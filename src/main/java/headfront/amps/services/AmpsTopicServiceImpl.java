@@ -127,7 +127,10 @@ public class AmpsTopicServiceImpl implements TopicService {
                                             String strTopic = topic.toString();
                                             String strFitler = filter.toString();
                                             if (strFitler.contains(JetFuelExecuteConstants.FUNCTION_PUBLISHER_NAME)) {
-                                                jetFuelExecuteFunction = strTopic;
+                                                // Dont choose topics with CLIENT
+                                                if (strTopic != null && !strFitler.contains("CLIENT")) {
+                                                    jetFuelExecuteFunction = strTopic;
+                                                }
                                             }
                                         }
                                     }
@@ -141,7 +144,10 @@ public class AmpsTopicServiceImpl implements TopicService {
                                             String strTopic = topic.toString();
                                             String strFitler = filter.toString();
                                             if (strFitler.contains(JetFuelExecuteConstants.FUNCTION_CALLER_HOSTNAME)) {
-                                                jetFuelExecuteFunctionBus = strTopic;
+                                                // Dont choose topics with CLIENT
+                                                if (strTopic != null && !strFitler.contains("CLIENT")) {
+                                                    jetFuelExecuteFunctionBus = strTopic;
+                                                }
                                             }
                                         }
                                     }
