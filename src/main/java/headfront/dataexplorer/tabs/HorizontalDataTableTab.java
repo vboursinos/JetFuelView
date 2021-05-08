@@ -5,6 +5,7 @@ import headfront.amps.AmpsConnection;
 import headfront.convertor.MessageConvertor;
 import headfront.dataexplorer.DataExplorerSelection;
 import headfront.dataexplorer.bean.DataBean;
+import headfront.utils.MessageUtil;
 import headfront.utils.StringUtils;
 
 import java.util.List;
@@ -54,7 +55,7 @@ public class HorizontalDataTableTab extends TableDataTab {
             } else {
                 String createdId = "";
                 for (String recId : recordIds) {
-                    createdId = createdId + filteredMap.get(recId) + StringUtils.KEY_SEPERATOR;
+                    createdId = createdId + MessageUtil.getActualLeafNode(filteredMap, recId) + StringUtils.KEY_SEPERATOR;
                 }
                 idObject = createdId.substring(0, createdId.length() - 1);
             }

@@ -20,7 +20,21 @@ public class MessageUtil {
         }
         return null;
     }
-
+    public static Object getActualLeafNode(Map map, String fieldName) {
+        Object o = map.get(fieldName);
+        if (o != null) {
+            return o;
+        }
+        if (fieldName.contains("/")) {
+            String[] parts = fieldName.split("/");
+            Object value = map.get(parts[0]);
+            if (value instanceof Map) {
+                Map newMap = (Map) value;
+                return getActualLeafNode(newMap, fieldName.replace(parts[0] + "/", ""));
+            }
+        }
+        return null;
+    }
     public static String removeHtml(String input) {
         return input.replace("</html>", "").replace("<html>", "").trim();
 
