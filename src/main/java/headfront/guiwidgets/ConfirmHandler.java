@@ -8,7 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.VBoxBuilder;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -46,13 +46,11 @@ public class ConfirmHandler implements Callback<String, Boolean> {
         Label dataViewer = createOption("DataViewer", msg, dialog, this::startJavaProcess);
         Label closeLabel = createOption("Cancel", msg, dialog, (name, mmsg) -> dialog.close());
 
-        dialog.setScene(
-                new Scene(
-                        VBoxBuilder.create().children(ampsAdminPageLabel, dataViewer, closeLabel
-                        ).build()
-                        , Color.TRANSPARENT
-                )
-        );
+        VBox vbox = new VBox(10); // 10 is the spacing between children, adjust as needed
+
+        vbox.getChildren().addAll(ampsAdminPageLabel, dataViewer, closeLabel);
+        Scene scene = new Scene(vbox, Color.TRANSPARENT);
+        dialog.setScene(scene);
 
         String[] split = msg.split(",");
         dialog.setX(Integer.parseInt(split[2]));

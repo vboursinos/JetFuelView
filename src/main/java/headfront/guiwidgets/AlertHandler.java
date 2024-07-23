@@ -4,7 +4,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.VBoxBuilder;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.web.WebEvent;
 import javafx.stage.Modality;
@@ -34,13 +34,11 @@ public class AlertHandler implements EventHandler<WebEvent<String>> {
         Button okButton = new Button("OK");
         okButton.setOnAction(e -> dialog.close());
 
-        dialog.setScene(
-                new Scene(
-                        VBoxBuilder.create().children(dataLabel, okButton
-                        ).build()
-                        , Color.TRANSPARENT
-                )
-        );
+        VBox vbox = new VBox(10); // 10 is the spacing between children, adjust as needed
+        vbox.getChildren().addAll(dataLabel, okButton);
+
+        Scene scene = new Scene(vbox, Color.TRANSPARENT);
+        dialog.setScene(scene);
         dialog.showAndWait();
     }
 

@@ -7,231 +7,214 @@ apply plugin: 'idea'
 apply plugin: 'distribution'
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
-sourceCompatibility = 8
+
+sourceCompatibility = 1.8
+
+ext {
+    javafxVersion = '19.0.2.1'
+}
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
-    compile('org.tinyjee.jgraphx:jgraphx:3.4.1.3')
-    compile("org.springframework.boot:spring-boot-starter:1.5.15.RELEASE") {
+    implementation fileTree(dir: 'libs', include: '*.jar')
+    implementation 'org.tinyjee.jgraphx:jgraphx:3.4.1.3'
+    implementation('org.springframework.boot:spring-boot-starter:1.5.15.RELEASE') {
         exclude group: 'ch.qos.logback', module: 'logback-classic'
     }
-    compile("org.springframework:spring-messaging:4.3.18.RELEASE")
-    compile("org.springframework:spring-websocket:4.3.15.RELEASE")
-    compile("org.apache.httpcomponents:httpclient:4.5.3")
-    compile("com.fasterxml.jackson.core:jackson-core:2.6.0-rc2")
-    compile("com.fasterxml.jackson.core:jackson-databind:2.6.0-rc2")
-    compile("com.fasterxml.jackson.core:jackson-annotations:2.6.0-rc2")
-    compile("org.controlsfx:controlsfx:8.40.11")
-    compile("org.mockito:mockito-core:1.10.19")
-    compile("org.apache.logging.log4j:log4j-api:2.1") { exclude group: '*' }
-    compile("org.apache.logging.log4j:log4j-core:2.1") { exclude group: '*' }
-    compile("org.apache.logging.log4j:log4j-slf4j-impl:2.1") { exclude group: '*' }
-    compile("org.apache.logging.log4j:log4j-jcl:2.1") { exclude group: '*' }
-    compile("org.apache.logging.log4j:log4j-1.2-api:2.1") { exclude group: '*' }
-    compile("org.slf4j:slf4j-api:1.7.25") { exclude group: '*' }
+    implementation 'org.springframework:spring-messaging:4.3.18.RELEASE'
+    implementation 'org.springframework:spring-websocket:4.3.15.RELEASE'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.3'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.6.0-rc2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.6.0-rc2'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.6.0-rc2'
+    implementation 'org.controlsfx:controlsfx:8.40.11'
+    implementation 'org.mockito:mockito-core:1.10.19'
+    implementation("org.apache.logging.log4j:log4j-api:2.1") { exclude group: '*' }
+    implementation("org.apache.logging.log4j:log4j-core:2.1") { exclude group: '*' }
+    implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.1") { exclude group: '*' }
+    implementation("org.apache.logging.log4j:log4j-jcl:2.1") { exclude group: '*' }
+    implementation("org.apache.logging.log4j:log4j-1.2-api:2.1") { exclude group: '*' }
+    implementation("org.slf4j:slf4j-api:1.7.25") { exclude group: '*' }
+    implementation "javax.annotation:javax.annotation-api:1.3.2"
 
-    testCompile ('junit:junit:4.12')
+    implementation "org.openjfx:javafx-base:$javafxVersion:win"
+    implementation "org.openjfx:javafx-controls:$javafxVersion:win"
+    implementation "org.openjfx:javafx-fxml:$javafxVersion:win"
+    implementation "org.openjfx:javafx-graphics:$javafxVersion:win"
+    implementation "org.openjfx:javafx-web:$javafxVersion:win"
+    implementation "org.openjfx:javafx-swing:$javafxVersion:win"
+
+    implementation "org.openjfx:javafx-base:$javafxVersion:linux"
+    implementation "org.openjfx:javafx-controls:$javafxVersion:linux"
+    implementation "org.openjfx:javafx-fxml:$javafxVersion:linux"
+    implementation "org.openjfx:javafx-graphics:$javafxVersion:linux"
+    implementation "org.openjfx:javafx-web:$javafxVersion:linux"
+    implementation "org.openjfx:javafx-swing:$javafxVersion:linux"
+
+    implementation "org.openjfx:javafx-base:$javafxVersion:mac"
+    implementation "org.openjfx:javafx-controls:$javafxVersion:mac"
+    implementation "org.openjfx:javafx-fxml:$javafxVersion:mac"
+    implementation "org.openjfx:javafx-graphics:$javafxVersion:mac"
+    implementation "org.openjfx:javafx-web:$javafxVersion:mac"
+    implementation "org.openjfx:javafx-swing:$javafxVersion:mac"
+
+
+    testImplementation 'junit:junit:4.12'
 }
-//This bit of code finds the version of the file -- start
-//FileTree tree = fileTree(dir: 'libs', include: 'headfront-jetfuel-*.jar')
-//def nameToUse = ""
-//def jetFuelVersion = ""
-//tree.visit { element ->
-//    def (company, project, version) = element.name.split("-")
-//    jetFuelVersion = version.replaceAll('.jar', '')
-//    nameToUse = "JetFuelView-" +jetFuelVersion
-//}
-//
-//jar{
-//    baseName = 'headfront-jetfuelview-' + jetFuelVersion
-//    manifest {
-//        attributes 'Company': 'Head Front Consulting',
-//                'App': 'JetFuel',
-//                'Version': jetFuelVersion,
-//                'ContactEmail': 'deepakcdo@gmail.com',
-//                'ContactNumber': '+44 7958 707 212',
-//                'Owner': 'Deepak Dhayatker',
-//                'Web': 'http://headfront.co.uk/'
-//    }
-//}
-//-- End 
 
-def nameToUse = ""
+// Extract the version from the properties file
 def props = new Properties()
 file("src/main/resources/jetfueldataexplorer.properties").withInputStream { props.load(it) }
-nameToUse = "JetFuelView-" +props.getProperty("version")
-def buildLoc = "build/BuildApp/JetFuel-" + props.getProperty("version")
-task BuildApp{
-    delete(buildLoc)
-    mkdir(buildLoc)
-    copy{
+def version = props.getProperty("version")
+def buildLoc = "build/BuildApp/JetFuel-${version}"
+def nameToUse = "JetFuelView-${version}"
+
+task BuildApp {
+    delete buildLoc
+    mkdir buildLoc
+    copy {
         from 'src/main/resources/'
         into buildLoc
         include 'log4j2-JetFuel.xml'
         include 'StartJetFuel.bat'
         include 'Notes.txt'
     }
-
-    copy{
-        into buildLoc + '/libs/'
-        from  configurations.runtime
+    copy {
+        into "${buildLoc}/libs/"
+        from configurations.runtimeClasspath
     }
-
 }
-task zipBuild( dependsOn: [BuildApp, jar], type: Zip) {
+
+task zipBuild(dependsOn: [BuildApp, jar], type: Zip) {
     from 'build/BuildApp'
     include '*'
-    include '**/*' //to include contents of a folder present inside Reports directory
-    archiveName 'JetFuel-' + props.getProperty("version") + '.zip'
-    destinationDir(file('.'))
+    include '**/*'
+    archiveFileName = "JetFuel-${version}.zip"
+    destinationDirectory = file('.')
 }
 
-jar{
-    baseName = 'headfront-jetfuelview-' + props.getProperty("version")
-    destinationDir = file(buildLoc + '/libs/')
+jar {
+    archiveBaseName.set("headfront-jetfuelview-${version}")
+    destinationDirectory = file("${buildLoc}/libs/")
     manifest {
-        attributes 'Company': 'Head Front Consulting',
+        attributes(
+                'Company': 'Head Front Consulting',
                 'App': 'JetFuel',
-                'Version': props.getProperty("version"),
+                'Version': version,
                 'ContactEmail': 'deepakcdo@gmail.com',
                 'ContactNumber': '+44 7958 707 212',
                 'Owner': 'Deepak Dhayatker',
                 'Web': 'http://headfront.co.uk/'
+        )
     }
 }
 
 distributions {
-
     main {
         contents {
-            baseName = nameToUse
-            from 'bin\\StartJetFuelView.bat'
-            from 'bin\\StartJetFuelExplorer.bat'
+            from 'bin/StartJetFuelView.bat'
+            from 'bin/StartJetFuelExplorer.bat'
             from 'Notes.txt'
             from 'ReadMe.txt'
             into('libs') {
                 from jar
-                from(project.configurations.runtime)
+                from configurations.runtimeClasspath
             }
             into('config') {
-                from 'config\\Example-UAT.properties'
-                from 'src\\main\\resources\\log4j2-JetFuelView.xml'
+                from 'config/Example-UAT.properties'
+                from 'src/main/resources/log4j2-JetFuelView.xml'
             }
             into('bin') {
-                from 'bin\\StartJetFuelExplorerDirect.bat'
+                from 'bin/StartJetFuelExplorerDirect.bat'
             }
         }
     }
 }
 
-github {
-    owner = 'deepakcdo'
-    repo = 'JetFuelView'
-    token = JetFuelViewGitHubToken
-    tagName = nameToUse
-    targetCommitish = 'master'
-    body = "Latest Stable release"
-    assets = [
-            'build/distributions/' + nameToUse + '.zip'
-    ]
+//github {
+//    owner = 'deepakcdo'
+//    repo = 'JetFuelView'
+//    token = JetFuelViewGitHubToken
+//    tagName = nameToUse
+//    targetCommitish = 'master'
+//    body = "Latest Stable release"
+//    assets = [
+//            "build/distributions/${nameToUse}.zip"
+//    ]GitHub
+//}
+
+tasks.withType(JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    jvmArgs '-Dlog4j.configurationFile=log4j2-JetFuel.xml', '-XX:MaxGCPauseMillis=10', '-XX:SurvivorRatio=4', '-XX:+UseConcMarkSweepGC'
 }
 
-
 task runAmpsPublisher(type: JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
     main = 'headfront.amps.AmpsPublisher'
-    jvmArgs '-Dlog4j.configurationFile=log4j2-JetFuel.xml'
 }
 
 task runBbgGateway(type: JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
     main = 'headfront.markets.MarketGateway'
-    jvmArgs '-Dlog4j.configurationFile=log4j2-JetFuel.xml'
     args 'BBG', '2000', '1643'
 }
 
 task runTradeWebGateway(type: JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
     main = 'headfront.markets.MarketGateway'
-    jvmArgs '-Dlog4j.configurationFile=log4j2-JetFuel.xml'
     args 'TRADEWEB', '2000', '1337'
 }
 
 task runDataExplorerMacPrimary(type: JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
     main = 'headfront.dataexplorer.DataExplorer'
-    jvmArgs '-Dlog4j.configurationFile=log4j2-JetFuel.xml', '-XX:MaxGCPauseMillis=10', '-XX:SurvivorRatio=4','-XX:+UseConcMarkSweepGC'
     args 'tcp://172.28.231.171:8001/amps/json', '8199', 'UAT', 'false'
 }
 
 task runDataExplorerMacBackup(type: JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
     main = 'headfront.dataexplorer.DataExplorer'
-    jvmArgs '-Dlog4j.configurationFile=log4j2-JetFuel.xml', '-XX:MaxGCPauseMillis=10', '-XX:SurvivorRatio=4','-XX:+UseConcMarkSweepGC'
     args 'tcp://192.168.56.101:9001/amps/json', '8198', 'UAT', 'false'
 }
 
 task runDataExplorerMacPrimary_PROD(type: JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
     main = 'headfront.dataexplorer.DataExplorer'
-    jvmArgs '-Dlog4j.configurationFile=log4j2-JetFuel.xml', '-XX:MaxGCPauseMillis=10', '-XX:SurvivorRatio=4','-XX:+UseConcMarkSweepGC'
     args 'tcp://192.168.56.101:8001/amps/json', '8199', 'PROD', 'false'
 }
 
 task runDataExplorerGcp_Primary(type: JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
     main = 'headfront.dataexplorer.DataExplorer'
-    jvmArgs '-Dlog4j.configurationFile=log4j2-JetFuel.xml', '-XX:MaxGCPauseMillis=10', '-XX:SurvivorRatio=4','-XX:+UseConcMarkSweepGC'
     args 'tcp://35.228.172.118:8001/amps/json', '8199', 'UAT', 'false'
 }
 
 task runDataExplorerGcp_Backup(type: JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
     main = 'headfront.dataexplorer.DataExplorer'
-    jvmArgs '-Dlog4j.configurationFile=log4j2-JetFuel.xml', '-XX:MaxGCPauseMillis=10', '-XX:SurvivorRatio=4','-XX:+UseConcMarkSweepGC'
     args 'tcp://35.228.111.20:8001/amps/json', '8199', 'UAT', 'false'
 }
 
 task runJetFuelView(type: JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
     main = 'headfront.jetfuelview.JetFuelView'
-    jvmArgs '-Dlog4j.configurationFile=log4j2-JetFuelView.xml', '-XX:MaxGCPauseMillis=10', '-XX:SurvivorRatio=4', '-XX:+UseConcMarkSweepGC'
     args 'JetFuelView'
 }
 
 task runJetFuelViewDisableAuth(type: JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
     main = 'headfront.jetfuelview.JetFuelView'
-    jvmArgs '-DDisableAuth=true', '-Dlog4j.configurationFile=log4j2-JetFuelView.xml', '-XX:MaxGCPauseMillis=10', '-XX:SurvivorRatio=4', '-XX:+UseConcMarkSweepGC'
+    jvmArgs '-DDisableAuth=true'
     args 'JetFuelView'
 }
 
 task runJetFuelExplorer(type: JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
     main = 'headfront.jetfuelview.JetFuelView'
-    jvmArgs '-Dlog4j.configurationFile=log4j2-JetFuelView.xml', '-XX:MaxGCPauseMillis=10', '-XX:SurvivorRatio=4', '-XX:+UseConcMarkSweepGC'
     args 'JetFuelExplorer'
 }
 
 task runJetFuelExplorerDisableAuth(type: JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
     main = 'headfront.jetfuelview.JetFuelView'
-    jvmArgs '-DDisableAuth=true', '-Dlog4j.configurationFile=log4j2-JetFuelView.xml', '-XX:MaxGCPauseMillis=10', '-XX:SurvivorRatio=4', '-XX:+UseConcMarkSweepGC'
+    jvmArgs '-DDisableAuth=true'
     args 'JetFuelExplorer'
 }
 
 task runJetFuelError(type: JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
     main = 'headfront.jetfuelview.JetFuelView'
-    jvmArgs '-Dlog4j.configurationFile=log4j2-JetFuelView.xml', '-XX:MaxGCPauseMillis=10', '-XX:SurvivorRatio=4', '-XX:+UseConcMarkSweepGC'
     args 'NoApp'
 }
 
 task runJetFuelNone(type: JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
     main = 'headfront.jetfuelview.JetFuelView'
-    jvmArgs '-Dlog4j.configurationFile=log4j2-JetFuelView.xml', '-XX:MaxGCPauseMillis=10', '-XX:SurvivorRatio=4', '-XX:+UseConcMarkSweepGC'
 }
-
